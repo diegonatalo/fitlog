@@ -1,0 +1,158 @@
+{
+  "name": "FitLog",
+  "repo": "FitLog",
+  "tagline": "O diário de treino que cabe no bolso.",
+  "urls": {
+    "demo": "https://dn-fitlog.vercel.app"
+  },
+  "stack": [
+    {
+      "pkg": "react"
+    },
+    {
+      "pkg": "typescript"
+    },
+    {
+      "pkg": "vite"
+    },
+    {
+      "pkg": "tailwindcss"
+    },
+    "PWA",
+    {
+      "pkg": "react-router"
+    },
+    "Phosphor Icons",
+    "React Compiler"
+  ],
+  "badges_extra": [
+    {
+      "alt": "PWA",
+      "label": "PWA",
+      "message": "instalável",
+      "color": "5a0fc8",
+      "logo": "pwa",
+      "logoColor": "white"
+    },
+    {
+      "alt": "Dados",
+      "label": "dados",
+      "message": "só no seu navegador",
+      "color": "9fe02e"
+    }
+  ],
+  "features": [
+    {
+      "title": "Funcionalidade 01",
+      "desc": "Treinos prontos. Agrupe exercícios em treinos (Push, Pull, Legs…), defina a ordem e inicie tudo com um toque."
+    },
+    {
+      "title": "Funcionalidade 02",
+      "desc": "Sessão ao vivo. Cronômetro do treino, séries por exercício e observações da sessão e de cada série."
+    },
+    {
+      "title": "Funcionalidade 03",
+      "desc": "Timer de descanso. Contagem regressiva de 60, 90, 120 ou 180 s depois de cada série, com vibração ao terminar."
+    },
+    {
+      "title": "Funcionalidade 04",
+      "desc": "Carga sugerida. A última série do exercício já vem preenchida, então você só ajusta o que mudou."
+    },
+    {
+      "title": "Funcionalidade 05",
+      "desc": "Quatro tipos de carga. Peso (kg), placas, peso corporal (com carga extra opcional) e tempo, para exercícios cronometrados."
+    },
+    {
+      "title": "Funcionalidade 06",
+      "desc": "Calculadora de cardio. Informe velocidade, inclinação e duração na esteira e veja calorias e frequência cardíaca estimadas, a zona de esforço e dicas para a intensidade."
+    },
+    {
+      "title": "Funcionalidade 07",
+      "desc": "Comparador de esteira. Gráfico com as curvas de 0%, 6%, 12% e 18% de inclinação (e a sua), em calorias ou frequência cardíaca, para ver o efeito de mudar velocidade ou inclinação."
+    },
+    {
+      "title": "Funcionalidade 08",
+      "desc": "Perfil. Peso, idade e sexo ficam salvos em Ajustes e alimentam as estimativas do cardio."
+    },
+    {
+      "title": "Funcionalidade 09",
+      "desc": "Recordes e evolução. Aviso na hora de um novo recorde, marca de PR no histórico, 1RM estimado e gráfico da melhor carga por dia."
+    },
+    {
+      "title": "Funcionalidade 10",
+      "desc": "Biblioteca. Busca, filtro por grupo muscular e 24 exercícios de exemplo. Exercícios com histórico são arquivados, não apagados."
+    },
+    {
+      "title": "Funcionalidade 11",
+      "desc": "Histórico de sessões. Duração, séries e anotações de cada treino concluído, com edição de qualquer série. Um seletor alterna entre Treinos e Cardio."
+    }
+  ],
+  "banner": {
+    "shot": {
+      "file": "docs/screenshots/inicio.png"
+    },
+    "chips": 4
+  },
+  "demo": {
+    "note": "",
+    "layout": "grid3",
+    "shots": [
+      {
+        "file": "docs/screenshots/inicio.png",
+        "title": "Treinos",
+        "alt": "Treinos",
+        "caption": "<b>Treinos</b>"
+      },
+      {
+        "file": "docs/screenshots/sessao.png",
+        "title": "Sessão ao vivo",
+        "alt": "Sessão ao vivo",
+        "caption": "<b>Sessão ao vivo</b>"
+      },
+      {
+        "file": "docs/screenshots/exercicio.png",
+        "title": "Evolução do exercício",
+        "alt": "Evolução do exercício",
+        "caption": "<b>Evolução do exercício</b>"
+      },
+      {
+        "file": "docs/screenshots/biblioteca.png",
+        "title": "Biblioteca",
+        "alt": "Biblioteca",
+        "caption": "<b>Biblioteca</b>"
+      },
+      {
+        "file": "docs/screenshots/historico.png",
+        "title": "Histórico de treinos",
+        "alt": "Histórico de treinos",
+        "caption": "<b>Histórico de treinos</b>"
+      },
+      {
+        "file": "docs/screenshots/historico-cardio.png",
+        "title": "Histórico de cardio",
+        "alt": "Histórico de cardio",
+        "caption": "<b>Histórico de cardio</b>"
+      },
+      {
+        "file": "docs/screenshots/cardio.png",
+        "title": "Calculadora de cardio",
+        "alt": "Calculadora de cardio",
+        "caption": "<b>Calculadora de cardio</b>"
+      },
+      {
+        "file": "docs/screenshots/cardio-grafico.png",
+        "title": "Comparador e dicas",
+        "alt": "Comparador e dicas",
+        "caption": "<b>Comparador e dicas</b>"
+      },
+      {
+        "file": "docs/screenshots/ajustes.png",
+        "title": "Ajustes e perfil",
+        "alt": "Ajustes e perfil",
+        "caption": "<b>Ajustes e perfil</b>"
+      }
+    ]
+  },
+  "footer": "Feito com 💚 para treinar sem planilha.",
+  "credits": []
+}

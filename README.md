@@ -1,6 +1,7 @@
+<!-- Arquivo gerado pelo readme-kit. Não edite aqui: altere docs/readme/ e rode "readme-kit build". -->
 <div align="center">
 
-<img src="docs/assets/banner.svg" alt="Banner do FitLog: O diário de treino que cabe no bolso." width="100%" />
+<img src="docs/assets/banner.svg" alt="FitLog: O diário de treino que cabe no bolso. github.com/diegonatalo/FitLog. Stack: React 19, TypeScript 6, Vite 8, Tailwind CSS 4" width="100%" />
 
 <br />
 
@@ -13,70 +14,57 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript_6-3178c6?style=flat-square&logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite_8-646cff?style=flat-square&logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white)
-![PWA](https://img.shields.io/badge/PWA-instalável-5a0fc8?style=flat-square&logo=pwa&logoColor=white)
-![Dados](https://img.shields.io/badge/dados-só_no_seu_navegador-9fe02e?style=flat-square&labelColor=17220a)
+![PWA](https://img.shields.io/badge/PWA-instal%C3%A1vel-5a0fc8?style=flat-square&logo=pwa&logoColor=white)
+![Dados](https://img.shields.io/badge/dados-s%C3%B3_no_seu_navegador-9fe02e?style=flat-square)
+![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-16a34a?style=flat-square)
 
 </div>
 
 <br />
 
-<div align="center"><img src="docs/assets/h-sobre.svg" alt="01 · SOBRE: Sobre o projeto" width="100%" /></div>
+<div align="center">
 
-<br />
+<img src="docs/assets/h-sobre.svg" alt="01 · SOBRE: Sobre o projeto" width="100%" />
+
+</div>
 
 **O diário de treino que cabe no bolso.**<br />
 Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja sua evolução, sem cadastro e sem internet.
 
 <br />
 
-<div align="center"><img src="docs/assets/h-demo.svg" alt="02 · DEMO: Telas" width="100%" /></div>
+<div align="center">
 
-<br />
+<img src="docs/assets/h-demo.svg" alt="02 · DEMO: Demonstração" width="100%" />
+
+</div>
 
 <div align="center">
 
 <table>
   <tr>
-    <td align="center" width="33%">
-      <img src="docs/assets/shot-inicio.svg" alt="Treinos" width="100%" /><br />
-      <sub><b>Treinos</b></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="docs/assets/shot-sessao.svg" alt="Sessão ao vivo" width="100%" /><br />
-      <sub><b>Sessão ao vivo</b></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="docs/assets/shot-exercicio.svg" alt="Evolução do exercício" width="100%" /><br />
-      <sub><b>Evolução do exercício</b></sub>
-    </td>
+    <td align="center" width="33%"><img src="docs/assets/shot-01.svg" alt="Treinos" width="100%" /><br />
+      <sub><b>Treinos</b></sub></td>
+    <td align="center" width="33%"><img src="docs/assets/shot-02.svg" alt="Sessão ao vivo" width="100%" /><br />
+      <sub><b>Sessão ao vivo</b></sub></td>
+    <td align="center" width="33%"><img src="docs/assets/shot-03.svg" alt="Evolução do exercício" width="100%" /><br />
+      <sub><b>Evolução do exercício</b></sub></td>
   </tr>
   <tr>
-    <td align="center" width="33%">
-      <img src="docs/assets/shot-biblioteca.svg" alt="Biblioteca" width="100%" /><br />
-      <sub><b>Biblioteca</b></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="docs/assets/shot-historico.svg" alt="Histórico de treinos" width="100%" /><br />
-      <sub><b>Histórico de treinos</b></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="docs/assets/shot-historico-cardio.svg" alt="Histórico de cardio" width="100%" /><br />
-      <sub><b>Histórico de cardio</b></sub>
-    </td>
+    <td align="center" width="33%"><img src="docs/assets/shot-04.svg" alt="Biblioteca" width="100%" /><br />
+      <sub><b>Biblioteca</b></sub></td>
+    <td align="center" width="33%"><img src="docs/assets/shot-05.svg" alt="Histórico de treinos" width="100%" /><br />
+      <sub><b>Histórico de treinos</b></sub></td>
+    <td align="center" width="33%"><img src="docs/assets/shot-06.svg" alt="Histórico de cardio" width="100%" /><br />
+      <sub><b>Histórico de cardio</b></sub></td>
   </tr>
   <tr>
-    <td align="center" width="33%">
-      <img src="docs/assets/shot-cardio.svg" alt="Calculadora de cardio" width="100%" /><br />
-      <sub><b>Calculadora de cardio</b></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="docs/assets/shot-cardio-grafico.svg" alt="Comparador e dicas" width="100%" /><br />
-      <sub><b>Comparador e dicas</b></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="docs/assets/shot-ajustes.svg" alt="Ajustes e perfil" width="100%" /><br />
-      <sub><b>Ajustes e perfil</b></sub>
-    </td>
+    <td align="center" width="33%"><img src="docs/assets/shot-07.svg" alt="Calculadora de cardio" width="100%" /><br />
+      <sub><b>Calculadora de cardio</b></sub></td>
+    <td align="center" width="33%"><img src="docs/assets/shot-08.svg" alt="Comparador e dicas" width="100%" /><br />
+      <sub><b>Comparador e dicas</b></sub></td>
+    <td align="center" width="33%"><img src="docs/assets/shot-09.svg" alt="Ajustes e perfil" width="100%" /><br />
+      <sub><b>Ajustes e perfil</b></sub></td>
   </tr>
 </table>
 
@@ -84,17 +72,29 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 
 <br />
 
-<div align="center"><img src="docs/assets/h-funcionalidades.svg" alt="03 · FUNCIONALIDADES: O que dá para fazer" width="100%" /></div>
+<div align="center">
 
-<br />
+<img src="docs/assets/h-func.svg" alt="03 · FUNCIONALIDADES: O que dá para fazer" width="100%" />
+
+</div>
 
 <div align="center">
 
-<img src="docs/assets/f-01.svg" alt="Funcionalidade 01: Treinos prontos. Agrupe exercícios em treinos (Push, Pull, Legs…), defina a ordem e inicie tudo com um toque." width="49%" /><img src="docs/assets/f-02.svg" alt="Funcionalidade 02: Sessão ao vivo. Cronômetro do treino, séries por exercício e observações da sessão e de cada série." width="49%" /><br />
-<img src="docs/assets/f-03.svg" alt="Funcionalidade 03: Timer de descanso. Contagem regressiva de 60, 90, 120 ou 180 s depois de cada série, com vibração ao terminar." width="49%" /><img src="docs/assets/f-04.svg" alt="Funcionalidade 04: Carga sugerida. A última série do exercício já vem preenchida, então você só ajusta o que mudou." width="49%" /><br />
-<img src="docs/assets/f-05.svg" alt="Funcionalidade 05: Quatro tipos de carga. Peso (kg), placas, peso corporal (com carga extra opcional) e tempo, para exercícios cronometrados." width="49%" /><img src="docs/assets/f-06.svg" alt="Funcionalidade 06: Calculadora de cardio. Informe velocidade, inclinação e duração na esteira e veja calorias e frequência cardíaca estimadas, a zona de esforço e dicas para a intensidade." width="49%" /><br />
-<img src="docs/assets/f-07.svg" alt="Funcionalidade 07: Comparador de esteira. Gráfico com as curvas de 0%, 6%, 12% e 18% de inclinação (e a sua), em calorias ou frequência cardíaca, para ver o efeito de mudar velocidade ou inclinação." width="49%" /><img src="docs/assets/f-08.svg" alt="Funcionalidade 08: Perfil. Peso, idade e sexo ficam salvos em Ajustes e alimentam as estimativas do cardio." width="49%" /><br />
-<img src="docs/assets/f-09.svg" alt="Funcionalidade 09: Recordes e evolução. Aviso na hora de um novo recorde, marca de PR no histórico, 1RM estimado e gráfico da melhor carga por dia." width="49%" /><img src="docs/assets/f-10.svg" alt="Funcionalidade 10: Biblioteca. Busca, filtro por grupo muscular e 24 exercícios de exemplo. Exercícios com histórico são arquivados, não apagados." width="49%" /><br />
+<img src="docs/assets/f-01.svg" alt="Funcionalidade 01: Treinos prontos. Agrupe exercícios em treinos (Push, Pull, Legs…), defina a ordem e inicie tudo com um toque." width="49%" />
+<img src="docs/assets/f-02.svg" alt="Funcionalidade 02: Sessão ao vivo. Cronômetro do treino, séries por exercício e observações da sessão e de cada série." width="49%" />
+<br />
+<img src="docs/assets/f-03.svg" alt="Funcionalidade 03: Timer de descanso. Contagem regressiva de 60, 90, 120 ou 180 s depois de cada série, com vibração ao terminar." width="49%" />
+<img src="docs/assets/f-04.svg" alt="Funcionalidade 04: Carga sugerida. A última série do exercício já vem preenchida, então você só ajusta o que mudou." width="49%" />
+<br />
+<img src="docs/assets/f-05.svg" alt="Funcionalidade 05: Quatro tipos de carga. Peso (kg), placas, peso corporal (com carga extra opcional) e tempo, para exercícios cronometrados." width="49%" />
+<img src="docs/assets/f-06.svg" alt="Funcionalidade 06: Calculadora de cardio. Informe velocidade, inclinação e duração na esteira e veja calorias e frequência cardíaca estimadas, a zona de esforço e dicas para a intensidade." width="49%" />
+<br />
+<img src="docs/assets/f-07.svg" alt="Funcionalidade 07: Comparador de esteira. Gráfico com as curvas de 0%, 6%, 12% e 18% de inclinação (e a sua), em calorias ou frequência cardíaca, para ver o efeito de mudar velocidade ou inclinação." width="49%" />
+<img src="docs/assets/f-08.svg" alt="Funcionalidade 08: Perfil. Peso, idade e sexo ficam salvos em Ajustes e alimentam as estimativas do cardio." width="49%" />
+<br />
+<img src="docs/assets/f-09.svg" alt="Funcionalidade 09: Recordes e evolução. Aviso na hora de um novo recorde, marca de PR no histórico, 1RM estimado e gráfico da melhor carga por dia." width="49%" />
+<img src="docs/assets/f-10.svg" alt="Funcionalidade 10: Biblioteca. Busca, filtro por grupo muscular e 24 exercícios de exemplo. Exercícios com histórico são arquivados, não apagados." width="49%" />
+<br />
 <img src="docs/assets/f-11.svg" alt="Funcionalidade 11: Histórico de sessões. Duração, séries e anotações de cada treino concluído, com edição de qualquer série. Um seletor alterna entre Treinos e Cardio." width="49%" />
 
 </div>
@@ -105,8 +105,9 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 
 <img src="docs/assets/h-stack.svg" alt="04 · STACK: Stack" width="100%" />
 
-<br />
-<br />
+</div>
+
+<div align="center">
 
 <img src="docs/assets/stack.svg" alt="Stack: React 19, TypeScript 6, Vite 8, Tailwind CSS 4, PWA, React Router 8, Phosphor Icons, React Compiler" width="100%" />
 
@@ -114,9 +115,11 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 
 <br />
 
-<div align="center"><img src="docs/assets/h-como-rodar.svg" alt="05 · COMO RODAR: Rodando localmente" width="100%" /></div>
+<div align="center">
 
-<br />
+<img src="docs/assets/h-run.svg" alt="05 · COMO RODAR: Rodando localmente" width="100%" />
+
+</div>
 
 Requer [Node.js](https://nodejs.org) e [pnpm](https://pnpm.io).
 
@@ -146,9 +149,11 @@ Veja [`.env.example`](.env.example).
 
 <br />
 
-<div align="center"><img src="docs/assets/h-estrutura.svg" alt="06 · ESTRUTURA: Estrutura" width="100%" /></div>
+<div align="center">
 
-<br />
+<img src="docs/assets/h-estrutura.svg" alt="06 · ESTRUTURA: Estrutura" width="100%" />
+
+</div>
 
 ```text
 src/
@@ -167,28 +172,24 @@ src/
 └── types.ts      modelos e metadados dos tipos de carga
 public/           ícones, manifest, service worker e imagem Open Graph
 ```
-
-<details>
-<summary><b>Como adicionar um novo tipo de carga</b></summary>
-
-<br />
-
-1. Inclua o valor em `LoadType` e uma entrada em `LOAD_TYPES`, em `src/types.ts` (rótulo, unidade, passo e se tem repetições).
-2. Associe um ícone em `ICONS`, em `src/components/LoadTypeToggle.tsx`.
-3. Se a unidade tiver formato especial, trate-a em `loadParts`, em `src/lib/format.ts`.
-4. O validador em `src/lib/schema.ts` já aceita qualquer valor de `LOAD_TYPES`.
-
-</details>
-
 > [!NOTE]
 > O estado vive em um único hook (`useWorkoutStore`), servido por Context e persistido por
 > `usePersistedState`. O React Compiler está ligado, então o código evita memoização manual.
 
 <br />
 
-<div align="center"><img src="docs/assets/h-mais.svg" alt="07 · MAIS: Mais informações" width="100%" /></div>
+<div align="center">
 
-<br />
+<img src="docs/assets/h-mais.svg" alt="07 · MAIS: Mais informações" width="100%" />
+
+</div>
+
+### 🧩 Como adicionar um novo tipo de carga
+
+1. Inclua o valor em `LoadType` e uma entrada em `LOAD_TYPES`, em `src/types.ts` (rótulo, unidade, passo e se tem repetições).
+2. Associe um ícone em `ICONS`, em `src/components/LoadTypeToggle.tsx`.
+3. Se a unidade tiver formato especial, trate-a em `loadParts`, em `src/lib/format.ts`.
+4. O validador em `src/lib/schema.ts` já aceita qualquer valor de `LOAD_TYPES`.
 
 ### 🔒 Seus dados
 
@@ -236,11 +237,17 @@ Publicado na [Vercel](https://vercel.com) em [dn-fitlog.vercel.app](https://dn-f
 
 > Hoje não há testes automatizados nem CI, e os dados existem apenas no aparelho onde foram registrados.
 
+### 📄 Créditos e licença
+
+- Distribuído sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE).
+
 <br />
 
-<div align="center"><img src="docs/assets/h-autor.svg" alt="08 · AUTOR: Autor" width="100%" /></div>
+<div align="center">
 
-<br />
+<img src="docs/assets/h-autor.svg" alt="08 · AUTOR: Autor" width="100%" />
+
+</div>
 
 <div align="center">
 
@@ -248,9 +255,12 @@ Publicado na [Vercel](https://vercel.com) em [dn-fitlog.vercel.app](https://dn-f
 <a href="https://www.linkedin.com/in/diegonatalo/"><img src="docs/assets/btn-linkedin.svg" alt="LinkedIn ↗" height="46" /></a>
 <a href="https://github.com/diegonatalo"><img src="docs/assets/btn-github.svg" alt="GitHub ↗" height="46" /></a>
 
-<br />
+</div>
+
 <br />
 
-<img src="docs/assets/footer.svg" alt="© 2026 DIEGO NATALO. Feito com 💚 para treinar sem planilha." width="100%" />
+<div align="center">
+
+<img src="docs/assets/footer.svg" alt="© 2026 Diego Natalo. Feito com 💚 para treinar sem planilha." width="100%" />
 
 </div>
