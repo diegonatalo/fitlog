@@ -1,4 +1,4 @@
-import type { LoadType, WorkoutSet } from "../types";
+import type { LoadType, WorkoutSet } from "@/types";
 
 /** Heaviest set; ties go to the one with more reps. */
 export function bestSet(sets: WorkoutSet[], loadType: LoadType) {

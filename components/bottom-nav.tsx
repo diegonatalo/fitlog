@@ -8,8 +8,8 @@ import {
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { paths } from "../lib/paths";
-import { cn } from "../lib/format";
+import { paths } from "@/lib/paths";
+import { cn } from "@/lib/format";
 
 const ITEMS: { to: string; label: string; icon: typeof HouseIcon }[] = [
   { to: paths.home, label: "Início", icon: HouseIcon },

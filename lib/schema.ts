@@ -7,8 +7,8 @@ import type {
   Workout,
   WorkoutSession,
   WorkoutSet,
-} from "../types";
-import { LOAD_TYPES, MUSCLE_GROUPS } from "../types";
+} from "@/types";
+import { LOAD_TYPES, MUSCLE_GROUPS } from "@/types";
 
 /**
  * Runtime validation for everything that comes from outside the app's own

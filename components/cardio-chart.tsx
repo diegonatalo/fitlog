@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { ChartLineIcon } from "@phosphor-icons/react";
-import type { CardioProfile } from "../types";
-import { compare, estimate } from "../lib/cardio";
-import type { CardioInput, Metric } from "../lib/cardio";
-import { cn } from "../lib/format";
+import type { CardioProfile } from "@/types";
+import { compare, estimate } from "@/lib/cardio";
+import type { CardioInput, Metric } from "@/lib/cardio";
+import { cn } from "@/lib/format";
 
 interface CardioChartProps {
   input: CardioInput;

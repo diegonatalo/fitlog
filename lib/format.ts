@@ -1,5 +1,5 @@
-import type { LoadType, WorkoutSet } from "../types";
-import { loadTypeMeta } from "../types";
+import type { LoadType, WorkoutSet } from "@/types";
+import { loadTypeMeta } from "@/types";
 
 export function cn(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(" ");

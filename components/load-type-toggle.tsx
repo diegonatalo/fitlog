@@ -5,9 +5,9 @@ import {
   TimerIcon,
   type Icon,
 } from "@phosphor-icons/react";
-import type { LoadType } from "../types";
-import { LOAD_TYPES } from "../types";
-import { cn } from "../lib/format";
+import type { LoadType } from "@/types";
+import { LOAD_TYPES } from "@/types";
+import { cn } from "@/lib/format";
 
 interface LoadTypeToggleProps {
   value: LoadType;

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { TimerIcon, XIcon } from "@phosphor-icons/react";
-import { useNow } from "../hooks/use-now";
-import { cn, formatClock } from "../lib/format";
+import { useNow } from "@/hooks/use-now";
+import { cn, formatClock } from "@/lib/format";
 
 const PRESETS = [60, 90, 120, 180];
 

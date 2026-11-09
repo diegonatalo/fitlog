@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { CheckIcon, FloppyDiskIcon, TrophyIcon } from "@phosphor-icons/react";
-import type { LoadType } from "../types";
-import { loadTypeMeta } from "../types";
+import type { LoadType } from "@/types";
+import { loadTypeMeta } from "@/types";
 import { LoadTypeToggle } from "./load-type-toggle";
 import { Stepper } from "./stepper";
-import { cn } from "../lib/format";
+import { cn } from "@/lib/format";
 
 export interface SetSuggestion {
   loadType: LoadType;

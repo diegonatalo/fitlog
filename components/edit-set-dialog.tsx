@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import type { WorkoutSet } from "../types";
-import { loadTypeMeta } from "../types";
-import { cn } from "../lib/format";
+import type { WorkoutSet } from "@/types";
+import { loadTypeMeta } from "@/types";
+import { cn } from "@/lib/format";
 import { Stepper } from "./stepper";
 
 interface EditSetDialogProps {

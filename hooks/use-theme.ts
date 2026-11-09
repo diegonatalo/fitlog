@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { THEME_KEY } from "../lib/storage";
+import { THEME_KEY } from "@/lib/storage";
 
 type Theme = "light" | "dark";
 

@@ -1,6 +1,6 @@
-import type { MuscleGroup } from "../types";
-import { muscleLabel } from "../types";
-import { cn } from "../lib/format";
+import type { MuscleGroup } from "@/types";
+import { muscleLabel } from "@/types";
+import { cn } from "@/lib/format";
 
 interface MuscleBadgeProps {
   group: MuscleGroup;

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { PersonSimpleRunIcon, TrashIcon } from "@phosphor-icons/react";
-import { Link } from "../lib/router";
+import { Link } from "@/lib/router";
 import { ConfirmDialog } from "./confirm-dialog";
 import { EmptyState } from "./empty-state";
-import { paths } from "../lib/paths";
-import { formatTime, relativeDay } from "../lib/format";
-import { useStore } from "../hooks/use-store";
+import { paths } from "@/lib/paths";
+import { formatTime, relativeDay } from "@/lib/format";
+import { useStore } from "@/hooks/use-store";
 
 export function CardioHistory() {
   const { cardioSessions, removeCardioSession } = useStore();

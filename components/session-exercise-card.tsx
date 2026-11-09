@@ -6,9 +6,9 @@ import {
   TrashIcon,
   TrophyIcon,
 } from "@phosphor-icons/react";
-import type { Exercise, LoadType, WorkoutSet } from "../types";
-import { formatLoad, formatSet } from "../lib/format";
-import { recordIds } from "../lib/stats";
+import type { Exercise, LoadType, WorkoutSet } from "@/types";
+import { formatLoad, formatSet } from "@/lib/format";
+import { recordIds } from "@/lib/stats";
 import { EditSetDialog } from "./edit-set-dialog";
 import { LogForm } from "./log-form";
 import { MuscleBadge } from "./muscle-badge";

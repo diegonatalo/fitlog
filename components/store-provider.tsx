@@ -1,8 +1,8 @@
 "use client";
 
 import { useSyncExternalStore, type ReactNode } from "react";
-import { useWorkoutStore } from "../hooks/use-workout-store";
-import { StoreContext } from "../lib/store-context";
+import { useWorkoutStore } from "@/hooks/use-workout-store";
+import { StoreContext } from "@/lib/store-context";
 
 const noopSubscribe = () => () => {};
 

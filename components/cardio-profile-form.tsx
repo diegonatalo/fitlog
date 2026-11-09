@@ -1,8 +1,8 @@
 import { useState } from "react";
-import type { CardioProfile, Sex } from "../types";
+import type { CardioProfile, Sex } from "@/types";
 import { Stepper } from "./stepper";
-import { cn } from "../lib/format";
-import { useStore } from "../hooks/use-store";
+import { cn } from "@/lib/format";
+import { useStore } from "@/hooks/use-store";
 
 const SEXES: { value: Sex; label: string }[] = [
   { value: "male", label: "Masculino" },

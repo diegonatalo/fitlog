@@ -5,7 +5,7 @@ import type {
   Workout,
   WorkoutSession,
   WorkoutSet,
-} from "../types";
+} from "@/types";
 import { DEFAULT_EXERCISES, DEFAULT_WORKOUTS } from "./defaults";
 import {
   normalizeCardioProfile,

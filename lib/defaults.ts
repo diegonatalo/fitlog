@@ -1,4 +1,4 @@
-import type { Exercise, LoadType, MuscleGroup, Workout } from "../types";
+import type { Exercise, LoadType, MuscleGroup, Workout } from "@/types";
 
 const BASE = Date.now();
 

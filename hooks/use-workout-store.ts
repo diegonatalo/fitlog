@@ -8,8 +8,8 @@ import type {
   Workout,
   WorkoutSession,
   WorkoutSet,
-} from "../types";
-import type { BackupData } from "../lib/schema";
+} from "@/types";
+import type { BackupData } from "@/lib/schema";
 import {
   STORAGE_KEYS,
   loadCardioProfile,
@@ -25,7 +25,7 @@ import {
   saveSets,
   saveWorkouts,
   uid,
-} from "../lib/storage";
+} from "@/lib/storage";
 import { usePersistedState } from "./use-persisted-state";
 
 export type Store = ReturnType<typeof useWorkoutStore>;

@@ -1,4 +1,4 @@
-import type { CardioProfile, Sex } from "../types";
+import type { CardioProfile, Sex } from "@/types";
 
 /**
  * Treadmill estimates. Oxygen cost comes from the ACSM walking/running

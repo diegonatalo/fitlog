@@ -5,10 +5,10 @@ import {
   TrashIcon,
   TrophyIcon,
 } from "@phosphor-icons/react";
-import type { WorkoutSet } from "../types";
-import { loadTypeMeta } from "../types";
-import { formatTime, loadParts, relativeDay } from "../lib/format";
-import { recordIds } from "../lib/stats";
+import type { WorkoutSet } from "@/types";
+import { loadTypeMeta } from "@/types";
+import { formatTime, loadParts, relativeDay } from "@/lib/format";
+import { recordIds } from "@/lib/stats";
 import { EditSetDialog } from "./edit-set-dialog";
 
 interface HistoryListProps {

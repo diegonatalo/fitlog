@@ -1,7 +1,7 @@
 import { ChartLineUpIcon } from "@phosphor-icons/react";
-import type { LoadType, WorkoutSet } from "../types";
-import { dailyBest } from "../lib/stats";
-import { formatDate, formatLoad, loadParts } from "../lib/format";
+import type { LoadType, WorkoutSet } from "@/types";
+import { dailyBest } from "@/lib/stats";
+import { formatDate, formatLoad, loadParts } from "@/lib/format";
 
 interface ProgressChartProps {
   sets: WorkoutSet[];
