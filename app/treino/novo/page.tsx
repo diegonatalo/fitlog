@@ -1,4 +1,4 @@
-import { WorkoutForm } from "@/app/treino/_components/workout-form";
+import { WorkoutForm } from "@/components/workout-form";
 
 export default function Page() {
   return <WorkoutForm />;

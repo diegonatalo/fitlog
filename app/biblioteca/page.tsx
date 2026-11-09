@@ -1,4 +1,4 @@
-import { LibraryPage } from "./library-page";
+import { LibraryPage } from "@/components/library-page";
 
 export default function Page() {
   return <LibraryPage />;
