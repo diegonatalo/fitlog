@@ -9,10 +9,10 @@ import type { LoadType } from "@/types";
 import { LOAD_TYPES } from "@/types";
 import { cn } from "@/lib/format";
 
-interface LoadTypeToggleProps {
+type LoadTypeToggleProps = {
   value: LoadType;
   onChange: (value: LoadType) => void;
-}
+};
 
 const ICONS: Record<LoadType, Icon> = {
   weight: BarbellIcon,

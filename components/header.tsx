@@ -6,7 +6,7 @@ import {
   SunIcon,
 } from "@phosphor-icons/react";
 
-interface HeaderProps {
+type HeaderProps = {
   theme: "light" | "dark";
   onToggleTheme: () => void;
   showBack: boolean;
@@ -14,7 +14,7 @@ interface HeaderProps {
   title: string;
   subtitle?: string;
   rightSlot?: ReactNode;
-}
+};
 
 export const Header = ({
   theme,

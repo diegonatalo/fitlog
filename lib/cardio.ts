@@ -13,18 +13,18 @@ const KCAL_PER_LITRE_O2 = 5;
 /** Typical adult resting heart rate, used because most people do not know theirs. */
 const RESTING_HR = 70;
 
-export interface CardioInput {
+export type CardioInput = {
   speedKmh: number;
   inclinePct: number;
   minutes: number;
-}
+};
 
-export interface Zone {
+export type Zone = {
   id: 1 | 2 | 3 | 4 | 5;
   label: string;
   /** lower bound of the zone, as a fraction of the heart-rate reserve */
   from: number;
-}
+};
 
 export const ZONES: Zone[] = [
   { id: 1, label: "Muito leve", from: 0 },
@@ -34,7 +34,7 @@ export const ZONES: Zone[] = [
   { id: 5, label: "Máxima", from: 0.9 },
 ];
 
-export interface CardioEstimate {
+export type CardioEstimate = {
   /** oxygen cost, ml/kg/min */
   vo2: number;
   kcal: number;
@@ -44,7 +44,7 @@ export interface CardioEstimate {
   /** effort as a fraction (0–1) of the heart-rate reserve */
   intensity: number;
   zone: Zone;
-}
+};
 
 /** Tanaka for men, Gulati (developed on women) for women. */
 export const maxHeartRate = (age: number, sex: Sex) =>
@@ -95,15 +95,15 @@ export function estimate(
 
 export type Metric = "kcal" | "hr";
 
-export interface CurvePoint {
+export type CurvePoint = {
   speed: number;
   value: number;
-}
+};
 
-export interface Curve {
+export type Curve = {
   incline: number;
   points: CurvePoint[];
-}
+};
 
 const BASE_INCLINES = [0, 6, 12, 18];
 
@@ -133,10 +133,10 @@ export function compare(
 
 /* ---------- Tips ---------- */
 
-export interface Tip {
+export type Tip = {
   title: string;
   text: string;
-}
+};
 
 const ZONE_TIPS: Record<Zone["id"], Tip> = {
   1: {

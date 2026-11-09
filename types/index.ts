@@ -1,6 +1,6 @@
 export type LoadType = "weight" | "plates" | "bodyweight" | "time";
 
-export interface LoadTypeMeta {
+export type LoadTypeMeta = {
   value: LoadType;
   /** short label used in the toggle */
   label: string;
@@ -14,7 +14,7 @@ export interface LoadTypeMeta {
   allowZero: boolean;
   /** time-based exercises have no repetitions */
   hasReps: boolean;
-}
+};
 
 export const LOAD_TYPES: LoadTypeMeta[] = [
   {
@@ -71,10 +71,10 @@ export type MuscleGroup =
   | "cardio"
   | "other";
 
-export interface MuscleGroupMeta {
+export type MuscleGroupMeta = {
   value: MuscleGroup;
   label: string;
-}
+};
 
 export const MUSCLE_GROUPS: MuscleGroupMeta[] = [
   { value: "chest", label: "Peito" },
@@ -93,7 +93,7 @@ export function muscleLabel(group: MuscleGroup): string {
   return MUSCLE_GROUPS.find((m) => m.value === group)?.label ?? "Outro";
 }
 
-export interface Exercise {
+export type Exercise = {
   id: string;
   name: string;
   muscleGroup: MuscleGroup;
@@ -102,9 +102,9 @@ export interface Exercise {
   /** archived exercises keep their history but disappear from the lists */
   archived?: boolean;
   createdAt: number;
-}
+};
 
-export interface WorkoutSet {
+export type WorkoutSet = {
   id: string;
   exerciseId: string;
   /** set belongs to an active/finished session when present */
@@ -116,18 +116,18 @@ export interface WorkoutSet {
   reps: number;
   note?: string;
   createdAt: number;
-}
+};
 
 /** A reusable plan: a named group of exercises done on a given day */
-export interface Workout {
+export type Workout = {
   id: string;
   name: string;
   exerciseIds: string[];
   createdAt: number;
-}
+};
 
 /** A performed instance of a workout (or a free session) */
-export interface WorkoutSession {
+export type WorkoutSession = {
   id: string;
   workoutId: string | null;
   name: string;
@@ -135,20 +135,20 @@ export interface WorkoutSession {
   /** null while the session is in progress */
   finishedAt: number | null;
   note?: string;
-}
+};
 
 /** Body data used by the treadmill calculator; saved so it is typed only once. */
 export type Sex = "male" | "female";
 
-export interface CardioProfile {
+export type CardioProfile = {
   weightKg: number;
   age: number;
   /** only used to pick the max-heart-rate formula */
   sex: Sex;
-}
+};
 
 /** A treadmill session saved from the calculator, with the estimates frozen. */
-export interface CardioSession {
+export type CardioSession = {
   id: string;
   createdAt: number;
   speedKmh: number;
@@ -157,4 +157,4 @@ export interface CardioSession {
   weightKg: number;
   kcal: number;
   avgHr: number;
-}
+};

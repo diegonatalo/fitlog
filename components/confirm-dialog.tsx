@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 
-interface ConfirmDialogProps {
+type ConfirmDialogProps = {
   title: string;
   description: string;
   confirmLabel: string;
   onCancelLabel: string;
   onConfirm: () => void;
   onCancel: () => void;
-}
+};
 
 export const ConfirmDialog = ({
   title,

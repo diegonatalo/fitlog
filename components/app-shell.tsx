@@ -10,10 +10,10 @@ import { useStore } from "@/hooks/use-store";
 import { useTheme } from "@/hooks/use-theme";
 import type { Store } from "@/hooks/use-workout-store";
 
-interface HeaderInfo {
+type HeaderInfo = {
   title: string;
   subtitle?: string;
-}
+};
 
 type Params = Record<string, string | undefined>;
 

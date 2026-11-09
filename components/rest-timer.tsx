@@ -5,11 +5,11 @@ import { cn, formatClock } from "@/lib/format";
 
 const PRESETS = [60, 90, 120, 180];
 
-interface RestTimerProps {
+type RestTimerProps = {
   /** when the rest started; changes every time a new set is saved */
   startedAt: number;
   onDismiss: () => void;
-}
+};
 
 /** Countdown that starts after each saved set and buzzes when it ends. */
 export const RestTimer = ({ startedAt, onDismiss }: RestTimerProps) => {

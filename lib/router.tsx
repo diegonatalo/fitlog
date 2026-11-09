@@ -19,9 +19,9 @@ export const Link = ({ to, ...props }: LinkProps) => {
   return <NextLink href={to} {...props} />;
 };
 
-interface NavigateOptions {
+type NavigateOptions = {
   replace?: boolean;
-}
+};
 
 export function useNavigate() {
   const router = useRouter();

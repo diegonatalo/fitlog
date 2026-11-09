@@ -151,20 +151,20 @@ export function normalizeList<T>(
 
 /* ---------- Backup file ---------- */
 
-export interface BackupData {
+export type BackupData = {
   exercises: Exercise[];
   sets: WorkoutSet[];
   workouts: Workout[];
   sessions: WorkoutSession[];
   cardioSessions: CardioSession[];
   cardioProfile: CardioProfile | null;
-}
+};
 
-interface BackupFile extends BackupData {
+type BackupFile = BackupData & {
   app: "treino-log";
   version: 1;
   exportedAt: string;
-}
+};
 
 export function buildBackup(data: BackupData): string {
   const file: BackupFile = {

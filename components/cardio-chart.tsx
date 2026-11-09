@@ -5,10 +5,10 @@ import { compare, estimate } from "@/lib/cardio";
 import type { CardioInput, Metric } from "@/lib/cardio";
 import { cn } from "@/lib/format";
 
-interface CardioChartProps {
+type CardioChartProps = {
   input: CardioInput;
   profile: CardioProfile;
-}
+};
 
 const W = 320;
 const H = 190;

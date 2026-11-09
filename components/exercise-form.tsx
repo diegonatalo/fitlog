@@ -5,7 +5,7 @@ import { MUSCLE_GROUPS } from "@/types";
 import { LoadTypeToggle } from "./load-type-toggle";
 import { cn } from "@/lib/format";
 
-interface ExerciseFormProps {
+type ExerciseFormProps = {
   /** when provided, the form edits this exercise */
   exercise?: Exercise;
   onClose: () => void;
@@ -14,7 +14,7 @@ interface ExerciseFormProps {
     muscleGroup: MuscleGroup,
     loadType: LoadType,
   ) => void;
-}
+};
 
 export const ExerciseForm = ({
   exercise,

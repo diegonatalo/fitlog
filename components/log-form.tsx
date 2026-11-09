@@ -6,13 +6,13 @@ import { LoadTypeToggle } from "./load-type-toggle";
 import { Stepper } from "./stepper";
 import { cn } from "@/lib/format";
 
-export interface SetSuggestion {
+export type SetSuggestion = {
   loadType: LoadType;
   load: number;
   reps: number;
-}
+};
 
-interface LogFormProps {
+type LogFormProps = {
   defaultLoadType: LoadType;
   /** pre-fills the inputs, usually with the last set of the exercise */
   suggestion?: SetSuggestion;
@@ -20,7 +20,7 @@ interface LogFormProps {
   onSave: (loadType: LoadType, load: number, reps: number) => boolean | void;
   /** drops the card chrome and title, for use inside another card */
   bare?: boolean;
-}
+};
 
 type Feedback = "saved" | "record" | null;
 

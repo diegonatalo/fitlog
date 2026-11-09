@@ -1,14 +1,14 @@
 import { MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import { useId } from "react";
 
-interface StepperProps {
+type StepperProps = {
   label: string;
   value: string;
   onChange: (v: string) => void;
   step: number;
   min?: number;
   placeholder?: string;
-}
+};
 
 export const Stepper = ({
   label,

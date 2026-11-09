@@ -50,10 +50,10 @@ export function isNewRecord(
   return max !== null && load > max;
 }
 
-export interface DailyBest {
+export type DailyBest = {
   day: number;
   load: number;
-}
+};
 
 /** Best load per calendar day, oldest first. */
 export function dailyBest(sets: WorkoutSet[], loadType: LoadType) {

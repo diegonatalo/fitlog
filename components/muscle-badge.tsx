@@ -2,10 +2,10 @@ import type { MuscleGroup } from "@/types";
 import { muscleLabel } from "@/types";
 import { cn } from "@/lib/format";
 
-interface MuscleBadgeProps {
+type MuscleBadgeProps = {
   group: MuscleGroup;
   size?: "sm" | "md";
-}
+};
 
 export const MuscleBadge = ({ group, size = "sm" }: MuscleBadgeProps) => {
   return (

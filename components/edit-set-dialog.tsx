@@ -4,11 +4,11 @@ import { loadTypeMeta } from "@/types";
 import { cn } from "@/lib/format";
 import { Stepper } from "./stepper";
 
-interface EditSetDialogProps {
+type EditSetDialogProps = {
   set: WorkoutSet;
   onClose: () => void;
   onSave: (patch: { load: number; reps: number; note: string }) => void;
-}
+};
 
 export const EditSetDialog = ({ set, onClose, onSave }: EditSetDialogProps) => {
   const meta = loadTypeMeta(set.loadType);

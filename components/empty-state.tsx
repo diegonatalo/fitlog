@@ -1,12 +1,12 @@
 import type { Icon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 
-interface EmptyStateProps {
+type EmptyStateProps = {
   icon: Icon;
   title: string;
   description: string;
   action?: ReactNode;
-}
+};
 
 export const EmptyState = ({
   icon: IconCmp,

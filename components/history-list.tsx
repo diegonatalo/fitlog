@@ -11,14 +11,14 @@ import { formatTime, loadParts, relativeDay } from "@/lib/format";
 import { recordIds } from "@/lib/stats";
 import { EditSetDialog } from "./edit-set-dialog";
 
-interface HistoryListProps {
+type HistoryListProps = {
   sets: WorkoutSet[];
   onRemoveSet: (id: string) => void;
   onUpdateSet: (
     id: string,
     patch: { load: number; reps: number; note: string },
   ) => void;
-}
+};
 
 export const HistoryList = ({
   sets,

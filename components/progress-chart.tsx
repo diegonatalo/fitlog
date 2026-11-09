@@ -3,10 +3,10 @@ import type { LoadType, WorkoutSet } from "@/types";
 import { dailyBest } from "@/lib/stats";
 import { formatDate, formatLoad, loadParts } from "@/lib/format";
 
-interface ProgressChartProps {
+type ProgressChartProps = {
   sets: WorkoutSet[];
   loadType: LoadType;
-}
+};
 
 const W = 320;
 const H = 120;

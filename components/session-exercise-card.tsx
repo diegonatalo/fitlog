@@ -13,7 +13,7 @@ import { EditSetDialog } from "./edit-set-dialog";
 import { LogForm } from "./log-form";
 import { MuscleBadge } from "./muscle-badge";
 
-interface SessionExerciseCardProps {
+type SessionExerciseCardProps = {
   exercise: Exercise;
   /** sets logged in the current session, oldest first */
   sets: WorkoutSet[];
@@ -25,7 +25,7 @@ interface SessionExerciseCardProps {
     patch: { load: number; reps: number; note: string },
   ) => void;
   onRemoveSet: (id: string) => void;
-}
+};
 
 export const SessionExerciseCard = ({
   exercise,
