@@ -1,4 +1,4 @@
-import { HistoryPage } from "@/components/views/history-page";
+import { HistoryPage } from "./history-page";
 
 export default function Page() {
   return <HistoryPage />;

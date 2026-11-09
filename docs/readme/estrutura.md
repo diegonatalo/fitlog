@@ -1,7 +1,7 @@
 ```text
-├── app/          rotas do Next (App Router): layout, uma pasta por tela, robots e sitemap
+├── app/          rotas do Next (App Router): layout, uma pasta por tela, robots e sitemap;
+│                 a tela de cada rota fica ao lado do page.tsx (componentes de cliente)
 ├── components/   interface reutilizável (log-form, rest-timer, progress-chart…) e StoreProvider (o estado do app, lido com useStore())
-│   └── views/    uma tela por rota (componentes de cliente, usados pelas páginas de app/)
 ├── hooks/        use-workout-store, use-persisted-state, use-theme, use-now
 ├── lib/
 │   ├── schema.ts     validação dos dados e formato do backup

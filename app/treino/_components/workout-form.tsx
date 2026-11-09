@@ -8,11 +8,11 @@ import {
   MagnifyingGlassIcon,
   XIcon,
 } from "@phosphor-icons/react";
-import { Navigate, useNavigate, useParams } from "../../lib/router";
-import { MuscleBadge } from "../muscle-badge";
-import { cn } from "../../lib/format";
-import { paths } from "../../lib/paths";
-import { useStore } from "../../hooks/use-store";
+import { Navigate, useNavigate, useParams } from "@/lib/router";
+import { MuscleBadge } from "@/components/muscle-badge";
+import { cn } from "@/lib/format";
+import { paths } from "@/lib/paths";
+import { useStore } from "@/hooks/use-store";
 
 export function WorkoutForm() {
   const store = useStore();

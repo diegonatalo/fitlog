@@ -1,4 +1,4 @@
-import { SessionScreen } from "@/components/views/session-screen";
+import { SessionScreen } from "./session-screen";
 
 export default function Page() {
   return <SessionScreen />;

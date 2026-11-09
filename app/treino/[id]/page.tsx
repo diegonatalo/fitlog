@@ -1,4 +1,4 @@
-import { WorkoutDetail } from "@/components/views/workout-detail";
+import { WorkoutDetail } from "./workout-detail";
 
 export default function Page() {
   return <WorkoutDetail />;

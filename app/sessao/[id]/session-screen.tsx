@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Navigate, useNavigate, useParams } from "../../lib/router";
+import { Navigate, useNavigate, useParams } from "@/lib/router";
 import { BarbellIcon, CheckCircleIcon } from "@phosphor-icons/react";
-import type { Exercise } from "../../types";
-import { paths } from "../../lib/paths";
-import { formatClock } from "../../lib/format";
-import { isNewRecord } from "../../lib/stats";
-import { useStore } from "../../hooks/use-store";
-import { useNow } from "../../hooks/use-now";
-import { ConfirmDialog } from "../confirm-dialog";
-import { EmptyState } from "../empty-state";
-import { RestTimer } from "../rest-timer";
-import { SessionExerciseCard } from "../session-exercise-card";
+import type { Exercise } from "@/types";
+import { paths } from "@/lib/paths";
+import { formatClock } from "@/lib/format";
+import { isNewRecord } from "@/lib/stats";
+import { useStore } from "@/hooks/use-store";
+import { useNow } from "@/hooks/use-now";
+import { ConfirmDialog } from "@/components/confirm-dialog";
+import { EmptyState } from "@/components/empty-state";
+import { RestTimer } from "@/components/rest-timer";
+import { SessionExerciseCard } from "@/components/session-exercise-card";
 
 export function SessionScreen() {
   const store = useStore();

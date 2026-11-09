@@ -8,12 +8,12 @@ import {
   PlayIcon,
   TrashIcon,
 } from "@phosphor-icons/react";
-import { Link, Navigate, useNavigate, useParams } from "../../lib/router";
-import { paths } from "../../lib/paths";
-import { useStore } from "../../hooks/use-store";
-import { MuscleBadge } from "../muscle-badge";
-import { EmptyState } from "../empty-state";
-import { ConfirmDialog } from "../confirm-dialog";
+import { Link, Navigate, useNavigate, useParams } from "@/lib/router";
+import { paths } from "@/lib/paths";
+import { useStore } from "@/hooks/use-store";
+import { MuscleBadge } from "@/components/muscle-badge";
+import { EmptyState } from "@/components/empty-state";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 
 export function WorkoutDetail() {
   const store = useStore();

@@ -7,19 +7,19 @@ import {
   PencilSimpleIcon,
   TrashIcon,
 } from "@phosphor-icons/react";
-import { Navigate, useNavigate, useParams } from "../../lib/router";
-import type { LoadType, WorkoutSet } from "../../types";
-import { loadTypeMeta } from "../../types";
-import { paths } from "../../lib/paths";
-import { formatLoad } from "../../lib/format";
-import { bestSet, estimateOneRepMax, isNewRecord } from "../../lib/stats";
-import { useStore } from "../../hooks/use-store";
-import { MuscleBadge } from "../muscle-badge";
-import { ExerciseForm } from "../exercise-form";
-import { LogForm } from "../log-form";
-import { HistoryList } from "../history-list";
-import { ProgressChart } from "../progress-chart";
-import { ConfirmDialog } from "../confirm-dialog";
+import { Navigate, useNavigate, useParams } from "@/lib/router";
+import type { LoadType, WorkoutSet } from "@/types";
+import { loadTypeMeta } from "@/types";
+import { paths } from "@/lib/paths";
+import { formatLoad } from "@/lib/format";
+import { bestSet, estimateOneRepMax, isNewRecord } from "@/lib/stats";
+import { useStore } from "@/hooks/use-store";
+import { MuscleBadge } from "@/components/muscle-badge";
+import { ExerciseForm } from "@/components/exercise-form";
+import { LogForm } from "@/components/log-form";
+import { HistoryList } from "@/components/history-list";
+import { ProgressChart } from "@/components/progress-chart";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 
 const NO_SETS: WorkoutSet[] = [];
 

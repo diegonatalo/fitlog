@@ -7,12 +7,12 @@ import {
   NotePencilIcon,
   TrashIcon,
 } from "@phosphor-icons/react";
-import { Navigate, useNavigate, useParams } from "../../lib/router";
-import type { WorkoutSet } from "../../types";
-import { formatDuration, formatSet, formatTime, relativeDay } from "../../lib/format";
-import { paths } from "../../lib/paths";
-import { useStore } from "../../hooks/use-store";
-import { ConfirmDialog } from "../confirm-dialog";
+import { Navigate, useNavigate, useParams } from "@/lib/router";
+import type { WorkoutSet } from "@/types";
+import { formatDuration, formatSet, formatTime, relativeDay } from "@/lib/format";
+import { paths } from "@/lib/paths";
+import { useStore } from "@/hooks/use-store";
+import { ConfirmDialog } from "@/components/confirm-dialog";
 
 export function SessionDetail() {
   const store = useStore();
