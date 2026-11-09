@@ -18,7 +18,7 @@ Para testar no celular, abra o endereço de rede que o `pnpm dev` mostra (o IP d
 
 ### 🔑 Variáveis de ambiente
 
-Veja [`.env.example`](.env.example). O nome antigo, `VITE_SITE_URL`, continua sendo aceito.
+Há uma só, e é opcional. Veja [`.env.example`](.env.example).
 
 | Variável | Descrição | Se não definir |
 |---|---|---|

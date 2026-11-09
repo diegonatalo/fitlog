@@ -1,11 +1,10 @@
 /**
  * URL pública do site, sem barra final. Usada nas tags Open Graph, no canonical,
- * no robots.txt e no sitemap.xml. `VITE_SITE_URL` (nome antigo) continua valendo
- * para não quebrar deploys já configurados.
+ * no robots.txt e no sitemap.xml. Para publicar em outro domínio, defina
+ * NEXT_PUBLIC_SITE_URL no build.
  */
 export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ??
-  process.env.VITE_SITE_URL ??
   "https://dn-fitlog.vercel.app"
 ).replace(/\/+$/, "");
 
