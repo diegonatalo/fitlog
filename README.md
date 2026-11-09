@@ -1,12 +1,12 @@
 <!-- Arquivo gerado pelo readme-kit. Não edite aqui: altere docs/readme/ e rode "readme-kit build". -->
 <div align="center">
 
-<img src="docs/assets/banner.svg" alt="FitLog: O diário de treino que cabe no bolso. github.com/diegonatalo/FitLog. Stack: Next.js 16, React 19, TypeScript 6, Tailwind CSS 4" width="100%" />
+<img src="docs/assets/banner.svg" alt="FitLog: O diário de treino que cabe no bolso. github.com/diegonatalo/fitlog. Stack: Next.js 16, React 19, TypeScript 6, Tailwind CSS 4" width="100%" />
 
 <br />
 
 <a href="https://dn-fitlog.vercel.app"><img src="docs/assets/btn-demo.svg" alt="Abrir o app ↗" height="46" /></a>
-<a href="https://github.com/diegonatalo/FitLog"><img src="docs/assets/btn-code.svg" alt="Código ↗" height="46" /></a>
+<a href="https://github.com/diegonatalo/fitlog"><img src="docs/assets/btn-code.svg" alt="Código ↗" height="46" /></a>
 
 <br />
 
@@ -124,8 +124,8 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 Requer [Node.js](https://nodejs.org) e [pnpm](https://pnpm.io).
 
 ```bash
-git clone https://github.com/diegonatalo/FitLog.git
-cd FitLog
+git clone https://github.com/diegonatalo/fitlog.git
+cd fitlog
 pnpm install
 pnpm dev        # http://localhost:3000
 ```

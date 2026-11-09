@@ -1,8 +1,8 @@
 Requer [Node.js](https://nodejs.org) e [pnpm](https://pnpm.io).
 
 ```bash
-git clone https://github.com/diegonatalo/FitLog.git
-cd FitLog
+git clone https://github.com/diegonatalo/fitlog.git
+cd fitlog
 pnpm install
 pnpm dev        # http://localhost:3000
 ```
