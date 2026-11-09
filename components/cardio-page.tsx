@@ -16,7 +16,7 @@ import { CardioChart } from "@/components/cardio-chart";
 import { Stepper } from "@/components/stepper";
 import { ZONES, estimate, tips } from "@/lib/cardio";
 import type { CardioInput } from "@/lib/cardio";
-import { cn } from "@/lib/format";
+import { cn } from "@/lib/cn";
 import { paths } from "@/lib/paths";
 import { useStore } from "@/hooks/use-store";
 

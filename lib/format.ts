@@ -1,10 +1,6 @@
 import type { LoadType, WorkoutSet } from "@/types";
 import { loadTypeMeta } from "@/types";
 
-export function cn(...classes: (string | false | null | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
 const dateFmt = new Intl.DateTimeFormat("pt-BR", {
   day: "2-digit",
   month: "short",

@@ -10,7 +10,7 @@ import {
 } from "@phosphor-icons/react";
 import { Navigate, useNavigate, useParams } from "@/lib/router";
 import { MuscleBadge } from "@/components/muscle-badge";
-import { cn } from "@/lib/format";
+import { cn } from "@/lib/cn";
 import { paths } from "@/lib/paths";
 import { useStore } from "@/hooks/use-store";
 

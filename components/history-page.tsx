@@ -9,7 +9,8 @@ import { Link, useSearchParams } from "@/lib/router";
 import { CardioHistory } from "@/components/cardio-history";
 import { EmptyState } from "@/components/empty-state";
 import { paths } from "@/lib/paths";
-import { cn, formatDuration, formatTime, relativeDay } from "@/lib/format";
+import { cn } from "@/lib/cn";
+import { formatDuration, formatTime, relativeDay } from "@/lib/format";
 import { useStore } from "@/hooks/use-store";
 
 type Kind = "workouts" | "cardio";

@@ -3,7 +3,7 @@ import { XIcon } from "@phosphor-icons/react";
 import type { Exercise, LoadType, MuscleGroup } from "@/types";
 import { MUSCLE_GROUPS } from "@/types";
 import { LoadTypeToggle } from "./load-type-toggle";
-import { cn } from "@/lib/format";
+import { cn } from "@/lib/cn";
 
 type ExerciseFormProps = {
   /** when provided, the form edits this exercise */

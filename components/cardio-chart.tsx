@@ -3,7 +3,7 @@ import { ChartLineIcon } from "@phosphor-icons/react";
 import type { CardioProfile } from "@/types";
 import { compare, estimate } from "@/lib/cardio";
 import type { CardioInput, Metric } from "@/lib/cardio";
-import { cn } from "@/lib/format";
+import { cn } from "@/lib/cn";
 
 type CardioChartProps = {
   input: CardioInput;

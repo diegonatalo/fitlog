@@ -4,7 +4,7 @@ import type { LoadType } from "@/types";
 import { loadTypeMeta } from "@/types";
 import { LoadTypeToggle } from "./load-type-toggle";
 import { Stepper } from "./stepper";
-import { cn } from "@/lib/format";
+import { cn } from "@/lib/cn";
 
 export type SetSuggestion = {
   loadType: LoadType;

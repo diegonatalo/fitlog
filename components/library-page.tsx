@@ -15,7 +15,8 @@ import { EmptyState } from "@/components/empty-state";
 import { MuscleBadge } from "@/components/muscle-badge";
 import { ExerciseForm } from "@/components/exercise-form";
 import { paths } from "@/lib/paths";
-import { cn, formatSet } from "@/lib/format";
+import { cn } from "@/lib/cn";
+import { formatSet } from "@/lib/format";
 import { useStore } from "@/hooks/use-store";
 
 export const LibraryPage = () => {
