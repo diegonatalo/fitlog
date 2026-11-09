@@ -109,7 +109,7 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 
 <div align="center">
 
-<img src="docs/assets/stack.svg" alt="Stack: Next.js 16, React 19, TypeScript 6, Tailwind CSS 4, PWA, Phosphor Icons, React Compiler" width="100%" />
+<img src="docs/assets/stack.svg" alt="Stack: Next.js 16, React 19, TypeScript 6, Tailwind CSS 4, PWA, Phosphor Icons" width="100%" />
 
 </div>
 
@@ -156,7 +156,6 @@ Veja [`.env.example`](.env.example). O nome antigo, `VITE_SITE_URL`, continua se
 </div>
 
 ```text
-src/
 ├── app/          rotas do Next (App Router): layout, uma pasta por tela, robots e sitemap
 ├── components/   interface reutilizável (LogForm, RestTimer, ProgressChart…)
 ├── context/      StoreProvider: o estado do app, lido com useStore()
@@ -176,7 +175,7 @@ public/           ícones, manifest, service worker e imagem Open Graph
 ```
 > [!NOTE]
 > O estado vive em um único hook (`useWorkoutStore`), servido por Context e persistido por
-> `usePersistedState`. O React Compiler está ligado, então o código evita memoização manual.
+> `usePersistedState`.
 
 <br />
 
@@ -188,10 +187,10 @@ public/           ícones, manifest, service worker e imagem Open Graph
 
 ### 🧩 Como adicionar um novo tipo de carga
 
-1. Inclua o valor em `LoadType` e uma entrada em `LOAD_TYPES`, em `src/types.ts` (rótulo, unidade, passo e se tem repetições).
-2. Associe um ícone em `ICONS`, em `src/components/LoadTypeToggle.tsx`.
-3. Se a unidade tiver formato especial, trate-a em `loadParts`, em `src/lib/format.ts`.
-4. O validador em `src/lib/schema.ts` já aceita qualquer valor de `LOAD_TYPES`.
+1. Inclua o valor em `LoadType` e uma entrada em `LOAD_TYPES`, em `types.ts` (rótulo, unidade, passo e se tem repetições).
+2. Associe um ícone em `ICONS`, em `components/LoadTypeToggle.tsx`.
+3. Se a unidade tiver formato especial, trate-a em `loadParts`, em `lib/format.ts`.
+4. O validador em `lib/schema.ts` já aceita qualquer valor de `LOAD_TYPES`.
 
 ### 🔒 Seus dados
 
@@ -226,8 +225,8 @@ Tudo fica no `localStorage` do seu navegador. Não há conta, servidor nem rastr
 Publicado na [Vercel](https://vercel.com) em [dn-fitlog.vercel.app](https://dn-fitlog.vercel.app).
 
 - A Vercel detecta o Next.js, então não há configuração extra. O acesso direto a páginas como `/biblioteca` funciona, e um endereço desconhecido volta para o início.
-- O `robots.txt` e o `sitemap.xml` vêm de `src/app/robots.ts` e `src/app/sitemap.ts`. As rotas públicas listadas no sitemap são `/`, `/biblioteca`, `/historico` e `/cardio`; sessões ativas (`/sessao/`) ficam bloqueadas no robots.
-- Ao trocar de domínio, defina `NEXT_PUBLIC_SITE_URL` (ou altere o valor padrão em `src/lib/site.ts`). Sem isso, o Open Graph, o `canonical` e o sitemap continuam apontando para o endereço antigo.
+- O `robots.txt` e o `sitemap.xml` vêm de `app/robots.ts` e `app/sitemap.ts`. As rotas públicas listadas no sitemap são `/`, `/biblioteca`, `/historico` e `/cardio`; sessões ativas (`/sessao/`) ficam bloqueadas no robots.
+- Ao trocar de domínio, defina `NEXT_PUBLIC_SITE_URL` (ou altere o valor padrão em `lib/site.ts`). Sem isso, o Open Graph, o `canonical` e o sitemap continuam apontando para o endereço antigo.
 
 ### 🧭 Próximos passos
 

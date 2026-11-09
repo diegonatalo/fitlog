@@ -1,5 +1,4 @@
 ```text
-src/
 ├── app/          rotas do Next (App Router): layout, uma pasta por tela, robots e sitemap
 ├── components/   interface reutilizável (LogForm, RestTimer, ProgressChart…)
 ├── context/      StoreProvider: o estado do app, lido com useStore()
@@ -19,4 +18,4 @@ public/           ícones, manifest, service worker e imagem Open Graph
 ```
 > [!NOTE]
 > O estado vive em um único hook (`useWorkoutStore`), servido por Context e persistido por
-> `usePersistedState`. O React Compiler está ligado, então o código evita memoização manual.
+> `usePersistedState`.
