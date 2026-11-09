@@ -4,19 +4,19 @@ import "./globals.css";
 import { Providers } from "@/components/providers";
 import { SITE_URL } from "@/lib/site";
 
-const TITULO = "FitLog | Monitore sua evolução";
-const DESCRICAO =
+const TITLE = "FitLog | Monitore sua evolução";
+const DESCRIPTION =
   "FitLog é o diário de treino que cabe no bolso: registre séries, monte treinos, bata recordes, estime calorias e frequência cardíaca na esteira e acompanhe sua evolução. Grátis, offline e sem cadastro.";
-const DESCRICAO_OG =
+const DESCRIPTION_OG =
   "Registre séries, monte treinos, bata recordes, calcule o gasto do cardio na esteira e acompanhe sua evolução. Grátis, offline e sem cadastro.";
-const DESCRICAO_TWITTER =
+const DESCRIPTION_TWITTER =
   "Registre séries, monte treinos, bata recordes, calcule o gasto do cardio na esteira e acompanhe sua evolução.";
-const ALT_IMAGEM = "FitLog: monitore sua evolução na academia";
+const IMAGE_ALT = "FitLog: monitore sua evolução na academia";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: TITULO,
-  description: DESCRICAO,
+  title: TITLE,
+  description: DESCRIPTION,
   authors: [{ name: "Diego" }],
   robots: { index: true, follow: true, "max-image-preview": "large" },
   alternates: { canonical: "/" },
@@ -39,23 +39,23 @@ export const metadata: Metadata = {
     siteName: "FitLog",
     locale: "pt_BR",
     url: "/",
-    title: TITULO,
-    description: DESCRICAO_OG,
+    title: TITLE,
+    description: DESCRIPTION_OG,
     images: [
       {
         url: "/og-image.png",
         type: "image/png",
         width: 1200,
         height: 630,
-        alt: ALT_IMAGEM,
+        alt: IMAGE_ALT,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: TITULO,
-    description: DESCRICAO_TWITTER,
-    images: [{ url: "/og-image.png", alt: ALT_IMAGEM }],
+    title: TITLE,
+    description: DESCRIPTION_TWITTER,
+    images: [{ url: "/og-image.png", alt: IMAGE_ALT }],
   },
 };
 
@@ -67,7 +67,7 @@ export const viewport: Viewport = {
 };
 
 // aplica o tema salvo antes do primeiro paint, evitando flash de tema errado
-const TEMA_ANTES_DO_PAINT = `
+const THEME_BEFORE_PAINT = `
 (function () {
   try {
     var t = localStorage.getItem("treino-log:theme:v1");
@@ -91,7 +91,7 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body>
         <Script id="tema" strategy="beforeInteractive">
-          {TEMA_ANTES_DO_PAINT}
+          {THEME_BEFORE_PAINT}
         </Script>
         <noscript>O FitLog precisa de JavaScript para funcionar.</noscript>
         <Providers>{children}</Providers>

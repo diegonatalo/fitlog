@@ -23,7 +23,7 @@ export function ExerciseForm({
 }: ExerciseFormProps) {
   const [name, setName] = useState(exercise?.name ?? "");
   const [muscleGroup, setMuscleGroup] = useState<MuscleGroup>(
-    exercise?.muscleGroup ?? "peito",
+    exercise?.muscleGroup ?? "chest",
   );
   const [loadType, setLoadType] = useState<LoadType>(
     exercise?.loadType ?? "weight",

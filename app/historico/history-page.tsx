@@ -12,16 +12,16 @@ import { paths } from "@/lib/paths";
 import { cn, formatDuration, formatTime, relativeDay } from "@/lib/format";
 import { useStore } from "@/hooks/use-store";
 
-type Kind = "treinos" | "cardio";
+type Kind = "workouts" | "cardio";
 
 const KINDS: { value: Kind; label: string }[] = [
-  { value: "treinos", label: "Treinos" },
+  { value: "workouts", label: "Treinos" },
   { value: "cardio", label: "Cardio" },
 ];
 
 export function HistoryPage() {
   const [params, setParams] = useSearchParams();
-  const kind: Kind = params.get("tipo") === "cardio" ? "cardio" : "treinos";
+  const kind: Kind = params.get("tipo") === "cardio" ? "cardio" : "workouts";
 
   const select = (next: Kind) =>
     setParams(next === "cardio" ? { tipo: "cardio" } : {}, { replace: true });

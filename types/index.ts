@@ -60,16 +60,16 @@ export function loadTypeMeta(value: LoadType): LoadTypeMeta {
 }
 
 export type MuscleGroup =
-  | "peito"
-  | "costas"
-  | "ombros"
+  | "chest"
+  | "back"
+  | "shoulders"
   | "biceps"
   | "triceps"
-  | "pernas"
-  | "gluteos"
-  | "abdomen"
+  | "legs"
+  | "glutes"
+  | "abs"
   | "cardio"
-  | "outro";
+  | "other";
 
 export interface MuscleGroupMeta {
   value: MuscleGroup;
@@ -77,16 +77,16 @@ export interface MuscleGroupMeta {
 }
 
 export const MUSCLE_GROUPS: MuscleGroupMeta[] = [
-  { value: "peito", label: "Peito" },
-  { value: "costas", label: "Costas" },
-  { value: "ombros", label: "Ombros" },
+  { value: "chest", label: "Peito" },
+  { value: "back", label: "Costas" },
+  { value: "shoulders", label: "Ombros" },
   { value: "biceps", label: "Bíceps" },
   { value: "triceps", label: "Tríceps" },
-  { value: "pernas", label: "Pernas" },
-  { value: "gluteos", label: "Glúteos" },
-  { value: "abdomen", label: "Abdômen" },
+  { value: "legs", label: "Pernas" },
+  { value: "glutes", label: "Glúteos" },
+  { value: "abs", label: "Abdômen" },
   { value: "cardio", label: "Cardio" },
-  { value: "outro", label: "Outro" },
+  { value: "other", label: "Outro" },
 ];
 
 export function muscleLabel(group: MuscleGroup): string {
