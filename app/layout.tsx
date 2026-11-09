@@ -1,8 +1,12 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+
+const inter = Inter({ subsets: ["latin"], variable: "--nf-inter", display: "swap" });
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--nf-mono", display: "swap" });
 
 const TITLE = "FitLog | Monitore sua evolução";
 const DESCRIPTION_OG =
@@ -84,7 +88,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     // a classe "dark" é aplicada pelo script abaixo, antes da hidratação
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="pt-BR" className={`${inter.variable} ${mono.variable}`} suppressHydrationWarning>
       <body>
         <Script id="tema" strategy="beforeInteractive">
           {THEME_BEFORE_PAINT}
