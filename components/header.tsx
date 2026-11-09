@@ -16,7 +16,7 @@ interface HeaderProps {
   rightSlot?: ReactNode;
 }
 
-export function Header({
+export const Header = ({
   theme,
   onToggleTheme,
   showBack,
@@ -24,7 +24,7 @@ export function Header({
   title,
   subtitle,
   rightSlot,
-}: HeaderProps) {
+}: HeaderProps) => {
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 w-full max-w-2xl items-center gap-3 px-4">
@@ -71,4 +71,4 @@ export function Header({
       </div>
     </header>
   );
-}
+};

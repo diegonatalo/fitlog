@@ -7,7 +7,7 @@ interface MuscleBadgeProps {
   size?: "sm" | "md";
 }
 
-export function MuscleBadge({ group, size = "sm" }: MuscleBadgeProps) {
+export const MuscleBadge = ({ group, size = "sm" }: MuscleBadgeProps) => {
   return (
     <span
       className={cn(
@@ -18,4 +18,4 @@ export function MuscleBadge({ group, size = "sm" }: MuscleBadgeProps) {
       {muscleLabel(group)}
     </span>
   );
-}
+};

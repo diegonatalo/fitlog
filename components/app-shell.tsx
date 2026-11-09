@@ -76,7 +76,7 @@ const HEADER_RULES: {
   },
 ];
 
-export function AppShell({ children }: { children: ReactNode }) {
+export const AppShell = ({ children }: { children: ReactNode }) => {
   const { theme, toggle: onToggleTheme } = useTheme();
   const store = useStore();
   const { pathname } = useLocation();
@@ -124,4 +124,4 @@ export function AppShell({ children }: { children: ReactNode }) {
       {isTab && <BottomNav />}
     </div>
   );
-}
+};

@@ -36,7 +36,7 @@ function parseInput(speed: string, incline: string, minutes: string) {
   return valid ? input : null;
 }
 
-export function CardioPage() {
+export const CardioPage = () => {
   const store = useStore();
   const { cardioSessions, cardioProfile: profile } = store;
   const last = cardioSessions[0];
@@ -186,9 +186,9 @@ export function CardioPage() {
       )}
     </div>
   );
-}
+};
 
-function Card({
+const Card = ({
   title,
   icon,
   children,
@@ -196,7 +196,7 @@ function Card({
   title: string;
   icon: ReactNode;
   children: ReactNode;
-}) {
+}) => {
   return (
     <section className="rounded-2xl border border-border bg-card p-4">
       <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
@@ -205,9 +205,9 @@ function Card({
       {children}
     </section>
   );
-}
+};
 
-function Stat({
+const Stat = ({
   icon,
   label,
   value,
@@ -217,7 +217,7 @@ function Stat({
   label: string;
   value: number;
   unit: string;
-}) {
+}) => {
   return (
     <div className="rounded-xl bg-muted/60 p-3">
       <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
@@ -231,4 +231,4 @@ function Stat({
       </p>
     </div>
   );
-}
+};

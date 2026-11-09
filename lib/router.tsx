@@ -15,9 +15,9 @@ import {
 
 type LinkProps = Omit<ComponentProps<typeof NextLink>, "href"> & { to: string };
 
-export function Link({ to, ...props }: LinkProps) {
+export const Link = ({ to, ...props }: LinkProps) => {
   return <NextLink href={to} {...props} />;
-}
+};
 
 interface NavigateOptions {
   replace?: boolean;
@@ -40,13 +40,13 @@ export function useNavigate() {
 }
 
 /** Redireciona assim que monta, sem deixar a tela atual no histórico. */
-export function Navigate({ to }: { to: string; replace?: boolean }) {
+export const Navigate = ({ to }: { to: string; replace?: boolean }) => {
   const router = useRouter();
   useEffect(() => {
     router.replace(to);
   }, [router, to]);
   return null;
-}
+};
 
 export function useParams(): Record<string, string | undefined> {
   const params = useNextParams<Record<string, string | undefined>>();

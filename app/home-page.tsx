@@ -15,7 +15,7 @@ import { paths } from "@/lib/paths";
 import { relativeDay, formatTime } from "@/lib/format";
 import { useStore } from "@/hooks/use-store";
 
-export function HomePage() {
+export const HomePage = () => {
   const store = useStore();
   const navigate = useNavigate();
   const { workouts, activeSession, exercises } = store;
@@ -158,4 +158,4 @@ export function HomePage() {
       )}
     </div>
   );
-}
+};

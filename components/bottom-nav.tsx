@@ -18,7 +18,7 @@ const ITEMS: { to: string; label: string; icon: typeof HouseIcon }[] = [
   { to: paths.cardio, label: "Cardio", icon: PersonSimpleRunIcon },
 ];
 
-export function BottomNav() {
+export const BottomNav = () => {
   const pathname = usePathname();
   return (
     <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/90 backdrop-blur-md">
@@ -41,4 +41,4 @@ export function BottomNav() {
       </div>
     </nav>
   );
-}
+};

@@ -10,14 +10,14 @@ interface StepperProps {
   placeholder?: string;
 }
 
-export function Stepper({
+export const Stepper = ({
   label,
   value,
   onChange,
   step,
   min = 0,
   placeholder = "0",
-}: StepperProps) {
+}: StepperProps) => {
   const id = useId();
 
   const bump = (delta: number) => {
@@ -62,4 +62,4 @@ export function Stepper({
       </div>
     </div>
   );
-}
+};

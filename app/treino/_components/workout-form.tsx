@@ -14,7 +14,7 @@ import { cn } from "@/lib/format";
 import { paths } from "@/lib/paths";
 import { useStore } from "@/hooks/use-store";
 
-export function WorkoutForm() {
+export const WorkoutForm = () => {
   const store = useStore();
   const { id } = useParams();
   const editing = id ? store.workouts.find((w) => w.id === id) : undefined;
@@ -22,9 +22,9 @@ export function WorkoutForm() {
   // remount when the edited workout changes so the form state restarts
   if (id && !editing) return <Navigate to={paths.home} replace />;
   return <WorkoutFormBody key={editing?.id ?? "new"} workoutId={editing?.id} />;
-}
+};
 
-function WorkoutFormBody({ workoutId }: { workoutId?: string }) {
+const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
   const store = useStore();
   const navigate = useNavigate();
   const editing = workoutId
@@ -226,4 +226,4 @@ function WorkoutFormBody({ workoutId }: { workoutId?: string }) {
       </button>
     </div>
   );
-}
+};

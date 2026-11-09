@@ -21,7 +21,7 @@ const ICONS: Record<LoadType, Icon> = {
   time: TimerIcon,
 };
 
-export function LoadTypeToggle({ value, onChange }: LoadTypeToggleProps) {
+export const LoadTypeToggle = ({ value, onChange }: LoadTypeToggleProps) => {
   return (
     <div
       className="grid grid-cols-2 gap-1 rounded-xl bg-muted p-1 sm:grid-cols-4"
@@ -51,4 +51,4 @@ export function LoadTypeToggle({ value, onChange }: LoadTypeToggleProps) {
       })}
     </div>
   );
-}
+};

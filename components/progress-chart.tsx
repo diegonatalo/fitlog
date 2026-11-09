@@ -14,7 +14,7 @@ const PAD = { top: 12, right: 12, bottom: 12, left: 12 };
 const MAX_POINTS = 20;
 
 /** Best load per day, as a small line chart. Needs at least two days. */
-export function ProgressChart({ sets, loadType }: ProgressChartProps) {
+export const ProgressChart = ({ sets, loadType }: ProgressChartProps) => {
   const points = dailyBest(sets, loadType).slice(-MAX_POINTS);
   if (points.length < 2) return null;
 
@@ -87,4 +87,4 @@ export function ProgressChart({ sets, loadType }: ProgressChartProps) {
       </div>
     </section>
   );
-}
+};

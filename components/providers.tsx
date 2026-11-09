@@ -4,7 +4,7 @@ import { useEffect, type ReactNode } from "react";
 import { StoreProvider } from "./store-provider";
 import { AppShell } from "./app-shell";
 
-export function Providers({ children }: { children: ReactNode }) {
+export const Providers = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // o suporte offline é opcional: falhar ao registrar não atrapalha o app
     if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
@@ -17,4 +17,4 @@ export function Providers({ children }: { children: ReactNode }) {
       <AppShell>{children}</AppShell>
     </StoreProvider>
   );
-}
+};

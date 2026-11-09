@@ -15,7 +15,7 @@ import { MuscleBadge } from "@/components/muscle-badge";
 import { EmptyState } from "@/components/empty-state";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 
-export function WorkoutDetail() {
+export const WorkoutDetail = () => {
   const store = useStore();
   const { id = "" } = useParams();
   const navigate = useNavigate();
@@ -139,4 +139,4 @@ export function WorkoutDetail() {
       )}
     </div>
   );
-}
+};

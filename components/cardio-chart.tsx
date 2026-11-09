@@ -29,7 +29,7 @@ const OTHER_COLORS = [
   "oklch(0.64 0.15 310)",
 ];
 
-export function CardioChart({ input, profile }: CardioChartProps) {
+export const CardioChart = ({ input, profile }: CardioChartProps) => {
   const [metric, setMetric] = useState<Metric>("kcal");
   const meta = METRICS.find((m) => m.value === metric) ?? METRICS[0];
 
@@ -195,7 +195,7 @@ export function CardioChart({ input, profile }: CardioChartProps) {
       </ul>
     </section>
   );
-}
+};
 
 /** Rounds a raw step up to 1, 2, 5 × 10ⁿ so axis labels stay readable. */
 function niceStep(raw: number): number {

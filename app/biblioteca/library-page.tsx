@@ -18,7 +18,7 @@ import { paths } from "@/lib/paths";
 import { cn, formatSet } from "@/lib/format";
 import { useStore } from "@/hooks/use-store";
 
-export function LibraryPage() {
+export const LibraryPage = () => {
   const store = useStore();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<MuscleGroup | "all" | "archived">(
@@ -179,9 +179,9 @@ export function LibraryPage() {
       )}
     </div>
   );
-}
+};
 
-function Chip({
+const Chip = ({
   label,
   active,
   onClick,
@@ -189,7 +189,7 @@ function Chip({
   label: string;
   active: boolean;
   onClick: () => void;
-}) {
+}) => {
   return (
     <button
       onClick={onClick}
@@ -203,4 +203,4 @@ function Chip({
       {label}
     </button>
   );
-}
+};

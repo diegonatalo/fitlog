@@ -23,7 +23,7 @@ import { ConfirmDialog } from "@/components/confirm-dialog";
 
 const NO_SETS: WorkoutSet[] = [];
 
-export function ExerciseDetail() {
+export const ExerciseDetail = () => {
   const store = useStore();
   const { id = "" } = useParams();
   const navigate = useNavigate();
@@ -179,9 +179,9 @@ export function ExerciseDetail() {
       )}
     </div>
   );
-}
+};
 
-function StatCard({
+const StatCard = ({
   label,
   value,
   sub,
@@ -191,7 +191,7 @@ function StatCard({
   value: string;
   sub?: string;
   className?: string;
-}) {
+}) => {
   return (
     <div
       className={`flex flex-col rounded-xl border border-border bg-card p-4 ${className}`}
@@ -207,4 +207,4 @@ function StatCard({
       )}
     </div>
   );
-}
+};

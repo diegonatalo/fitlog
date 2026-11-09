@@ -27,14 +27,14 @@ interface SessionExerciseCardProps {
   onRemoveSet: (id: string) => void;
 }
 
-export function SessionExerciseCard({
+export const SessionExerciseCard = ({
   exercise,
   sets,
   history,
   onAddSet,
   onUpdateSet,
   onRemoveSet,
-}: SessionExerciseCardProps) {
+}: SessionExerciseCardProps) => {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<WorkoutSet | null>(null);
   const records = recordIds(history);
@@ -142,4 +142,4 @@ export function SessionExerciseCard({
       )}
     </li>
   );
-}
+};

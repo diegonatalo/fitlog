@@ -16,11 +16,11 @@ interface ExerciseFormProps {
   ) => void;
 }
 
-export function ExerciseForm({
+export const ExerciseForm = ({
   exercise,
   onClose,
   onSubmit,
-}: ExerciseFormProps) {
+}: ExerciseFormProps) => {
   const [name, setName] = useState(exercise?.name ?? "");
   const [muscleGroup, setMuscleGroup] = useState<MuscleGroup>(
     exercise?.muscleGroup ?? "chest",
@@ -125,4 +125,4 @@ export function ExerciseForm({
       </div>
     </div>
   );
-}
+};

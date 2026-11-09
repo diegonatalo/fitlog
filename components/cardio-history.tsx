@@ -7,7 +7,7 @@ import { paths } from "@/lib/paths";
 import { formatTime, relativeDay } from "@/lib/format";
 import { useStore } from "@/hooks/use-store";
 
-export function CardioHistory() {
+export const CardioHistory = () => {
   const { cardioSessions, removeCardioSession } = useStore();
   const [toDelete, setToDelete] = useState<string | null>(null);
 
@@ -88,4 +88,4 @@ export function CardioHistory() {
       )}
     </section>
   );
-}
+};

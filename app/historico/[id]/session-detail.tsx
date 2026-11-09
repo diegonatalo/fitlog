@@ -14,7 +14,7 @@ import { paths } from "@/lib/paths";
 import { useStore } from "@/hooks/use-store";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 
-export function SessionDetail() {
+export const SessionDetail = () => {
   const store = useStore();
   const { id = "" } = useParams();
   const navigate = useNavigate();
@@ -127,9 +127,9 @@ export function SessionDetail() {
       )}
     </div>
   );
-}
+};
 
-function SummaryStat({ label, value }: { label: string; value: string }) {
+const SummaryStat = ({ label, value }: { label: string; value: string }) => {
   return (
     <div className="flex flex-col rounded-xl border border-border bg-card p-3 text-center">
       <span className="font-mono text-xl font-bold leading-none">{value}</span>
@@ -138,4 +138,4 @@ function SummaryStat({ label, value }: { label: string; value: string }) {
       </span>
     </div>
   );
-}
+};

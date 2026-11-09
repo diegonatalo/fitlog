@@ -19,7 +19,7 @@ const KINDS: { value: Kind; label: string }[] = [
   { value: "cardio", label: "Cardio" },
 ];
 
-export function HistoryPage() {
+export const HistoryPage = () => {
   const [params, setParams] = useSearchParams();
   const kind: Kind = params.get("tipo") === "cardio" ? "cardio" : "workouts";
 
@@ -53,9 +53,9 @@ export function HistoryPage() {
       {kind === "cardio" ? <CardioHistory /> : <WorkoutHistory />}
     </div>
   );
-}
+};
 
-function WorkoutHistory() {
+const WorkoutHistory = () => {
   const store = useStore();
   const { finishedSessions } = store;
 
@@ -121,4 +121,4 @@ function WorkoutHistory() {
       })}
     </ul>
   );
-}
+};

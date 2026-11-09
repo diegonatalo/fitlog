@@ -8,12 +8,12 @@ interface EmptyStateProps {
   action?: ReactNode;
 }
 
-export function EmptyState({
+export const EmptyState = ({
   icon: IconCmp,
   title,
   description,
   action,
-}: EmptyStateProps) {
+}: EmptyStateProps) => {
   return (
     <div className="flex flex-col items-center rounded-2xl border border-dashed border-border bg-card/40 px-6 py-14 text-center">
       <span className="mb-4 grid size-16 place-items-center rounded-2xl bg-muted text-muted-foreground">
@@ -26,4 +26,4 @@ export function EmptyState({
       {action && <div className="mt-5">{action}</div>}
     </div>
   );
-}
+};

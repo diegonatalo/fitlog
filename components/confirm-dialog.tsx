@@ -9,14 +9,14 @@ interface ConfirmDialogProps {
   onCancel: () => void;
 }
 
-export function ConfirmDialog({
+export const ConfirmDialog = ({
   title,
   description,
   confirmLabel,
   onCancelLabel,
   onConfirm,
   onCancel,
-}: ConfirmDialogProps) {
+}: ConfirmDialogProps) => {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onCancel();
     window.addEventListener("keydown", onKey);
@@ -55,4 +55,4 @@ export function ConfirmDialog({
       </div>
     </div>
   );
-}
+};

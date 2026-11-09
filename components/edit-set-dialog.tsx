@@ -10,7 +10,7 @@ interface EditSetDialogProps {
   onSave: (patch: { load: number; reps: number; note: string }) => void;
 }
 
-export function EditSetDialog({ set, onClose, onSave }: EditSetDialogProps) {
+export const EditSetDialog = ({ set, onClose, onSave }: EditSetDialogProps) => {
   const meta = loadTypeMeta(set.loadType);
   const [load, setLoad] = useState(String(set.load));
   const [reps, setReps] = useState(String(set.reps));
@@ -98,4 +98,4 @@ export function EditSetDialog({ set, onClose, onSave }: EditSetDialogProps) {
       </div>
     </div>
   );
-}
+};

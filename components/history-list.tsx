@@ -20,11 +20,11 @@ interface HistoryListProps {
   ) => void;
 }
 
-export function HistoryList({
+export const HistoryList = ({
   sets,
   onRemoveSet,
   onUpdateSet,
-}: HistoryListProps) {
+}: HistoryListProps) => {
   const [editing, setEditing] = useState<WorkoutSet | null>(null);
   const records = recordIds(sets);
 
@@ -128,4 +128,4 @@ export function HistoryList({
       )}
     </section>
   );
-}
+};

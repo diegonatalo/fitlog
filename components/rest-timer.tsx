@@ -12,7 +12,7 @@ interface RestTimerProps {
 }
 
 /** Countdown that starts after each saved set and buzzes when it ends. */
-export function RestTimer({ startedAt, onDismiss }: RestTimerProps) {
+export const RestTimer = ({ startedAt, onDismiss }: RestTimerProps) => {
   const [duration, setDuration] = useState(90);
   const now = useNow(250);
   const remaining = duration - (now - startedAt) / 1000;
@@ -79,4 +79,4 @@ export function RestTimer({ startedAt, onDismiss }: RestTimerProps) {
       </button>
     </div>
   );
-}
+};

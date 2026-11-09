@@ -24,12 +24,12 @@ interface LogFormProps {
 
 type Feedback = "saved" | "record" | null;
 
-export function LogForm({
+export const LogForm = ({
   defaultLoadType,
   suggestion,
   onSave,
   bare = false,
-}: LogFormProps) {
+}: LogFormProps) => {
   const [loadType, setLoadType] = useState<LoadType>(
     suggestion?.loadType ?? defaultLoadType,
   );
@@ -125,4 +125,4 @@ export function LogForm({
       </button>
     </section>
   );
-}
+};

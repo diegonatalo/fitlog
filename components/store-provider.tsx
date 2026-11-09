@@ -11,7 +11,7 @@ const noopSubscribe = () => () => {};
  * só é desenhado no navegador: no servidor (e na hidratação) sai vazio, e assim
  * o HTML e a primeira renderização do cliente sempre coincidem.
  */
-export function StoreProvider({ children }: { children: ReactNode }) {
+export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const store = useWorkoutStore();
   const isClient = useSyncExternalStore(
     noopSubscribe,
@@ -20,4 +20,4 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   );
   if (!isClient) return null;
   return <StoreContext value={store}>{children}</StoreContext>;
-}
+};

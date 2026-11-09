@@ -15,7 +15,7 @@ import { CardioProfileForm } from "@/components/cardio-profile-form";
 
 type Notice = { kind: "ok" | "error"; text: string } | null;
 
-export function SettingsPage() {
+export const SettingsPage = () => {
   const store = useStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const [notice, setNotice] = useState<Notice>(null);
@@ -149,9 +149,9 @@ export function SettingsPage() {
       )}
     </div>
   );
-}
+};
 
-function Section({
+const Section = ({
   title,
   description,
   children,
@@ -159,7 +159,7 @@ function Section({
   title: string;
   description: string;
   children: ReactNode;
-}) {
+}) => {
   return (
     <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4">
       <div>
@@ -173,9 +173,9 @@ function Section({
       {children}
     </section>
   );
-}
+};
 
-function ActionButton({
+const ActionButton = ({
   onClick,
   icon,
   children,
@@ -183,7 +183,7 @@ function ActionButton({
   onClick: () => void;
   icon: ReactNode;
   children: ReactNode;
-}) {
+}) => {
   return (
     <button
       onClick={onClick}
@@ -193,4 +193,4 @@ function ActionButton({
       {children}
     </button>
   );
-}
+};

@@ -26,7 +26,7 @@ function parse(
 }
 
 /** Body data for the cardio estimates; saves as soon as everything is valid. */
-export function CardioProfileForm() {
+export const CardioProfileForm = () => {
   const { cardioProfile, saveCardioProfile } = useStore();
   const [weight, setWeight] = useState(
     cardioProfile ? String(cardioProfile.weightKg) : "",
@@ -87,4 +87,4 @@ export function CardioProfileForm() {
       </div>
     </div>
   );
-}
+};

@@ -14,7 +14,7 @@ import { EmptyState } from "@/components/empty-state";
 import { RestTimer } from "@/components/rest-timer";
 import { SessionExerciseCard } from "@/components/session-exercise-card";
 
-export function SessionScreen() {
+export const SessionScreen = () => {
   const store = useStore();
   const { id = "" } = useParams();
   const navigate = useNavigate();
@@ -155,4 +155,4 @@ export function SessionScreen() {
       )}
     </div>
   );
-}
+};
