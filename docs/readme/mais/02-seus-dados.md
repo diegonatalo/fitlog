@@ -4,7 +4,7 @@ Tudo fica no `localStorage` do seu navegador. Não há conta, servidor nem rastr
 
 - Ao carregar, cada registro é validado: dados corrompidos ou editados à mão são descartados em vez de quebrar o app.
 - Abas abertas ao mesmo tempo ficam sincronizadas.
-- O app pode ser instalado e funciona offline na versão publicada (service worker).
+- O app pode ser instalado e funciona offline na versão publicada (service worker). As telas já abertas ficam guardadas; abrir pela primeira vez, sem rede, um link direto para uma tela nunca visitada leva ao início.
 
 > [!NOTE]
 > Limpar os dados do navegador apaga o histórico. Em **Ajustes**, use **Exportar backup** para

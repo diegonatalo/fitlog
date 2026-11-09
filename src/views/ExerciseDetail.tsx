@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   ArchiveIcon,
@@ -5,7 +7,7 @@ import {
   PencilSimpleIcon,
   TrashIcon,
 } from "@phosphor-icons/react";
-import { Navigate, useNavigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "../lib/router";
 import type { LoadType, WorkoutSet } from "../types";
 import { loadTypeMeta } from "../types";
 import { paths } from "../lib/paths";

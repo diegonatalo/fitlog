@@ -1,7 +1,7 @@
 <!-- Arquivo gerado pelo readme-kit. Não edite aqui: altere docs/readme/ e rode "readme-kit build". -->
 <div align="center">
 
-<img src="docs/assets/banner.svg" alt="FitLog: O diário de treino que cabe no bolso. github.com/diegonatalo/FitLog. Stack: React 19, TypeScript 6, Vite 8, Tailwind CSS 4" width="100%" />
+<img src="docs/assets/banner.svg" alt="FitLog: O diário de treino que cabe no bolso. github.com/diegonatalo/FitLog. Stack: Next.js 16, React 19, TypeScript 6, Tailwind CSS 4" width="100%" />
 
 <br />
 
@@ -10,9 +10,9 @@
 
 <br />
 
+![Next.js](https://img.shields.io/badge/Next.js_16-000000?style=flat-square&logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React_19-20232a?style=flat-square&logo=react&logoColor=61dafb)
 ![TypeScript](https://img.shields.io/badge/TypeScript_6-3178c6?style=flat-square&logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite_8-646cff?style=flat-square&logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white)
 ![PWA](https://img.shields.io/badge/PWA-instal%C3%A1vel-5a0fc8?style=flat-square&logo=pwa&logoColor=white)
 ![Dados](https://img.shields.io/badge/dados-s%C3%B3_no_seu_navegador-9fe02e?style=flat-square)
@@ -109,7 +109,7 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 
 <div align="center">
 
-<img src="docs/assets/stack.svg" alt="Stack: React 19, TypeScript 6, Vite 8, Tailwind CSS 4, PWA, React Router 8, Phosphor Icons, React Compiler" width="100%" />
+<img src="docs/assets/stack.svg" alt="Stack: Next.js 16, React 19, TypeScript 6, Tailwind CSS 4, PWA, Phosphor Icons, React Compiler" width="100%" />
 
 </div>
 
@@ -127,25 +127,25 @@ Requer [Node.js](https://nodejs.org) e [pnpm](https://pnpm.io).
 git clone https://github.com/diegonatalo/FitLog.git
 cd FitLog
 pnpm install
-pnpm dev        # http://localhost:5173
+pnpm dev        # http://localhost:3000
 ```
 
-Para testar no celular, use `pnpm dev --host` e abra o IP da sua máquina na mesma rede Wi-Fi.
+Para testar no celular, abra o endereço de rede que o `pnpm dev` mostra (o IP da sua máquina) na mesma rede Wi-Fi.
 
 | Comando | O que faz |
 |---|---|
-| `pnpm dev` | Servidor de desenvolvimento com HMR |
-| `pnpm build` | Checa os tipos e gera o build de produção em `dist/` |
-| `pnpm preview` | Serve o build de produção (o service worker só roda nele) |
+| `pnpm dev` | Servidor de desenvolvimento |
+| `pnpm build` | Checa os tipos e gera o build de produção em `.next/` |
+| `pnpm start` | Serve o build de produção (o service worker só roda nele) |
 | `pnpm lint` | Roda o ESLint |
 
 ### 🔑 Variáveis de ambiente
 
-Veja [`.env.example`](.env.example).
+Veja [`.env.example`](.env.example). O nome antigo, `VITE_SITE_URL`, continua sendo aceito.
 
 | Variável | Descrição | Se não definir |
 |---|---|---|
-| `VITE_SITE_URL` | URL pública do site, usada no `canonical`, nas tags Open Graph, no `robots.txt` e no `sitemap.xml`. Sem barra no final. | Usa `https://dn-fitlog.vercel.app` |
+| `NEXT_PUBLIC_SITE_URL` | URL pública do site, usada no `canonical`, nas tags Open Graph, no `robots.txt` e no `sitemap.xml`. Sem barra no final. | Usa `https://dn-fitlog.vercel.app` |
 
 <br />
 
@@ -157,6 +157,7 @@ Veja [`.env.example`](.env.example).
 
 ```text
 src/
+├── app/          rotas do Next (App Router): layout, uma pasta por tela, robots e sitemap
 ├── components/   interface reutilizável (LogForm, RestTimer, ProgressChart…)
 ├── context/      StoreProvider: o estado do app, lido com useStore()
 ├── hooks/        useWorkoutStore, usePersistedState, useTheme, useNow
@@ -167,8 +168,9 @@ src/
 │   ├── stats.ts      recordes, 1RM e série histórica
 │   ├── cardio.ts     calorias, FC estimada, zonas, comparação e dicas da esteira
 │   ├── format.ts     datas, durações e cargas
-│   └── paths.ts      rotas centralizadas
-├── pages/        uma tela por rota
+│   ├── paths.ts      rotas centralizadas
+│   └── router.tsx    Link, useNavigate e useParams sobre o roteador do Next
+├── views/        uma tela por rota (componentes de cliente, usados pelas páginas de app/)
 └── types.ts      modelos e metadados dos tipos de carga
 public/           ícones, manifest, service worker e imagem Open Graph
 ```
@@ -197,7 +199,7 @@ Tudo fica no `localStorage` do seu navegador. Não há conta, servidor nem rastr
 
 - Ao carregar, cada registro é validado: dados corrompidos ou editados à mão são descartados em vez de quebrar o app.
 - Abas abertas ao mesmo tempo ficam sincronizadas.
-- O app pode ser instalado e funciona offline na versão publicada (service worker).
+- O app pode ser instalado e funciona offline na versão publicada (service worker). As telas já abertas ficam guardadas; abrir pela primeira vez, sem rede, um link direto para uma tela nunca visitada leva ao início.
 
 > [!NOTE]
 > Limpar os dados do navegador apaga o histórico. Em **Ajustes**, use **Exportar backup** para
@@ -223,9 +225,9 @@ Tudo fica no `localStorage` do seu navegador. Não há conta, servidor nem rastr
 
 Publicado na [Vercel](https://vercel.com) em [dn-fitlog.vercel.app](https://dn-fitlog.vercel.app).
 
-- O `vercel.json` reescreve todas as rotas para `index.html`, o que mantém funcionando o acesso direto a páginas como `/biblioteca`.
-- O `robots.txt` e o `sitemap.xml` são gerados na build, em `vite.config.ts`. As rotas públicas listadas no sitemap são `/`, `/biblioteca`, `/historico` e `/cardio`; sessões ativas (`/sessao/`) ficam bloqueadas no robots.
-- Ao trocar de domínio, defina `VITE_SITE_URL` (ou altere o valor padrão em `vite.config.ts`). Sem isso, o Open Graph, o `canonical` e o sitemap continuam apontando para o endereço antigo.
+- A Vercel detecta o Next.js, então não há configuração extra. O acesso direto a páginas como `/biblioteca` funciona, e um endereço desconhecido volta para o início.
+- O `robots.txt` e o `sitemap.xml` vêm de `src/app/robots.ts` e `src/app/sitemap.ts`. As rotas públicas listadas no sitemap são `/`, `/biblioteca`, `/historico` e `/cardio`; sessões ativas (`/sessao/`) ficam bloqueadas no robots.
+- Ao trocar de domínio, defina `NEXT_PUBLIC_SITE_URL` (ou altere o valor padrão em `src/lib/site.ts`). Sem isso, o Open Graph, o `canonical` e o sitemap continuam apontando para o endereço antigo.
 
 ### 🧭 Próximos passos
 

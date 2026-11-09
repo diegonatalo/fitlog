@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PersonSimpleRunIcon, TrashIcon } from "@phosphor-icons/react";
-import { Link } from "react-router";
+import { Link } from "../lib/router";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { EmptyState } from "./EmptyState";
 import { paths } from "../lib/paths";

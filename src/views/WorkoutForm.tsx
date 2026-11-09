@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo, useState } from "react";
 import {
   ArrowDownIcon,
@@ -6,7 +8,7 @@ import {
   MagnifyingGlassIcon,
   XIcon,
 } from "@phosphor-icons/react";
-import { Navigate, useNavigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "../lib/router";
 import { MuscleBadge } from "../components/MuscleBadge";
 import { cn } from "../lib/format";
 import { paths } from "../lib/paths";

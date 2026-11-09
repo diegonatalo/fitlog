@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CaretRightIcon,
   ListChecksIcon,
@@ -5,7 +7,7 @@ import {
   PlusIcon,
   PushPinIcon,
 } from "@phosphor-icons/react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "../lib/router";
 import type { MuscleGroup, Workout } from "../types";
 import { EmptyState } from "../components/EmptyState";
 import { MuscleBadge } from "../components/MuscleBadge";

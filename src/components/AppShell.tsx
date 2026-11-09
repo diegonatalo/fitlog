@@ -1,16 +1,13 @@
-import { useMemo } from "react";
+"use client";
+
+import { useMemo, type ReactNode } from "react";
 import { GearSixIcon } from "@phosphor-icons/react";
-import {
-  Link,
-  Outlet,
-  matchPath,
-  useLocation,
-  useNavigate,
-} from "react-router";
+import { Link, matchPath, useLocation, useNavigate } from "../lib/router";
 import { Header } from "./Header";
 import { BottomNav } from "./BottomNav";
 import { patterns, paths, tabPatterns } from "../lib/paths";
 import { useStore } from "../hooks/useStore";
+import { useTheme } from "../hooks/useTheme";
 import type { Store } from "../hooks/useWorkoutStore";
 
 interface HeaderInfo {
@@ -79,12 +76,8 @@ const HEADER_RULES: {
   },
 ];
 
-interface LayoutProps {
-  theme: "dark" | "light";
-  onToggleTheme: () => void;
-}
-
-export function Layout({ theme, onToggleTheme }: LayoutProps) {
+export function AppShell({ children }: { children: ReactNode }) {
+  const { theme, toggle: onToggleTheme } = useTheme();
   const store = useStore();
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -125,7 +118,7 @@ export function Layout({ theme, onToggleTheme }: LayoutProps) {
       />
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-28 pt-4">
-        <Outlet />
+        {children}
       </main>
 
       {isTab && <BottomNav />}

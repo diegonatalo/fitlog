@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   BarbellIcon,
@@ -6,7 +8,7 @@ import {
   PlayIcon,
   TrashIcon,
 } from "@phosphor-icons/react";
-import { Link, Navigate, useNavigate, useParams } from "react-router";
+import { Link, Navigate, useNavigate, useParams } from "../lib/router";
 import { paths } from "../lib/paths";
 import { useStore } from "../hooks/useStore";
 import { MuscleBadge } from "../components/MuscleBadge";

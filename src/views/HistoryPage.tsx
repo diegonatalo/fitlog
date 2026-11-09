@@ -1,9 +1,11 @@
+"use client";
+
 import {
   CaretRightIcon,
   ClockCounterClockwiseIcon,
   ListChecksIcon,
 } from "@phosphor-icons/react";
-import { Link, useSearchParams } from "react-router";
+import { Link, useSearchParams } from "../lib/router";
 import { CardioHistory } from "../components/CardioHistory";
 import { EmptyState } from "../components/EmptyState";
 import { paths } from "../lib/paths";

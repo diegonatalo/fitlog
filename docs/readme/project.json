@@ -7,21 +7,18 @@
   },
   "stack": [
     {
+      "pkg": "next"
+    },
+    {
       "pkg": "react"
     },
     {
       "pkg": "typescript"
     },
     {
-      "pkg": "vite"
-    },
-    {
       "pkg": "tailwindcss"
     },
     "PWA",
-    {
-      "pkg": "react-router"
-    },
     "Phosphor Icons",
     "React Compiler"
   ],

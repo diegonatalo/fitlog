@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo, useState } from "react";
 import {
   BarbellIcon,
@@ -6,7 +8,7 @@ import {
   PlusIcon,
   XIcon,
 } from "@phosphor-icons/react";
-import { Link } from "react-router";
+import { Link } from "../lib/router";
 import type { MuscleGroup } from "../types";
 import { MUSCLE_GROUPS } from "../types";
 import { EmptyState } from "../components/EmptyState";

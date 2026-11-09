@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "../lib/router";
 import { BarbellIcon, CheckCircleIcon } from "@phosphor-icons/react";
 import type { Exercise } from "../types";
 import { paths } from "../lib/paths";

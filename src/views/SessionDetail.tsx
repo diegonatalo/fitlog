@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   BarbellIcon,
@@ -5,7 +7,7 @@ import {
   NotePencilIcon,
   TrashIcon,
 } from "@phosphor-icons/react";
-import { Navigate, useNavigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "../lib/router";
 import type { WorkoutSet } from "../types";
 import { formatDuration, formatSet, formatTime, relativeDay } from "../lib/format";
 import { paths } from "../lib/paths";
