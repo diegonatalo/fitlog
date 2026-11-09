@@ -9,4 +9,8 @@ export const SITE_URL = (
 ).replace(/\/+$/, "");
 
 /** Páginas públicas, listadas no sitemap. O resto do app são dados de cada pessoa. */
-export const PUBLIC_ROUTES = ["/", "/biblioteca", "/historico", "/cardio"];
+export const ROUTES = ["/", "/biblioteca", "/historico", "/cardio"];
+
+export const SITE_NAME = "FitLog";
+export const SITE_DESCRIPTION =
+  "FitLog é o diário de treino que cabe no bolso: registre séries, monte treinos, bata recordes, estime calorias e frequência cardíaca na esteira e acompanhe sua evolução. Grátis, offline e sem cadastro.";

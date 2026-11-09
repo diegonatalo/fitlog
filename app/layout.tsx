@@ -2,11 +2,9 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { Providers } from "@/components/providers";
-import { SITE_URL } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 const TITLE = "FitLog | Monitore sua evolução";
-const DESCRIPTION =
-  "FitLog é o diário de treino que cabe no bolso: registre séries, monte treinos, bata recordes, estime calorias e frequência cardíaca na esteira e acompanhe sua evolução. Grátis, offline e sem cadastro.";
 const DESCRIPTION_OG =
   "Registre séries, monte treinos, bata recordes, calcule o gasto do cardio na esteira e acompanhe sua evolução. Grátis, offline e sem cadastro.";
 const DESCRIPTION_TWITTER =
@@ -16,7 +14,7 @@ const IMAGE_ALT = "FitLog: monitore sua evolução na academia";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
-  description: DESCRIPTION,
+  description: SITE_DESCRIPTION,
   authors: [{ name: "Diego" }],
   robots: { index: true, follow: true, "max-image-preview": "large" },
   manifest: "/manifest.webmanifest",
@@ -35,7 +33,7 @@ export const metadata: Metadata = {
   other: { "mobile-web-app-capable": "yes" },
   openGraph: {
     type: "website",
-    siteName: "FitLog",
+    siteName: SITE_NAME,
     locale: "pt_BR",
     title: TITLE,
     description: DESCRIPTION_OG,
