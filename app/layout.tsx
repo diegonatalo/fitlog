@@ -66,7 +66,7 @@ export const viewport: Viewport = {
 const THEME_BEFORE_PAINT = `
 (function () {
   try {
-    var t = localStorage.getItem("treino-log:theme:v1");
+    var t = localStorage.getItem("fitlog:theme:v1");
     var dark =
       t === "dark" ||
       (t !== "light" && !window.matchMedia("(prefers-color-scheme: light)").matches);

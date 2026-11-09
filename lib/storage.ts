@@ -18,16 +18,16 @@ import {
 } from "./schema";
 
 export const STORAGE_KEYS = {
-  exercises: "treino-log:exercises:v1",
-  sets: "treino-log:sets:v1",
-  workouts: "treino-log:workouts:v1",
-  sessions: "treino-log:sessions:v1",
-  cardioSessions: "treino-log:cardio-sessions:v1",
-  cardioProfile: "treino-log:cardio-profile:v1",
+  exercises: "fitlog:exercises:v1",
+  sets: "fitlog:sets:v1",
+  workouts: "fitlog:workouts:v1",
+  sessions: "fitlog:sessions:v1",
+  cardioSessions: "fitlog:cardio-sessions:v1",
+  cardioProfile: "fitlog:cardio-profile:v1",
 } as const;
 
-export const THEME_KEY = "treino-log:theme:v1";
-const SCHEMA_KEY = "treino-log:schema";
+export const THEME_KEY = "fitlog:theme:v1";
+const SCHEMA_KEY = "fitlog:schema:v1";
 
 export const uid = () =>
   Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
