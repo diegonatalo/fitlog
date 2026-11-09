@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { XIcon } from "@phosphor-icons/react";
 import type { Exercise, LoadType, MuscleGroup } from "../types";
 import { MUSCLE_GROUPS } from "../types";
-import { LoadTypeToggle } from "./LoadTypeToggle";
+import { LoadTypeToggle } from "./load-type-toggle";
 import { cn } from "../lib/format";
 
 interface ExerciseFormProps {

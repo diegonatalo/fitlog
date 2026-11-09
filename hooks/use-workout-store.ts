@@ -26,7 +26,7 @@ import {
   saveWorkouts,
   uid,
 } from "../lib/storage";
-import { usePersistedState } from "./usePersistedState";
+import { usePersistedState } from "./use-persisted-state";
 
 export type Store = ReturnType<typeof useWorkoutStore>;
 

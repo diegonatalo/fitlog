@@ -9,9 +9,9 @@ import {
 import type { Exercise, LoadType, WorkoutSet } from "../types";
 import { formatLoad, formatSet } from "../lib/format";
 import { recordIds } from "../lib/stats";
-import { EditSetDialog } from "./EditSetDialog";
-import { LogForm } from "./LogForm";
-import { MuscleBadge } from "./MuscleBadge";
+import { EditSetDialog } from "./edit-set-dialog";
+import { LogForm } from "./log-form";
+import { MuscleBadge } from "./muscle-badge";
 
 interface SessionExerciseCardProps {
   exercise: Exercise;

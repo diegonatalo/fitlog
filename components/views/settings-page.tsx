@@ -7,11 +7,11 @@ import {
   UploadSimpleIcon,
 } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
-import { buildBackup, parseBackup } from "../lib/schema";
-import type { BackupData } from "../lib/schema";
-import { useStore } from "../hooks/useStore";
-import { ConfirmDialog } from "../components/ConfirmDialog";
-import { CardioProfileForm } from "../components/CardioProfileForm";
+import { buildBackup, parseBackup } from "../../lib/schema";
+import type { BackupData } from "../../lib/schema";
+import { useStore } from "../../hooks/use-store";
+import { ConfirmDialog } from "../confirm-dialog";
+import { CardioProfileForm } from "../cardio-profile-form";
 
 type Notice = { kind: "ok" | "error"; text: string } | null;
 

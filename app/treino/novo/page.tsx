@@ -1,4 +1,4 @@
-import { WorkoutForm } from "@/views/WorkoutForm";
+import { WorkoutForm } from "@/components/views/workout-form";
 
 export default function Page() {
   return <WorkoutForm />;

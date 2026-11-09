@@ -9,7 +9,7 @@ import type { WorkoutSet } from "../types";
 import { loadTypeMeta } from "../types";
 import { formatTime, loadParts, relativeDay } from "../lib/format";
 import { recordIds } from "../lib/stats";
-import { EditSetDialog } from "./EditSetDialog";
+import { EditSetDialog } from "./edit-set-dialog";
 
 interface HistoryListProps {
   sets: WorkoutSet[];

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, type ReactNode } from "react";
-import { StoreProvider } from "../context/StoreProvider";
-import { AppShell } from "./AppShell";
+import { StoreProvider } from "./store-provider";
+import { AppShell } from "./app-shell";
 
 export function Providers({ children }: { children: ReactNode }) {
   useEffect(() => {

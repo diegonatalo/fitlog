@@ -3,12 +3,12 @@
 import { useMemo, type ReactNode } from "react";
 import { GearSixIcon } from "@phosphor-icons/react";
 import { Link, matchPath, useLocation, useNavigate } from "../lib/router";
-import { Header } from "./Header";
-import { BottomNav } from "./BottomNav";
+import { Header } from "./header";
+import { BottomNav } from "./bottom-nav";
 import { patterns, paths, tabPatterns } from "../lib/paths";
-import { useStore } from "../hooks/useStore";
-import { useTheme } from "../hooks/useTheme";
-import type { Store } from "../hooks/useWorkoutStore";
+import { useStore } from "../hooks/use-store";
+import { useTheme } from "../hooks/use-theme";
+import type { Store } from "../hooks/use-workout-store";
 
 interface HeaderInfo {
   title: string;

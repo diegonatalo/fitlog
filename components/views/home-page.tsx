@@ -7,13 +7,13 @@ import {
   PlusIcon,
   PushPinIcon,
 } from "@phosphor-icons/react";
-import { Link, useNavigate } from "../lib/router";
-import type { MuscleGroup, Workout } from "../types";
-import { EmptyState } from "../components/EmptyState";
-import { MuscleBadge } from "../components/MuscleBadge";
-import { paths } from "../lib/paths";
-import { relativeDay, formatTime } from "../lib/format";
-import { useStore } from "../hooks/useStore";
+import { Link, useNavigate } from "../../lib/router";
+import type { MuscleGroup, Workout } from "../../types";
+import { EmptyState } from "../empty-state";
+import { MuscleBadge } from "../muscle-badge";
+import { paths } from "../../lib/paths";
+import { relativeDay, formatTime } from "../../lib/format";
+import { useStore } from "../../hooks/use-store";
 
 export function HomePage() {
   const store = useStore();

@@ -5,12 +5,12 @@ import {
   ClockCounterClockwiseIcon,
   ListChecksIcon,
 } from "@phosphor-icons/react";
-import { Link, useSearchParams } from "../lib/router";
-import { CardioHistory } from "../components/CardioHistory";
-import { EmptyState } from "../components/EmptyState";
-import { paths } from "../lib/paths";
-import { cn, formatDuration, formatTime, relativeDay } from "../lib/format";
-import { useStore } from "../hooks/useStore";
+import { Link, useSearchParams } from "../../lib/router";
+import { CardioHistory } from "../cardio-history";
+import { EmptyState } from "../empty-state";
+import { paths } from "../../lib/paths";
+import { cn, formatDuration, formatTime, relativeDay } from "../../lib/format";
+import { useStore } from "../../hooks/use-store";
 
 type Kind = "treinos" | "cardio";
 

@@ -8,15 +8,15 @@ import {
   PlusIcon,
   XIcon,
 } from "@phosphor-icons/react";
-import { Link } from "../lib/router";
-import type { MuscleGroup } from "../types";
-import { MUSCLE_GROUPS } from "../types";
-import { EmptyState } from "../components/EmptyState";
-import { MuscleBadge } from "../components/MuscleBadge";
-import { ExerciseForm } from "../components/ExerciseForm";
-import { paths } from "../lib/paths";
-import { cn, formatSet } from "../lib/format";
-import { useStore } from "../hooks/useStore";
+import { Link } from "../../lib/router";
+import type { MuscleGroup } from "../../types";
+import { MUSCLE_GROUPS } from "../../types";
+import { EmptyState } from "../empty-state";
+import { MuscleBadge } from "../muscle-badge";
+import { ExerciseForm } from "../exercise-form";
+import { paths } from "../../lib/paths";
+import { cn, formatSet } from "../../lib/format";
+import { useStore } from "../../hooks/use-store";
 
 export function LibraryPage() {
   const store = useStore();

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { ReactNode } from "react";
-import { Link } from "../lib/router";
+import { Link } from "../../lib/router";
 import {
   CheckIcon,
   FireIcon,
@@ -12,13 +12,13 @@ import {
   LightbulbIcon,
   PersonSimpleRunIcon,
 } from "@phosphor-icons/react";
-import { CardioChart } from "../components/CardioChart";
-import { Stepper } from "../components/Stepper";
-import { ZONES, estimate, tips } from "../lib/cardio";
-import type { CardioInput } from "../lib/cardio";
-import { cn } from "../lib/format";
-import { paths } from "../lib/paths";
-import { useStore } from "../hooks/useStore";
+import { CardioChart } from "../cardio-chart";
+import { Stepper } from "../stepper";
+import { ZONES, estimate, tips } from "../../lib/cardio";
+import type { CardioInput } from "../../lib/cardio";
+import { cn } from "../../lib/format";
+import { paths } from "../../lib/paths";
+import { useStore } from "../../hooks/use-store";
 
 function parseInput(speed: string, incline: string, minutes: string) {
   const input: CardioInput = {
