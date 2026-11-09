@@ -35,23 +35,8 @@ const optStr = (v: unknown): string | undefined => {
 const loadType = (v: unknown): LoadType =>
   LOAD_TYPES.some((t) => t.value === v) ? (v as LoadType) : "weight";
 
-// Valores salvos antes da troca de nomes (português → inglês).
-const LEGACY_MUSCLE_GROUPS: Record<string, MuscleGroup> = {
-  peito: "chest",
-  costas: "back",
-  ombros: "shoulders",
-  pernas: "legs",
-  gluteos: "glutes",
-  abdomen: "abs",
-  outro: "other",
-};
-
-const muscleGroup = (v: unknown): MuscleGroup => {
-  const value = typeof v === "string" ? (LEGACY_MUSCLE_GROUPS[v] ?? v) : v;
-  return MUSCLE_GROUPS.some((m) => m.value === value)
-    ? (value as MuscleGroup)
-    : "other";
-};
+const muscleGroup = (v: unknown): MuscleGroup =>
+  MUSCLE_GROUPS.some((m) => m.value === v) ? (v as MuscleGroup) : "other";
 
 export function normalizeExercise(v: unknown): Exercise | null {
   if (!isRecord(v)) return null;
