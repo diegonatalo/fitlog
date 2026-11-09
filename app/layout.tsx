@@ -19,7 +19,6 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   authors: [{ name: "Diego" }],
   robots: { index: true, follow: true, "max-image-preview": "large" },
-  alternates: { canonical: "/" },
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [
@@ -38,7 +37,6 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "FitLog",
     locale: "pt_BR",
-    url: "/",
     title: TITLE,
     description: DESCRIPTION_OG,
     images: [
