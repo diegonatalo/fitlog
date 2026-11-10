@@ -147,6 +147,16 @@ Há uma só, e é opcional. Veja [`.env.example`](.env.example).
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | URL pública do site, usada no `canonical`, nas tags Open Graph, no `robots.txt` e no `sitemap.xml`. Sem barra no final. | Usa `https://dn-fitlog.vercel.app` |
 
+### 🧪 Testes
+
+```bash
+pnpm test
+```
+
+Usa [Vitest](https://vitest.dev). Os testes cobrem a calculadora de cardio, as estatísticas e recordes de carga, a normalização e o schema dos dados salvos, o backup, as chaves de armazenamento e os formatadores de data e duração.
+
+Para reexecutar ao salvar: `pnpm test:watch`.
+
 <br />
 
 <div align="center">
@@ -230,13 +240,13 @@ Publicado na [Vercel](https://vercel.com) em [dn-fitlog.vercel.app](https://dn-f
 
 ### 🧭 Próximos passos
 
-- [ ] Testes automatizados (Vitest) para `lib/` e para as regras do store
+- [ ] Testes para as regras do store (hoje os testes cobrem só `lib/`)
 - [ ] Séries de aquecimento e *drop sets*
 - [ ] Medidas corporais e peso ao longo do tempo
 - [ ] Calculadora de cardio para outros equipamentos (bicicleta, elíptico)
 - [ ] Sincronização opcional entre dispositivos
 
-> Hoje não há testes automatizados nem CI, e os dados existem apenas no aparelho onde foram registrados.
+> Hoje não há CI, e os dados existem apenas no aparelho onde foram registrados.
 
 ### 📄 Créditos e licença
 
