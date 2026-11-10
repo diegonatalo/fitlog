@@ -5,15 +5,14 @@ import {
   BarbellIcon,
   CaretRightIcon,
   MagnifyingGlassIcon,
-  PlusIcon,
   XIcon,
 } from "@phosphor-icons/react";
 import { Link } from "@/lib/router";
 import type { MuscleGroup } from "@/types";
-import { MUSCLE_GROUPS } from "@/types";
+import { MUSCLE_GROUPS, equipmentMeta } from "@/types";
 import { EmptyState } from "@/components/empty-state";
 import { MuscleBadge } from "@/components/muscle-badge";
-import { ExerciseForm } from "@/components/exercise-form";
+import { EXERCISES } from "@/lib/exercises";
 import { paths } from "@/lib/paths";
 import { cn } from "@/lib/cn";
 import { formatSet } from "@/lib/format";
@@ -22,99 +21,59 @@ import { useStore } from "@/hooks/use-store";
 export const LibraryPage = () => {
   const store = useStore();
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<MuscleGroup | "all" | "archived">(
-    "all",
-  );
-  const [adding, setAdding] = useState(false);
-
-  const archivedCount = store.exercises.length - store.activeExercises.length;
-  const showingArchived = filter === "archived" && archivedCount > 0;
-
-  const usedGroups = useMemo(() => {
-    const set = new Set(store.activeExercises.map((e) => e.muscleGroup));
-    return MUSCLE_GROUPS.filter((m) => set.has(m.value));
-  }, [store.activeExercises]);
+  const [filter, setFilter] = useState<MuscleGroup | "all">("all");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return store.exercises
-      .filter((e) => Boolean(e.archived) === showingArchived)
-      .filter((e) =>
-        showingArchived || filter === "all" ? true : e.muscleGroup === filter,
-      )
+    return EXERCISES.filter((e) => filter === "all" || e.muscleGroup === filter)
       .filter((e) => (q ? e.name.toLowerCase().includes(q) : true))
       .sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
-  }, [store.exercises, query, filter, showingArchived]);
-
-  const hasExercises = store.exercises.length > 0;
+  }, [query, filter]);
 
   return (
     <div>
-      {hasExercises && (
-        <>
-          <div className="relative mb-3">
-            <MagnifyingGlassIcon
-              size={18}
-              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
-            />
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar exercício..."
-              aria-label="Buscar exercício"
-              className="w-full rounded-xl border border-input bg-background py-3 pl-11 pr-10 text-base outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"
-            />
-            {query && (
-              <button
-                onClick={() => setQuery("")}
-                aria-label="Limpar busca"
-                className="absolute right-2.5 top-1/2 grid size-7 -translate-y-1/2 place-items-center rounded-full text-muted-foreground hover:bg-muted"
-              >
-                <XIcon size={16} weight="bold" />
-              </button>
-            )}
-          </div>
-
-          <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 scrollbar-none [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:overflow-x-visible sm:px-0 sm:pb-0">
-            <Chip
-              label="Todos"
-              active={filter === "all"}
-              onClick={() => setFilter("all")}
-            />
-            {usedGroups.map((m) => (
-              <Chip
-                key={m.value}
-                label={m.label}
-                active={filter === m.value}
-                onClick={() => setFilter(m.value)}
-              />
-            ))}
-            {archivedCount > 0 && (
-              <Chip
-                label={`Arquivados (${archivedCount})`}
-                active={showingArchived}
-                onClick={() => setFilter("archived")}
-              />
-            )}
-          </div>
-        </>
-      )}
-
-      {!hasExercises ? (
-        <EmptyState
-          icon={BarbellIcon}
-          title="Sua biblioteca está vazia"
-          description="Cadastre os exercícios que você faz para começar a registrar suas séries e montar treinos."
-          action={
+        <div className="relative mb-3">
+          <MagnifyingGlassIcon
+            size={18}
+            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
+          />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Buscar exercício..."
+            aria-label="Buscar exercício"
+            className="w-full rounded-xl border border-input bg-background py-3 pl-11 pr-10 text-base outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"
+          />
+          {query && (
             <button
-              onClick={() => setAdding(true)}
-              className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-bold text-accent-foreground"
+              onClick={() => setQuery("")}
+              aria-label="Limpar busca"
+              className="absolute right-2.5 top-1/2 grid size-7 -translate-y-1/2 place-items-center rounded-full text-muted-foreground hover:bg-muted"
             >
-              <PlusIcon size={20} weight="bold" /> Novo exercício
+              <XIcon size={16} weight="bold" />
             </button>
-          }
-        />
-      ) : filtered.length === 0 ? (
+          )}
+        </div>
+
+        <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 scrollbar-none [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:overflow-x-visible sm:px-0 sm:pb-0">
+          <Chip
+            label="Todos"
+            active={filter === "all"}
+            onClick={() => setFilter("all")}
+          />
+          {MUSCLE_GROUPS.filter((m) =>
+            EXERCISES.some((e) => e.muscleGroup === m.value),
+          ).map((m) => (
+            <Chip
+              key={m.value}
+              label={m.label}
+              active={filter === m.value}
+              onClick={() => setFilter(m.value)}
+            />
+          ))}
+        </div>
+
+      {filtered.length === 0 ? (
         <EmptyState
           icon={MagnifyingGlassIcon}
           title="Nenhum exercício encontrado"
@@ -138,8 +97,11 @@ export const LibraryPage = () => {
                     <span className="mb-1 flex items-center gap-2">
                       <span className="truncate font-semibold">{ex.name}</span>
                     </span>
-                    <span className="flex items-center gap-2">
+                    <span className="flex flex-wrap items-center gap-2">
                       <MuscleBadge group={ex.muscleGroup} />
+                      <span className="text-xs text-muted-foreground">
+                        {ex.equipments.map((q) => equipmentMeta(q).label).join(" · ")}
+                      </span>
                       <span className="truncate text-xs text-muted-foreground">
                         {count === 0
                           ? "Sem registros"
@@ -159,25 +121,6 @@ export const LibraryPage = () => {
         </ul>
       )}
 
-      {hasExercises && (
-        <button
-          onClick={() => setAdding(true)}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border py-3.5 font-semibold text-muted-foreground transition-colors hover:border-accent hover:text-accent"
-        >
-          <PlusIcon size={20} weight="bold" />
-          Novo exercício
-        </button>
-      )}
-
-      {adding && (
-        <ExerciseForm
-          onClose={() => setAdding(false)}
-          onSubmit={(name, muscleGroup, loadType) => {
-            store.addExercise(name, muscleGroup, loadType);
-            setAdding(false);
-          }}
-        />
-      )}
     </div>
   );
 };

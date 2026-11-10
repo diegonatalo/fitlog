@@ -3,7 +3,6 @@ import {
   buildBackup,
   normalizeCardioProfile,
   normalizeCardioSession,
-  normalizeExercise,
   normalizeList,
   normalizeSession,
   normalizeSet,
@@ -11,44 +10,6 @@ import {
   parseBackup,
   type BackupData,
 } from "@/lib/schema";
-
-describe("normalizeExercise", () => {
-  it("mantém um exercício válido", () => {
-    expect(
-      normalizeExercise({
-        id: "e1",
-        name: "  Supino  ",
-        muscleGroup: "chest",
-        loadType: "plates",
-        archived: true,
-        createdAt: 5,
-      }),
-    ).toEqual({
-      id: "e1",
-      name: "Supino",
-      muscleGroup: "chest",
-      loadType: "plates",
-      archived: true,
-      createdAt: 5,
-    });
-  });
-
-  it("usa valores padrão para grupo e carga desconhecidos", () => {
-    const result = normalizeExercise({ id: "e1", name: "X", muscleGroup: "?", loadType: "?", createdAt: 1 });
-    expect(result).toMatchObject({ muscleGroup: "other", loadType: "weight" });
-  });
-
-  it("só marca arquivado quando é exatamente true", () => {
-    expect(normalizeExercise({ id: "e", name: "X", archived: "sim" })).not.toHaveProperty("archived");
-  });
-
-  it.each([null, "x", [], {}, { id: "e" }, { name: "X" }, { id: "e", name: "   " }])(
-    "descarta %j",
-    (value) => {
-      expect(normalizeExercise(value)).toBeNull();
-    },
-  );
-});
 
 describe("normalizeSet", () => {
   const base = { id: "s1", exerciseId: "e1", load: 40, reps: 10, loadType: "weight", createdAt: 3 };
@@ -71,6 +32,12 @@ describe("normalizeSet", () => {
   it("exige id e exercício", () => {
     expect(normalizeSet({ ...base, id: "" })).toBeNull();
     expect(normalizeSet({ ...base, exerciseId: undefined })).toBeNull();
+  });
+
+  it("mantém o equipamento válido e ignora o desconhecido", () => {
+    expect(normalizeSet({ ...base, equipment: "dumbbell" })?.equipment).toBe("dumbbell");
+    expect(normalizeSet({ ...base, equipment: "foguete" })?.equipment).toBeUndefined();
+    expect(normalizeSet(base)?.equipment).toBeUndefined();
   });
 
   it("limpa observação vazia", () => {
@@ -155,7 +122,6 @@ describe("normalizeList", () => {
 
 describe("backup", () => {
   const data: BackupData = {
-    exercises: [{ id: "e1", name: "Supino", muscleGroup: "chest", loadType: "weight", createdAt: 1 }],
     sets: [{ id: "s1", exerciseId: "e1", loadType: "weight", load: 40, reps: 10, createdAt: 2 }],
     workouts: [{ id: "w1", name: "Push", exerciseIds: ["e1"], createdAt: 3 }],
     sessions: [{ id: "ss1", workoutId: "w1", name: "Push", startedAt: 4, finishedAt: 5 }],
@@ -180,6 +146,12 @@ describe("backup", () => {
     expect(parseBackup(JSON.stringify(old))).toMatchObject({ cardioSessions: [], cardioProfile: null });
   });
 
+  it("aceita backup antigo que ainda traz exercícios, ignorando-os", () => {
+    const file = JSON.parse(buildBackup(data));
+    file.exercises = [{ id: "e1", name: "Supino" }];
+    expect(parseBackup(JSON.stringify(file))).toEqual(data);
+  });
+
   it("recusa texto que não é JSON", () => {
     expect(() => parseBackup("{quebrado")).toThrow("O arquivo não é um JSON válido.");
   });
@@ -190,7 +162,7 @@ describe("backup", () => {
   });
 
   it("recusa backup incompleto", () => {
-    expect(() => parseBackup(JSON.stringify({ app: "treino-log", exercises: [] }))).toThrow(
+    expect(() => parseBackup(JSON.stringify({ app: "treino-log", workouts: [] }))).toThrow(
       "O backup está incompleto ou corrompido.",
     );
   });

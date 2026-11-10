@@ -93,15 +93,43 @@ export function muscleLabel(group: MuscleGroup): string {
   return MUSCLE_GROUPS.find((m) => m.value === group)?.label ?? "Outro";
 }
 
+export type Equipment =
+  | "barbell"
+  | "dumbbell"
+  | "smith"
+  | "machine"
+  | "cable"
+  | "bodyweight"
+  | "time";
+
+export type EquipmentMeta = {
+  value: Equipment;
+  label: string;
+  /** how the load is entered: kg for free weights, plates for machines */
+  loadType: LoadType;
+};
+
+export const EQUIPMENT: EquipmentMeta[] = [
+  { value: "barbell", label: "Barra", loadType: "weight" },
+  { value: "dumbbell", label: "Halter", loadType: "weight" },
+  { value: "smith", label: "Smith", loadType: "weight" },
+  { value: "machine", label: "Máquina", loadType: "plates" },
+  { value: "cable", label: "Polia", loadType: "plates" },
+  { value: "bodyweight", label: "Corporal", loadType: "bodyweight" },
+  { value: "time", label: "Tempo", loadType: "time" },
+];
+
+export function equipmentMeta(value: Equipment): EquipmentMeta {
+  return EQUIPMENT.find((e) => e.value === value) ?? EQUIPMENT[0];
+}
+
+/** Built-in catalog entry; the user cannot create, edit or remove these. */
 export type Exercise = {
   id: string;
   name: string;
   muscleGroup: MuscleGroup;
-  /** default input mode for this exercise */
-  loadType: LoadType;
-  /** archived exercises keep their history but disappear from the lists */
-  archived?: boolean;
-  createdAt: number;
+  /** ways to perform it; the first one is the default */
+  equipments: Equipment[];
 };
 
 export type WorkoutSet = {
@@ -109,6 +137,8 @@ export type WorkoutSet = {
   exerciseId: string;
   /** set belongs to an active/finished session when present */
   sessionId?: string;
+  /** absent on sets logged before equipment existed */
+  equipment?: Equipment;
   loadType: LoadType;
   /** see `loadTypeMeta(loadType).unit` for the unit */
   load: number;

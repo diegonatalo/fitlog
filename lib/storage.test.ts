@@ -1,15 +1,13 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { DEFAULT_EXERCISES, DEFAULT_WORKOUTS } from "@/lib/defaults";
+import { DEFAULT_WORKOUTS } from "@/lib/defaults";
 import {
   STORAGE_KEYS,
   loadCardioProfile,
   loadCardioSessions,
-  loadExercises,
   loadSessions,
   loadSets,
   loadWorkouts,
   saveCardioProfile,
-  saveExercises,
   saveSets,
   uid,
 } from "@/lib/storage";
@@ -25,31 +23,25 @@ describe("chaves de armazenamento", () => {
   });
 });
 
-describe("loadExercises e loadWorkouts", () => {
-  it("na primeira vez gravam e devolvem os padrões", () => {
-    expect(loadExercises()).toEqual(DEFAULT_EXERCISES);
+describe("loadWorkouts", () => {
+  it("na primeira vez grava e devolve os treinos padrão", () => {
     expect(loadWorkouts()).toEqual(DEFAULT_WORKOUTS);
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.exercises)!)).toHaveLength(
-      DEFAULT_EXERCISES.length,
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.workouts)!)).toHaveLength(
+      DEFAULT_WORKOUTS.length,
     );
   });
 
-  it("leem o que foi salvo, sem voltar aos padrões", () => {
-    saveExercises([{ id: "x", name: "Meu", muscleGroup: "abs", loadType: "weight", createdAt: 1 }]);
-    expect(loadExercises().map((e) => e.id)).toEqual(["x"]);
-  });
-
-  it("descartam entradas corrompidas", () => {
+  it("lê o que foi salvo, sem voltar aos padrões", () => {
     localStorage.setItem(
-      STORAGE_KEYS.exercises,
-      JSON.stringify([{ id: "x", name: "Ok" }, { id: "" }, 7]),
+      STORAGE_KEYS.workouts,
+      JSON.stringify([{ id: "w", name: "Meu", exerciseIds: [], createdAt: 1 }]),
     );
-    expect(loadExercises().map((e) => e.id)).toEqual(["x"]);
+    expect(loadWorkouts().map((w) => w.id)).toEqual(["w"]);
   });
 
-  it("voltam aos padrões quando o JSON salvo está quebrado", () => {
-    localStorage.setItem(STORAGE_KEYS.exercises, "{quebrado");
-    expect(loadExercises()).toEqual(DEFAULT_EXERCISES);
+  it("volta aos padrões quando o JSON salvo está quebrado", () => {
+    localStorage.setItem(STORAGE_KEYS.workouts, "{quebrado");
+    expect(loadWorkouts()).toEqual(DEFAULT_WORKOUTS);
   });
 });
 

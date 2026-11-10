@@ -1,14 +1,13 @@
 import type {
   CardioProfile,
   CardioSession,
-  Exercise,
+  Equipment,
   LoadType,
-  MuscleGroup,
   Workout,
   WorkoutSession,
   WorkoutSet,
 } from "@/types";
-import { LOAD_TYPES, MUSCLE_GROUPS } from "@/types";
+import { EQUIPMENT, LOAD_TYPES } from "@/types";
 
 /**
  * Runtime validation for everything that comes from outside the app's own
@@ -35,23 +34,8 @@ const optStr = (v: unknown): string | undefined => {
 const loadType = (v: unknown): LoadType =>
   LOAD_TYPES.some((t) => t.value === v) ? (v as LoadType) : "weight";
 
-const muscleGroup = (v: unknown): MuscleGroup =>
-  MUSCLE_GROUPS.some((m) => m.value === v) ? (v as MuscleGroup) : "other";
-
-export function normalizeExercise(v: unknown): Exercise | null {
-  if (!isRecord(v)) return null;
-  const id = str(v.id);
-  const name = str(v.name)?.trim();
-  if (!id || !name) return null;
-  return {
-    id,
-    name,
-    muscleGroup: muscleGroup(v.muscleGroup),
-    loadType: loadType(v.loadType),
-    ...(v.archived === true && { archived: true }),
-    createdAt: num(v.createdAt) ?? Date.now(),
-  };
-}
+const equipment = (v: unknown): Equipment | undefined =>
+  EQUIPMENT.find((e) => e.value === v)?.value;
 
 export function normalizeSet(v: unknown): WorkoutSet | null {
   if (!isRecord(v)) return null;
@@ -64,6 +48,7 @@ export function normalizeSet(v: unknown): WorkoutSet | null {
     id,
     exerciseId,
     sessionId: str(v.sessionId) ?? undefined,
+    equipment: equipment(v.equipment),
     loadType: loadType(v.loadType),
     load,
     reps: reps !== null && reps >= 1 ? Math.round(reps) : 1,
@@ -152,7 +137,6 @@ export function normalizeList<T>(
 /* ---------- Backup file ---------- */
 
 export type BackupData = {
-  exercises: Exercise[];
   sets: WorkoutSet[];
   workouts: Workout[];
   sessions: WorkoutSession[];
@@ -187,11 +171,10 @@ export function parseBackup(text: string): BackupData {
   if (!isRecord(raw) || raw.app !== "treino-log") {
     throw new Error("Este arquivo não é um backup do FitLog.");
   }
-  const exercises = normalizeList(raw.exercises, normalizeExercise);
   const sets = normalizeList(raw.sets, normalizeSet);
   const workouts = normalizeList(raw.workouts, normalizeWorkout);
   const sessions = normalizeList(raw.sessions, normalizeSession);
-  if (!exercises || !sets || !workouts || !sessions) {
+  if (!sets || !workouts || !sessions) {
     throw new Error("O backup está incompleto ou corrompido.");
   }
   // older backups predate the cardio tab
@@ -199,7 +182,6 @@ export function parseBackup(text: string): BackupData {
     normalizeList(raw.cardioSessions, normalizeCardioSession) ?? [];
   const cardioProfile = normalizeCardioProfile(raw.cardioProfile);
   return {
-    exercises,
     sets,
     workouts,
     sessions,

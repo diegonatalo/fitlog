@@ -23,17 +23,19 @@ export function estimateOneRepMax(load: number, reps: number) {
 }
 
 /**
- * Sets that beat every earlier set of the same load type. The very first set
+ * Sets that beat every earlier set made with the same equipment (or, for
+ * sets logged before equipment existed, the same load type). The very first set
  * of an exercise is not a record, there is nothing to beat yet.
  */
 export function recordIds(sets: WorkoutSet[]) {
   const chronological = [...sets].sort((a, b) => a.createdAt - b.createdAt);
-  const maxByType = new Map<LoadType, number>();
+  const maxByKind = new Map<string, number>();
   const ids = new Set<string>();
   for (const s of chronological) {
-    const max = maxByType.get(s.loadType);
+    const kind = s.equipment ?? s.loadType;
+    const max = maxByKind.get(kind);
     if (max !== undefined && s.load > max) ids.add(s.id);
-    if (max === undefined || s.load > max) maxByType.set(s.loadType, s.load);
+    if (max === undefined || s.load > max) maxByKind.set(kind, s.load);
   }
   return ids;
 }

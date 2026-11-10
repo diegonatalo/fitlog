@@ -10,6 +10,7 @@ import {
 import { Navigate, useNavigate, useParams } from "@/lib/router";
 import type { WorkoutSet } from "@/types";
 import { formatDuration, formatSet, formatTime, relativeDay } from "@/lib/format";
+import { getExercise } from "@/lib/exercises";
 import { paths } from "@/lib/paths";
 import { useStore } from "@/hooks/use-store";
 import { ConfirmDialog } from "@/components/confirm-dialog";
@@ -34,7 +35,7 @@ export const SessionDetail = () => {
   }, {});
 
   const exerciseName = (exId: string) =>
-    store.exercises.find((e) => e.id === exId)?.name ?? "Exercício removido";
+    getExercise(exId)?.name ?? "Exercício removido";
 
   return (
     <div className="pb-24">

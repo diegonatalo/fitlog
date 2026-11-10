@@ -11,6 +11,7 @@ import { Link, useNavigate } from "@/lib/router";
 import type { MuscleGroup, Workout } from "@/types";
 import { EmptyState } from "@/components/empty-state";
 import { MuscleBadge } from "@/components/muscle-badge";
+import { getExercise } from "@/lib/exercises";
 import { paths } from "@/lib/paths";
 import { relativeDay, formatTime } from "@/lib/format";
 import { useStore } from "@/hooks/use-store";
@@ -18,14 +19,12 @@ import { useStore } from "@/hooks/use-store";
 export const HomePage = () => {
   const store = useStore();
   const navigate = useNavigate();
-  const { workouts, activeSession, exercises } = store;
-
-  const exMap = new Map(exercises.map((e) => [e.id, e]));
+  const { workouts, activeSession } = store;
 
   const workoutGroups = (wk: Workout): MuscleGroup[] => {
     const groups: MuscleGroup[] = [];
     for (const id of wk.exerciseIds) {
-      const g = exMap.get(id)?.muscleGroup;
+      const g = getExercise(id)?.muscleGroup;
       if (g && !groups.includes(g)) groups.push(g);
     }
     return groups.slice(0, 4);

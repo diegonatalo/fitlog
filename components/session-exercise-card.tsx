@@ -6,7 +6,9 @@ import {
   TrashIcon,
   TrophyIcon,
 } from "@phosphor-icons/react";
-import type { Exercise, LoadType, WorkoutSet } from "@/types";
+import type { Equipment, Exercise, WorkoutSet } from "@/types";
+import { setsForEquipment } from "@/lib/exercises";
+import { useEquipmentChoice } from "@/hooks/use-equipment-choice";
 import { formatLoad, formatSet } from "@/lib/format";
 import { recordIds } from "@/lib/stats";
 import { EditSetDialog } from "./edit-set-dialog";
@@ -19,7 +21,11 @@ type SessionExerciseCardProps = {
   sets: WorkoutSet[];
   /** previous set of this exercise, from any session, newest first */
   history: WorkoutSet[];
-  onAddSet: (loadType: LoadType, load: number, reps: number) => boolean;
+  onAddSet: (
+    equipment: Equipment,
+    load: number,
+    reps: number,
+  ) => boolean;
   onUpdateSet: (
     id: string,
     patch: { load: number; reps: number; note: string },
@@ -40,6 +46,10 @@ export const SessionExerciseCard = ({
   const records = recordIds(history);
   // the latest set of this session, or else the last one ever logged
   const last = sets[sets.length - 1] ?? history[0];
+  const [equipment, setEquipment] = useEquipmentChoice(exercise, last);
+  const lastForEquipment =
+    setsForEquipment([...sets].reverse(), exercise, equipment)[0] ??
+    setsForEquipment(history, exercise, equipment)[0];
 
   return (
     <li className="overflow-hidden rounded-2xl border border-border bg-card">
@@ -110,15 +120,16 @@ export const SessionExerciseCard = ({
         <div className="border-t border-border p-3">
           <LogForm
             bare
-            defaultLoadType={exercise.loadType}
+            equipments={exercise.equipments}
+            equipment={equipment}
+            onEquipmentChange={setEquipment}
             suggestion={
-              last && {
-                loadType: last.loadType,
-                load: last.load,
-                reps: last.reps,
+              lastForEquipment && {
+                load: lastForEquipment.load,
+                reps: lastForEquipment.reps,
               }
             }
-            onSave={onAddSet}
+            onSave={(load, reps) => onAddSet(equipment, load, reps)}
           />
         </div>
       ) : (

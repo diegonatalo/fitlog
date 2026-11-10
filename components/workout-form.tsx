@@ -10,6 +10,7 @@ import {
 } from "@phosphor-icons/react";
 import { Navigate, useNavigate, useParams } from "@/lib/router";
 import { MuscleBadge } from "@/components/muscle-badge";
+import { EXERCISES, getExercise } from "@/lib/exercises";
 import { cn } from "@/lib/cn";
 import { paths } from "@/lib/paths";
 import { useStore } from "@/hooks/use-store";
@@ -31,27 +32,21 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
     ? store.workouts.find((w) => w.id === workoutId)
     : undefined;
   const [name, setName] = useState(editing?.name ?? "");
-  // archived exercises can't be added, but ones already in the workout stay
   const [selected, setSelected] = useState<string[]>(
     editing?.exerciseIds ?? [],
   );
   const [query, setQuery] = useState("");
 
-  const exerciseById = useMemo(
-    () => new Map(store.exercises.map((e) => [e.id, e])),
-    [store.exercises],
-  );
-
   const picked = selected
-    .map((exId) => exerciseById.get(exId))
+    .map((exId) => getExercise(exId))
     .filter((e): e is NonNullable<typeof e> => Boolean(e));
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return [...store.activeExercises]
+    return [...EXERCISES]
       .sort((a, b) => a.name.localeCompare(b.name, "pt-BR"))
       .filter((e) => (q ? e.name.toLowerCase().includes(q) : true));
-  }, [store.activeExercises, query]);
+  }, [query]);
 
   const toggle = (exId: string) =>
     setSelected((prev) =>
@@ -72,7 +67,7 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
   const save = () => {
     if (!canSave) return;
     // drop ids of exercises that no longer exist
-    const exerciseIds = selected.filter((exId) => exerciseById.has(exId));
+    const exerciseIds = selected.filter((exId) => getExercise(exId));
     if (editing) {
       store.updateWorkout(editing.id, { name, exerciseIds });
       navigate(-1);
@@ -116,12 +111,7 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
                 <span className="grid size-7 shrink-0 place-items-center rounded-md bg-muted font-mono text-xs font-bold">
                   {i + 1}
                 </span>
-                <span
-                  className={cn(
-                    "min-w-0 flex-1 truncate font-semibold",
-                    ex.archived && "text-muted-foreground line-through",
-                  )}
-                >
+                <span className="min-w-0 flex-1 truncate font-semibold">
                   {ex.name}
                 </span>
                 <button
@@ -158,14 +148,7 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
           <span className="text-sm font-medium">Adicionar da biblioteca</span>
         </div>
 
-        {store.activeExercises.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-border py-8 text-center text-sm text-muted-foreground">
-            Nenhum exercício na biblioteca.
-            <br />
-            Cadastre exercícios na aba Biblioteca primeiro.
-          </p>
-        ) : (
-          <>
+        <>
             <div className="relative mb-3">
               <MagnifyingGlassIcon
                 size={18}
@@ -213,8 +196,7 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
                 );
               })}
             </ul>
-          </>
-        )}
+        </>
       </div>
 
       <button
