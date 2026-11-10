@@ -9,6 +9,7 @@ import {
 import type { ReactNode } from "react";
 import { buildBackup, parseBackup } from "@/lib/schema";
 import type { BackupData } from "@/lib/schema";
+import { EXERCISES } from "@/lib/exercises";
 import { useStore } from "@/hooks/use-store";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { CardioProfileForm } from "@/components/cardio-profile-form";
@@ -24,7 +25,6 @@ export const SettingsPage = () => {
 
   const exportBackup = () => {
     const json = buildBackup({
-      exercises: store.exercises,
       sets: store.sets,
       workouts: store.workouts,
       sessions: store.sessions,
@@ -103,7 +103,7 @@ export const SettingsPage = () => {
 
       <Section
         title="Zona de perigo"
-        description="Apaga exercícios, treinos, sessões e registros deste aparelho."
+        description="Apaga treinos, sessões e registros deste aparelho."
       >
         <button
           onClick={() => setConfirmClear(true)}
@@ -114,14 +114,14 @@ export const SettingsPage = () => {
       </Section>
 
       <p className="text-center text-xs text-muted-foreground">
-        FitLog · {store.exercises.length} exercícios · {store.sets.length}{" "}
+        FitLog · {EXERCISES.length} exercícios · {store.sets.length}{" "}
         séries · {store.finishedSessions.length} sessões
       </p>
 
       {pendingImport && (
         <ConfirmDialog
           title="Substituir seus dados?"
-          description={`O backup tem ${pendingImport.exercises.length} exercícios, ${pendingImport.workouts.length} treinos e ${pendingImport.sets.length} séries. Tudo o que está no app agora será substituído.`}
+          description={`O backup tem ${pendingImport.workouts.length} treinos e ${pendingImport.sets.length} séries. Tudo o que está no app agora será substituído.`}
           confirmLabel="Importar"
           onCancelLabel="Cancelar"
           onConfirm={() => {

@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
 import { CheckIcon, FloppyDiskIcon, TrophyIcon } from "@phosphor-icons/react";
-import type { LoadType } from "@/types";
-import { loadTypeMeta } from "@/types";
-import { LoadTypeToggle } from "./load-type-toggle";
+import type { Equipment } from "@/types";
+import { equipmentMeta, loadTypeMeta } from "@/types";
+import { EquipmentToggle } from "./equipment-toggle";
 import { Stepper } from "./stepper";
 import { cn } from "@/lib/cn";
 
 export type SetSuggestion = {
-  loadType: LoadType;
   load: number;
   reps: number;
 };
 
 type LogFormProps = {
-  defaultLoadType: LoadType;
-  /** pre-fills the inputs, usually with the last set of the exercise */
+  equipments: Equipment[];
+  equipment: Equipment;
+  onEquipmentChange: (equipment: Equipment) => void;
+  /** pre-fills the inputs, usually with the last set made with this equipment */
   suggestion?: SetSuggestion;
   /** return true when the saved set is a new personal record */
-  onSave: (loadType: LoadType, load: number, reps: number) => boolean | void;
+  onSave: (load: number, reps: number) => boolean | void;
   /** drops the card chrome and title, for use inside another card */
   bare?: boolean;
 };
@@ -25,16 +26,18 @@ type LogFormProps = {
 type Feedback = "saved" | "record" | null;
 
 export const LogForm = ({
-  defaultLoadType,
+  equipments,
+  equipment,
+  onEquipmentChange,
   suggestion,
   onSave,
   bare = false,
 }: LogFormProps) => {
-  const [loadType, setLoadType] = useState<LoadType>(
-    suggestion?.loadType ?? defaultLoadType,
-  );
-  const [load, setLoad] = useState(suggestion ? String(suggestion.load) : "");
-  const [reps, setReps] = useState(suggestion ? String(suggestion.reps) : "");
+  const initialLoad = suggestion ? String(suggestion.load) : "";
+  const initialReps = suggestion ? String(suggestion.reps) : "";
+  const [load, setLoad] = useState(initialLoad);
+  const [reps, setReps] = useState(initialReps);
+  const [seenEquipment, setSeenEquipment] = useState(equipment);
   const [feedback, setFeedback] = useState<Feedback>(null);
 
   useEffect(() => {
@@ -43,7 +46,14 @@ export const LogForm = ({
     return () => window.clearTimeout(id);
   }, [feedback]);
 
-  const meta = loadTypeMeta(loadType);
+  // switching equipment restarts the inputs from that equipment's last set
+  if (seenEquipment !== equipment) {
+    setSeenEquipment(equipment);
+    setLoad(initialLoad);
+    setReps(initialReps);
+  }
+
+  const meta = loadTypeMeta(equipmentMeta(equipment).loadType);
   const loadNum = Number.parseFloat(load);
   const repsNum = meta.hasReps ? Number.parseInt(reps, 10) : 1;
   const valid =
@@ -52,15 +62,9 @@ export const LogForm = ({
     Number.isInteger(repsNum) &&
     repsNum > 0;
 
-  const changeLoadType = (next: LoadType) => {
-    setLoadType(next);
-    setLoad("");
-    setReps("");
-  };
-
   const submit = () => {
     if (!valid) return;
-    const isRecord = onSave(loadType, loadNum, repsNum);
+    const isRecord = onSave(loadNum, repsNum);
     // values stay in place: the next set is usually close to this one
     setFeedback(isRecord ? "record" : "saved");
   };
@@ -75,7 +79,13 @@ export const LogForm = ({
         </h2>
       )}
 
-      <LoadTypeToggle value={loadType} onChange={changeLoadType} />
+      {equipments.length > 1 && (
+        <EquipmentToggle
+          options={equipments}
+          value={equipment}
+          onChange={onEquipmentChange}
+        />
+      )}
 
       <div
         className={cn(

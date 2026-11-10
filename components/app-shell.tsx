@@ -6,6 +6,7 @@ import { Link, matchPath, useLocation, useNavigate } from "@/lib/router";
 import { Header } from "./header";
 import { BottomNav } from "./bottom-nav";
 import { patterns, paths, tabPatterns } from "@/lib/paths";
+import { getExercise } from "@/lib/exercises";
 import { useStore } from "@/hooks/use-store";
 import { useTheme } from "@/hooks/use-theme";
 import type { Store } from "@/hooks/use-workout-store";
@@ -49,8 +50,8 @@ const HEADER_RULES: {
   },
   {
     pattern: patterns.exercise,
-    resolve: (p, store) => ({
-      title: store.exercises.find((e) => e.id === p.id)?.name ?? "Exercício",
+    resolve: (p) => ({
+      title: getExercise(p.id ?? "")?.name ?? "Exercício",
     }),
   },
   {

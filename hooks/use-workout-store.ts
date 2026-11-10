@@ -2,9 +2,8 @@ import { useCallback, useMemo } from "react";
 import type {
   CardioProfile,
   CardioSession,
-  Exercise,
+  Equipment,
   LoadType,
-  MuscleGroup,
   Workout,
   WorkoutSession,
   WorkoutSet,
@@ -14,13 +13,11 @@ import {
   STORAGE_KEYS,
   loadCardioProfile,
   loadCardioSessions,
-  loadExercises,
   loadSessions,
   loadSets,
   loadWorkouts,
   saveCardioProfile,
   saveCardioSessions,
-  saveExercises,
   saveSessions,
   saveSets,
   saveWorkouts,
@@ -31,11 +28,6 @@ import { usePersistedState } from "./use-persisted-state";
 export type Store = ReturnType<typeof useWorkoutStore>;
 
 export function useWorkoutStore() {
-  const [exercises, setExercises] = usePersistedState(
-    STORAGE_KEYS.exercises,
-    loadExercises,
-    saveExercises,
-  );
   const [sets, setSets] = usePersistedState(
     STORAGE_KEYS.sets,
     loadSets,
@@ -62,73 +54,11 @@ export function useWorkoutStore() {
     saveCardioProfile,
   );
 
-  /* ---------- Exercises ---------- */
-  const addExercise = useCallback(
-    (name: string, muscleGroup: MuscleGroup, loadType: LoadType) => {
-      const trimmed = name.trim();
-      if (!trimmed) return;
-      const exercise: Exercise = {
-        id: uid(),
-        name: trimmed,
-        muscleGroup,
-        loadType,
-        createdAt: Date.now(),
-      };
-      setExercises((prev) => [...prev, exercise]);
-      return exercise;
-    },
-    [setExercises],
-  );
-
-  const updateExercise = useCallback(
-    (
-      id: string,
-      patch: Partial<
-        Pick<Exercise, "name" | "muscleGroup" | "loadType" | "archived">
-      >,
-    ) => {
-      setExercises((prev) =>
-        prev.map((e) => {
-          if (e.id !== id) return e;
-          const next = { ...e, ...patch };
-          next.name = next.name.trim() || e.name;
-          if (!next.archived) delete next.archived;
-          return next;
-        }),
-      );
-    },
-    [setExercises],
-  );
-
-  const archiveExercise = useCallback(
-    (id: string) => updateExercise(id, { archived: true }),
-    [updateExercise],
-  );
-
-  const restoreExercise = useCallback(
-    (id: string) => updateExercise(id, { archived: false }),
-    [updateExercise],
-  );
-
-  /** Permanent: also drops the exercise's sets and its place in workouts. */
-  const removeExercise = useCallback(
-    (id: string) => {
-      setExercises((prev) => prev.filter((e) => e.id !== id));
-      setSets((prev) => prev.filter((s) => s.exerciseId !== id));
-      setWorkouts((prev) =>
-        prev.map((w) => ({
-          ...w,
-          exerciseIds: w.exerciseIds.filter((x) => x !== id),
-        })),
-      );
-    },
-    [setExercises, setSets, setWorkouts],
-  );
-
   /* ---------- Sets ---------- */
   const addSet = useCallback(
     (
       exerciseId: string,
+      equipment: Equipment,
       loadType: LoadType,
       load: number,
       reps: number,
@@ -138,6 +68,7 @@ export function useWorkoutStore() {
         id: uid(),
         exerciseId,
         sessionId,
+        equipment,
         loadType,
         load,
         reps,
@@ -274,7 +205,6 @@ export function useWorkoutStore() {
   /* ---------- Bulk ---------- */
   const replaceAll = useCallback(
     (data: BackupData) => {
-      setExercises(data.exercises);
       setSets(data.sets);
       setWorkouts(data.workouts);
       setSessions(data.sessions);
@@ -282,7 +212,6 @@ export function useWorkoutStore() {
       setCardioProfile(data.cardioProfile);
     },
     [
-      setExercises,
       setSets,
       setWorkouts,
       setSessions,
@@ -294,7 +223,6 @@ export function useWorkoutStore() {
   const clearAll = useCallback(
     () =>
       replaceAll({
-        exercises: [],
         sets: [],
         workouts: [],
         sessions: [],
@@ -305,11 +233,6 @@ export function useWorkoutStore() {
   );
 
   /* ---------- Derived ---------- */
-  const activeExercises = useMemo(
-    () => exercises.filter((e) => !e.archived),
-    [exercises],
-  );
-
   const setsByExercise = useMemo(() => {
     const map = new Map<string, WorkoutSet[]>();
     for (const s of sets) {
@@ -344,8 +267,6 @@ export function useWorkoutStore() {
   );
 
   return {
-    exercises,
-    activeExercises,
     sets,
     workouts,
     sessions,
@@ -358,11 +279,6 @@ export function useWorkoutStore() {
     saveCardioProfile: (profile: CardioProfile) => setCardioProfile(profile),
     addCardioSession,
     removeCardioSession,
-    addExercise,
-    updateExercise,
-    archiveExercise,
-    restoreExercise,
-    removeExercise,
     addSet,
     updateSet,
     removeSet,

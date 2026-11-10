@@ -6,7 +6,7 @@ import {
   TrophyIcon,
 } from "@phosphor-icons/react";
 import type { WorkoutSet } from "@/types";
-import { loadTypeMeta } from "@/types";
+import { equipmentMeta, loadTypeMeta } from "@/types";
 import { formatTime, loadParts, relativeDay } from "@/lib/format";
 import { recordIds } from "@/lib/stats";
 import { EditSetDialog } from "./edit-set-dialog";
@@ -87,6 +87,7 @@ export const HistoryList = ({
                     )}
                   </p>
                   <p className="text-xs text-muted-foreground">
+                    {s.equipment && `${equipmentMeta(s.equipment).label} · `}
                     {relativeDay(s.createdAt)} · {formatTime(s.createdAt)}
                   </p>
                   {s.note && (

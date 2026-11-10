@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Navigate, useNavigate, useParams } from "@/lib/router";
 import { BarbellIcon, CheckCircleIcon } from "@phosphor-icons/react";
 import type { Exercise } from "@/types";
+import { equipmentMeta } from "@/types";
+import { getExercise, setsForEquipment } from "@/lib/exercises";
 import { paths } from "@/lib/paths";
 import { formatClock } from "@/lib/format";
 import { isNewRecord } from "@/lib/stats";
@@ -32,8 +34,8 @@ export const SessionScreen = () => {
     ? store.workouts.find((w) => w.id === session.workoutId)
     : null;
   const exercises = (workout?.exerciseIds ?? [])
-    .map((exId) => store.exercises.find((e) => e.id === exId))
-    .filter((e): e is Exercise => Boolean(e) && !e?.archived);
+    .map((exId) => getExercise(exId))
+    .filter((e): e is Exercise => Boolean(e));
 
   const sessionSets = store.setsBySession.get(session.id) ?? [];
   const totalSets = sessionSets.length;
@@ -88,13 +90,18 @@ export const SessionScreen = () => {
               exercise={ex}
               sets={sessionSets.filter((s) => s.exerciseId === ex.id)}
               history={store.setsByExercise.get(ex.id) ?? []}
-              onAddSet={(loadType, load, reps) => {
+              onAddSet={(equipment, load, reps) => {
+                const loadType = equipmentMeta(equipment).loadType;
                 const record = isNewRecord(
-                  store.setsByExercise.get(ex.id) ?? [],
+                  setsForEquipment(
+                    store.setsByExercise.get(ex.id) ?? [],
+                    ex,
+                    equipment,
+                  ),
                   loadType,
                   load,
                 );
-                store.addSet(ex.id, loadType, load, reps, session.id);
+                store.addSet(ex.id, equipment, loadType, load, reps, session.id);
                 setRestStartedAt(Date.now());
                 return record;
               }}

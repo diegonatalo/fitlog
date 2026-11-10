@@ -9,6 +9,7 @@ import {
   TrashIcon,
 } from "@phosphor-icons/react";
 import { Link, Navigate, useNavigate, useParams } from "@/lib/router";
+import { getExercise } from "@/lib/exercises";
 import { paths } from "@/lib/paths";
 import { useStore } from "@/hooks/use-store";
 import { MuscleBadge } from "@/components/muscle-badge";
@@ -25,8 +26,8 @@ export const WorkoutDetail = () => {
   if (!workout) return <Navigate to={paths.home} replace />;
 
   const exercises = workout.exerciseIds
-    .map((id) => store.exercises.find((e) => e.id === id))
-    .filter((e): e is NonNullable<typeof e> => Boolean(e) && !e?.archived);
+    .map((id) => getExercise(id))
+    .filter((e): e is NonNullable<typeof e> => Boolean(e));
 
   const activeHere =
     store.activeSession && store.activeSession.workoutId === workout.id;
@@ -72,7 +73,7 @@ export const WorkoutDetail = () => {
           <EmptyState
             icon={BarbellIcon}
             title="Treino sem exercícios"
-            description="Edite o treino para adicionar exercícios da sua biblioteca."
+            description="Edite o treino para adicionar exercícios da biblioteca."
             action={
               <Link
                 to={paths.editWorkout(workout.id)}
