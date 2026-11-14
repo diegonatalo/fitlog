@@ -21,7 +21,7 @@ export const WorkoutForm = () => {
   const editing = id ? store.workouts.find((w) => w.id === id) : undefined;
 
   // remount when the edited workout changes so the form state restarts
-  if (id && !editing) return <Navigate to={paths.home} replace />;
+  if (id && !editing) return <Navigate to={paths.workouts} replace />;
   return <WorkoutFormBody key={editing?.id ?? "new"} workoutId={editing?.id} />;
 };
 

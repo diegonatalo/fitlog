@@ -9,7 +9,7 @@ export const SITE_URL = (
 ).replace(/\/+$/, "");
 
 /** Páginas públicas, listadas no sitemap. O resto do app são dados de cada pessoa. */
-export const ROUTES = ["/", "/agenda", "/biblioteca", "/historico", "/cardio"];
+export const ROUTES = ["/", "/agenda", "/treinos", "/biblioteca", "/historico", "/cardio"];
 
 export const SITE_NAME = "FitLog";
 export const SITE_DESCRIPTION =

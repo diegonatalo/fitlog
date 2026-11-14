@@ -25,7 +25,7 @@ describe("paths", () => {
     expect(tabPatterns).toEqual([
       patterns.home,
       patterns.schedule,
-      patterns.library,
+      patterns.workouts,
       patterns.history,
       patterns.cardio,
     ]);

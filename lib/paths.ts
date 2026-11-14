@@ -2,6 +2,7 @@
 export const paths = {
   home: "/",
   schedule: "/agenda",
+  workouts: "/treinos",
   library: "/biblioteca",
   history: "/historico",
   cardio: "/cardio",
@@ -18,6 +19,7 @@ export const paths = {
 export const patterns = {
   home: "/",
   schedule: "/agenda",
+  workouts: "/treinos",
   library: "/biblioteca",
   history: "/historico",
   cardio: "/cardio",
@@ -34,7 +36,7 @@ export const patterns = {
 export const tabPatterns: string[] = [
   patterns.home,
   patterns.schedule,
-  patterns.library,
+  patterns.workouts,
   patterns.history,
   patterns.cardio,
 ];
