@@ -3,11 +3,16 @@ import type {
   CardioSession,
   Equipment,
   LoadType,
+  Plan,
+  RepeatRule,
+  Schedule,
+  ScheduledDay,
   Workout,
   WorkoutSession,
   WorkoutSet,
 } from "@/types";
 import { EQUIPMENT, LOAD_TYPES } from "@/types";
+import { isDateKey } from "./dates";
 
 /**
  * Runtime validation for everything that comes from outside the app's own
@@ -126,6 +131,49 @@ export function normalizeCardioProfile(v: unknown): CardioProfile | null {
   return { weightKg, age, sex: v.sex };
 }
 
+const normalizePlan = (v: unknown): Plan | null => {
+  if (!isRecord(v)) return null;
+  if (v.type === "rest") return { type: "rest" };
+  if (v.type === "none") return { type: "none" };
+  const workoutId = str(v.workoutId);
+  return v.type === "workout" && workoutId
+    ? { type: "workout", workoutId }
+    : null;
+};
+
+export function normalizeScheduledDay(v: unknown): ScheduledDay | null {
+  if (!isRecord(v) || !isDateKey(v.date)) return null;
+  const plan = normalizePlan(v.plan);
+  return plan ? { date: v.date, plan } : null;
+}
+
+export function normalizeRepeatRule(v: unknown): RepeatRule | null {
+  if (!isRecord(v)) return null;
+  const id = str(v.id);
+  const weekday = num(v.weekday);
+  const plan = normalizePlan(v.plan);
+  if (
+    !id ||
+    !plan ||
+    !isDateKey(v.from) ||
+    weekday === null ||
+    !Number.isInteger(weekday) ||
+    weekday < 0 ||
+    weekday > 6
+  )
+    return null;
+  return { id, weekday, from: v.from, plan };
+}
+
+/** Accepts anything: a missing or broken schedule is just an empty one. */
+export function normalizeSchedule(v: unknown): Schedule {
+  if (!isRecord(v)) return { days: [], rules: [] };
+  return {
+    days: normalizeList(v.days, normalizeScheduledDay) ?? [],
+    rules: normalizeList(v.rules, normalizeRepeatRule) ?? [],
+  };
+}
+
 export function normalizeList<T>(
   raw: unknown,
   normalize: (v: unknown) => T | null,
@@ -142,6 +190,7 @@ export type BackupData = {
   sessions: WorkoutSession[];
   cardioSessions: CardioSession[];
   cardioProfile: CardioProfile | null;
+  schedule: Schedule;
 };
 
 type BackupFile = BackupData & {
@@ -181,11 +230,14 @@ export function parseBackup(text: string): BackupData {
   const cardioSessions =
     normalizeList(raw.cardioSessions, normalizeCardioSession) ?? [];
   const cardioProfile = normalizeCardioProfile(raw.cardioProfile);
+  // older backups predate the agenda
+  const schedule = normalizeSchedule(raw.schedule);
   return {
     sets,
     workouts,
     sessions,
     cardioSessions,
     cardioProfile,
+    schedule,
   };
 }

@@ -1,39 +1,77 @@
 "use client";
 
-import {
-  CaretRightIcon,
-  ListChecksIcon,
-  PlayIcon,
-  PlusIcon,
-  PushPinIcon,
-} from "@phosphor-icons/react";
+import { useMemo } from "react";
+import { CaretRightIcon, PlayIcon } from "@phosphor-icons/react";
 import { Link, useNavigate } from "@/lib/router";
-import type { MuscleGroup, Workout } from "@/types";
-import { EmptyState } from "@/components/empty-state";
-import { MuscleBadge } from "@/components/muscle-badge";
+import type { MuscleGroup } from "@/types";
+import { muscleLabel } from "@/types";
+import { dashboardStats } from "@/lib/dashboard";
+import { dateKey } from "@/lib/dates";
 import { getExercise } from "@/lib/exercises";
+import { formatTime, relativeDay } from "@/lib/format";
 import { paths } from "@/lib/paths";
-import { relativeDay, formatTime } from "@/lib/format";
+import { resolvePlan } from "@/lib/schedule";
 import { useStore } from "@/hooks/use-store";
+import { useToday } from "@/hooks/use-today";
+import { TodayCard, type TodayPlan } from "@/components/today-card";
 
 export const HomePage = () => {
   const store = useStore();
   const navigate = useNavigate();
+  const today = useToday();
   const { workouts, activeSession } = store;
 
-  const workoutGroups = (wk: Workout): MuscleGroup[] => {
+  const todayWorkout = useMemo(() => {
+    if (!today) return null;
+    const plan = resolvePlan(store.schedule, today)?.plan;
+    if (plan?.type !== "workout") return null;
+    return workouts.find((w) => w.id === plan.workoutId) ?? null;
+  }, [today, store.schedule, workouts]);
+
+  const todayPlan: TodayPlan = useMemo(() => {
+    if (!today) return null;
+    const plan = resolvePlan(store.schedule, today)?.plan;
+    if (plan?.type === "rest") return { kind: "rest" };
+    if (!todayWorkout) return null;
     const groups: MuscleGroup[] = [];
-    for (const id of wk.exerciseIds) {
+    for (const id of todayWorkout.exerciseIds) {
       const g = getExercise(id)?.muscleGroup;
       if (g && !groups.includes(g)) groups.push(g);
     }
-    return groups.slice(0, 4);
-  };
+    return {
+      kind: "workout",
+      name: todayWorkout.name,
+      exercises: todayWorkout.exerciseIds.length,
+      groups: groups.slice(0, 4),
+    };
+  }, [today, store.schedule, todayWorkout]);
 
-  const start = (wk: Workout) => {
-    const session = store.startSession(wk);
+  const doneToday = useMemo(
+    () =>
+      store.finishedSessions.some((s) => dateKey(new Date(s.startedAt)) === today),
+    [store.finishedSessions, today],
+  );
+
+  const stats = useMemo(
+    () =>
+      today
+        ? dashboardStats(
+            store.sessions,
+            store.sets,
+            today,
+            (id) => getExercise(id)?.muscleGroup,
+          )
+        : null,
+    [today, store.sessions, store.sets],
+  );
+
+  const start = (workout: typeof todayWorkout) => {
+    const session = store.startSession(workout);
     navigate(paths.session(session.id));
   };
+
+  const maxSets = stats?.muscles30[0]?.sets ?? 1;
+  const hasData = store.finishedSessions.length > 0;
 
   return (
     <div className="flex flex-col gap-4">
@@ -65,96 +103,94 @@ export const HomePage = () => {
         </Link>
       )}
 
-      <div className="flex items-baseline justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          Meus treinos
-        </h2>
-        <span className="font-mono text-xs text-muted-foreground">
-          {workouts.length}
-        </span>
-      </div>
-
-      {workouts.length === 0 ? (
-        <EmptyState
-          icon={PushPinIcon}
-          title="Monte seu primeiro treino"
-          description="Agrupe os exercícios de um dia (ex: Peito e Tríceps) em um treino para iniciar tudo com um toque."
-          action={
-            <Link
-              to={paths.newWorkout}
-              className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-bold text-accent-foreground"
-            >
-              <PlusIcon size={20} weight="bold" /> Criar treino
-            </Link>
-          }
+      {today && (
+        <TodayCard
+          plan={todayPlan}
+          doneToday={doneToday}
+          busy={!!activeSession}
+          onStart={() => start(todayWorkout)}
+          onStartFree={() => start(null)}
         />
-      ) : (
-        <ul className="flex flex-col gap-3">
-          {workouts.map((wk) => {
-            const groups = workoutGroups(wk);
-            const n = wk.exerciseIds.length;
-            return (
-              <li
-                key={wk.id}
-                className="overflow-hidden rounded-2xl border border-border bg-card"
-              >
-                <Link
-                  to={paths.workout(wk.id)}
-                  className="flex w-full items-center gap-3 p-4 text-left transition-colors hover:bg-muted/40"
-                >
-                  <span className="min-w-0 flex-1">
-                    <span className="mb-1.5 block truncate text-base font-bold">
-                      {wk.name}
-                    </span>
-                    <span className="mb-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <ListChecksIcon size={15} weight="bold" />
-                      {n} {n === 1 ? "exercício" : "exercícios"}
-                    </span>
-                    <span className="flex flex-wrap gap-1.5">
-                      {groups.length === 0 ? (
-                        <span className="text-xs text-muted-foreground">
-                          Sem exercícios ainda
-                        </span>
-                      ) : (
-                        groups.map((g) => <MuscleBadge key={g} group={g} />)
-                      )}
-                    </span>
-                  </span>
-                  <CaretRightIcon
-                    size={18}
-                    className="shrink-0 text-muted-foreground"
-                    weight="bold"
-                  />
-                </Link>
-                <div className="border-t border-border p-2">
-                  <button
-                    onClick={() => start(wk)}
-                    disabled={n === 0 || !!activeSession}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-bold text-primary-foreground transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    <PlayIcon size={18} weight="fill" />
-                    {!activeSession
-                      ? "Iniciar treino"
-                      : activeSession.workoutId === wk.id
-                        ? "Em andamento"
-                        : "Outro treino em andamento"}
-                  </button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
       )}
 
-      {workouts.length > 0 && (
-        <Link
-          to={paths.newWorkout}
-          className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border py-3.5 font-semibold text-muted-foreground transition-colors hover:border-accent hover:text-accent"
-        >
-          <PlusIcon size={20} weight="bold" />
-          Criar treino
-        </Link>
+      {stats && (
+        <section aria-label="Estatísticas" className="flex flex-col gap-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Seu progresso
+          </h2>
+
+          {!hasData && (
+            <p className="rounded-xl border border-dashed border-border p-4 text-center text-sm text-muted-foreground">
+              Termine seu primeiro treino e as estatísticas aparecem aqui.
+            </p>
+          )}
+
+          <div className="grid grid-cols-2 gap-2">
+            <Stat label="Treinos (7 dias)" value={String(stats.sessions7)} />
+            <Stat label="Treinos (30 dias)" value={String(stats.sessions30)} />
+            <Stat
+              label="Volume (7 dias)"
+              value={`${stats.volume7.toLocaleString("pt-BR")} kg`}
+            />
+            <Stat label="Recordes (30 dias)" value={String(stats.records30)} />
+            <Stat
+              label="Duração média"
+              value={stats.avgMinutes === null ? "—" : `${stats.avgMinutes} min`}
+              className="col-span-2"
+            />
+          </div>
+
+          {stats.muscles30.length > 0 && (
+            <div className="rounded-2xl border border-border bg-card p-4">
+              <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Músculos mais treinados (30 dias)
+              </h3>
+              <ul className="flex flex-col gap-2.5">
+                {stats.muscles30.slice(0, 5).map(({ group, sets }) => (
+                  <li key={group}>
+                    <div className="mb-1 flex justify-between text-sm">
+                      <span className="font-medium">{muscleLabel(group)}</span>
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {sets} {sets === 1 ? "série" : "séries"}
+                      </span>
+                    </div>
+                    <div
+                      className="h-2 overflow-hidden rounded-full bg-muted"
+                      role="presentation"
+                    >
+                      <div
+                        className="h-full rounded-full bg-accent"
+                        style={{ width: `${(sets / maxSets) * 100}%` }}
+                      />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
       )}
+    </div>
+  );
+};
+
+const Stat = ({
+  label,
+  value,
+  className = "",
+}: {
+  label: string;
+  value: string;
+  className?: string;
+}) => {
+  return (
+    <div
+      className={`flex flex-col rounded-xl border border-border bg-card p-4 ${className}`}
+    >
+      <p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">
+        {label}
+      </p>
+      <p className="font-mono text-2xl font-bold leading-none">{value}</p>
     </div>
   );
 };

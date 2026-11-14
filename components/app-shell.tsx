@@ -31,6 +31,10 @@ const HEADER_RULES: {
     resolve: () => ({ title: "FitLog", subtitle: "Seus treinos de hoje" }),
   },
   {
+    pattern: patterns.schedule,
+    resolve: () => ({ title: "Agenda", subtitle: "Organize seus treinos" }),
+  },
+  {
     pattern: patterns.library,
     resolve: () => ({ title: "Biblioteca", subtitle: "Todos os exercícios" }),
   },

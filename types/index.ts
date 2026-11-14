@@ -188,3 +188,31 @@ export type CardioSession = {
   kcal: number;
   avgHr: number;
 };
+
+/** What is planned for a day. "none" cancels a repeating day on a given date. */
+export type Plan =
+  | { type: "workout"; workoutId: string }
+  | { type: "rest" }
+  | { type: "none" };
+
+/** A plan for one specific date, as a "YYYY-MM-DD" key. */
+export type ScheduledDay = {
+  date: string;
+  plan: Plan;
+};
+
+/**
+ * Repeats a plan every `weekday` (0 = Sunday) from `from` on. A later rule for
+ * the same weekday replaces it from its own start date, so history is kept.
+ */
+export type RepeatRule = {
+  id: string;
+  weekday: number;
+  from: string;
+  plan: Plan;
+};
+
+export type Schedule = {
+  days: ScheduledDay[];
+  rules: RepeatRule[];
+};

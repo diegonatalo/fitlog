@@ -21,9 +21,10 @@ describe("paths", () => {
     expect(toRegex(patterns.sessionDetail).test(paths.sessionDetail("abc"))).toBe(true);
   });
 
-  it("as abas da barra inferior são as quatro telas principais", () => {
+  it("as abas da barra inferior são as cinco telas principais", () => {
     expect(tabPatterns).toEqual([
       patterns.home,
+      patterns.schedule,
       patterns.library,
       patterns.history,
       patterns.cardio,

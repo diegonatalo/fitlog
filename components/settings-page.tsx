@@ -30,6 +30,7 @@ export const SettingsPage = () => {
       sessions: store.sessions,
       cardioSessions: store.cardioSessions,
       cardioProfile: store.cardioProfile,
+      schedule: store.schedule,
     });
     const url = URL.createObjectURL(
       new Blob([json], { type: "application/json" }),

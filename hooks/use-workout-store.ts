@@ -4,6 +4,7 @@ import type {
   CardioSession,
   Equipment,
   LoadType,
+  Plan,
   Workout,
   WorkoutSession,
   WorkoutSet,
@@ -14,18 +15,27 @@ import {
   loadCardioProfile,
   loadCardioSessions,
   loadRestSeconds,
+  loadSchedule,
   loadSessions,
   loadSets,
   loadWorkouts,
   saveCardioProfile,
   saveCardioSessions,
   saveRestSeconds,
+  saveSchedule,
   saveSessions,
   saveSets,
   saveWorkouts,
   uid,
 } from "@/lib/storage";
 import { clampRest } from "@/lib/rest";
+import {
+  clearDay,
+  removeWorkoutFromSchedule,
+  setDayPlan,
+  setRepeat,
+  stopRepeat,
+} from "@/lib/schedule";
 import { usePersistedState } from "./use-persisted-state";
 
 export type Store = ReturnType<typeof useWorkoutStore>;
@@ -57,6 +67,11 @@ export function useWorkoutStore() {
     saveCardioProfile,
   );
 
+  const [schedule, setSchedule] = usePersistedState(
+    STORAGE_KEYS.schedule,
+    loadSchedule,
+    saveSchedule,
+  );
   const [restSeconds, setRestSecondsState] = usePersistedState(
     STORAGE_KEYS.restSeconds,
     loadRestSeconds,
@@ -142,8 +157,30 @@ export function useWorkoutStore() {
   );
 
   const removeWorkout = useCallback(
-    (id: string) => setWorkouts((prev) => prev.filter((w) => w.id !== id)),
-    [setWorkouts],
+    (id: string) => {
+      setWorkouts((prev) => prev.filter((w) => w.id !== id));
+      setSchedule((prev) => removeWorkoutFromSchedule(prev, id));
+    },
+    [setWorkouts, setSchedule],
+  );
+
+  /* ---------- Schedule ---------- */
+  const planDay = useCallback(
+    (date: string, plan: Plan, repeatWeekly: boolean) => {
+      if (plan.type === "none") {
+        setSchedule((prev) => clearDay(prev, date));
+      } else if (repeatWeekly) {
+        setSchedule((prev) => setRepeat(prev, date, plan, uid()));
+      } else {
+        setSchedule((prev) => setDayPlan(prev, date, plan));
+      }
+    },
+    [setSchedule],
+  );
+
+  const stopRepeating = useCallback(
+    (date: string) => setSchedule((prev) => stopRepeat(prev, date, uid())),
+    [setSchedule],
   );
 
   /* ---------- Sessions ---------- */
@@ -223,6 +260,7 @@ export function useWorkoutStore() {
       setSessions(data.sessions);
       setCardioSessions(data.cardioSessions);
       setCardioProfile(data.cardioProfile);
+      setSchedule(data.schedule);
     },
     [
       setSets,
@@ -230,6 +268,7 @@ export function useWorkoutStore() {
       setSessions,
       setCardioSessions,
       setCardioProfile,
+      setSchedule,
     ],
   );
 
@@ -241,6 +280,7 @@ export function useWorkoutStore() {
         sessions: [],
         cardioSessions: [],
         cardioProfile: null,
+        schedule: { days: [], rules: [] },
       }),
     [replaceAll],
   );
@@ -287,6 +327,9 @@ export function useWorkoutStore() {
     setsBySession,
     activeSession,
     finishedSessions,
+    schedule,
+    planDay,
+    stopRepeating,
     restSeconds,
     setRestSeconds,
     cardioSessions,

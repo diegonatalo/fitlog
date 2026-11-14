@@ -1,6 +1,7 @@
 import type {
   CardioProfile,
   CardioSession,
+  Schedule,
   Workout,
   WorkoutSession,
   WorkoutSet,
@@ -11,6 +12,7 @@ import {
   normalizeCardioProfile,
   normalizeCardioSession,
   normalizeList,
+  normalizeSchedule,
   normalizeSession,
   normalizeSet,
   normalizeWorkout,
@@ -23,6 +25,7 @@ export const STORAGE_KEYS = {
   cardioSessions: "fitlog:cardio-sessions:v1",
   cardioProfile: "fitlog:cardio-profile:v1",
   restSeconds: "fitlog:rest-seconds:v1",
+  schedule: "fitlog:schedule:v1",
 } as const;
 
 export const THEME_KEY = "fitlog:theme:v1";
@@ -107,4 +110,12 @@ export function loadRestSeconds(): number {
 
 export function saveRestSeconds(seconds: number) {
   write(STORAGE_KEYS.restSeconds, clampRest(seconds));
+}
+
+export function loadSchedule(): Schedule {
+  return normalizeSchedule(readJson(STORAGE_KEYS.schedule));
+}
+
+export function saveSchedule(schedule: Schedule) {
+  write(STORAGE_KEYS.schedule, schedule);
 }
