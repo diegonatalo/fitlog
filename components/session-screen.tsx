@@ -72,6 +72,8 @@ export const SessionScreen = () => {
         <RestTimer
           key={restStartedAt}
           startedAt={restStartedAt}
+          duration={store.restSeconds}
+          onDurationChange={store.setRestSeconds}
           onDismiss={() => setRestStartedAt(null)}
         />
       )}

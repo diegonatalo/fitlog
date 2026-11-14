@@ -13,16 +13,19 @@ import {
   STORAGE_KEYS,
   loadCardioProfile,
   loadCardioSessions,
+  loadRestSeconds,
   loadSessions,
   loadSets,
   loadWorkouts,
   saveCardioProfile,
   saveCardioSessions,
+  saveRestSeconds,
   saveSessions,
   saveSets,
   saveWorkouts,
   uid,
 } from "@/lib/storage";
+import { clampRest } from "@/lib/rest";
 import { usePersistedState } from "./use-persisted-state";
 
 export type Store = ReturnType<typeof useWorkoutStore>;
@@ -52,6 +55,16 @@ export function useWorkoutStore() {
     STORAGE_KEYS.cardioProfile,
     loadCardioProfile,
     saveCardioProfile,
+  );
+
+  const [restSeconds, setRestSecondsState] = usePersistedState(
+    STORAGE_KEYS.restSeconds,
+    loadRestSeconds,
+    saveRestSeconds,
+  );
+  const setRestSeconds = useCallback(
+    (seconds: number) => setRestSecondsState(clampRest(seconds)),
+    [setRestSecondsState],
   );
 
   /* ---------- Sets ---------- */
@@ -274,6 +287,8 @@ export function useWorkoutStore() {
     setsBySession,
     activeSession,
     finishedSessions,
+    restSeconds,
+    setRestSeconds,
     cardioSessions,
     cardioProfile,
     saveCardioProfile: (profile: CardioProfile) => setCardioProfile(profile),

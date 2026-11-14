@@ -6,6 +6,7 @@ import type {
   WorkoutSet,
 } from "@/types";
 import { DEFAULT_WORKOUTS } from "./defaults";
+import { DEFAULT_REST_SECONDS, clampRest } from "./rest";
 import {
   normalizeCardioProfile,
   normalizeCardioSession,
@@ -21,6 +22,7 @@ export const STORAGE_KEYS = {
   sessions: "fitlog:sessions:v1",
   cardioSessions: "fitlog:cardio-sessions:v1",
   cardioProfile: "fitlog:cardio-profile:v1",
+  restSeconds: "fitlog:rest-seconds:v1",
 } as const;
 
 export const THEME_KEY = "fitlog:theme:v1";
@@ -96,4 +98,13 @@ export function loadCardioProfile(): CardioProfile | null {
 
 export function saveCardioProfile(profile: CardioProfile | null) {
   write(STORAGE_KEYS.cardioProfile, profile);
+}
+
+export function loadRestSeconds(): number {
+  const raw = readJson(STORAGE_KEYS.restSeconds);
+  return typeof raw === "number" ? clampRest(raw) : DEFAULT_REST_SECONDS;
+}
+
+export function saveRestSeconds(seconds: number) {
+  write(STORAGE_KEYS.restSeconds, clampRest(seconds));
 }

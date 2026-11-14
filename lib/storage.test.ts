@@ -4,10 +4,12 @@ import {
   STORAGE_KEYS,
   loadCardioProfile,
   loadCardioSessions,
+  loadRestSeconds,
   loadSessions,
   loadSets,
   loadWorkouts,
   saveCardioProfile,
+  saveRestSeconds,
   saveSets,
   uid,
 } from "@/lib/storage";
@@ -66,6 +68,24 @@ describe("listas sem padrão", () => {
     expect(loadCardioProfile()).toEqual({ weightKg: 70, age: 30, sex: "male" });
     saveCardioProfile(null);
     expect(loadCardioProfile()).toBeNull();
+  });
+});
+
+describe("tempo de descanso", () => {
+  it("usa 90 s por padrão", () => {
+    expect(loadRestSeconds()).toBe(90);
+  });
+
+  it("guarda e lê o valor", () => {
+    saveRestSeconds(120);
+    expect(loadRestSeconds()).toBe(120);
+  });
+
+  it("limita valores fora do intervalo e ignora lixo salvo", () => {
+    saveRestSeconds(99999);
+    expect(loadRestSeconds()).toBe(600);
+    localStorage.setItem(STORAGE_KEYS.restSeconds, '"abc"');
+    expect(loadRestSeconds()).toBe(90);
   });
 });
 
