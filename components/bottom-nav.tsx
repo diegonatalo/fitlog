@@ -15,7 +15,7 @@ import { cn } from "@/lib/cn";
 const ITEMS: { to: string; label: string; icon: typeof HouseIcon }[] = [
   { to: paths.home, label: "Início", icon: HouseIcon },
   { to: paths.schedule, label: "Agenda", icon: CalendarBlankIcon },
-  { to: paths.library, label: "Biblioteca", icon: BarbellIcon },
+  { to: paths.workouts, label: "Treinos", icon: BarbellIcon },
   { to: paths.history, label: "Histórico", icon: ClockCounterClockwiseIcon },
   { to: paths.cardio, label: "Cardio", icon: PersonSimpleRunIcon },
 ];

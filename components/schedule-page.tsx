@@ -5,12 +5,8 @@ import {
   CaretLeftIcon,
   CaretRightIcon,
   CheckIcon,
-  ListChecksIcon,
   MoonIcon,
-  PlusIcon,
 } from "@phosphor-icons/react";
-import { Link } from "@/lib/router";
-import type { Workout } from "@/types";
 import {
   WEEKDAY_SHORT,
   dateKey,
@@ -20,12 +16,10 @@ import {
   shiftMonth,
 } from "@/lib/dates";
 import { isRepeating, resolvePlan } from "@/lib/schedule";
-import { paths } from "@/lib/paths";
 import { cn } from "@/lib/cn";
 import { useStore } from "@/hooks/use-store";
 import { useToday } from "@/hooks/use-today";
 import { DayEditor } from "@/components/day-editor";
-import { EmptyState } from "@/components/empty-state";
 
 type View = { year: number; month: number };
 
@@ -65,7 +59,7 @@ export const SchedulePage = () => {
   };
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-4">
       <section aria-label="Calendário">
         {shown ? (
           <>
@@ -141,8 +135,6 @@ export const SchedulePage = () => {
         )}
       </section>
 
-      <WorkoutList workouts={store.workouts} />
-
       {selected && (
         <DayEditor
           date={selected}
@@ -195,73 +187,5 @@ const DayCell = ({ day, label, kind, done, isToday, onClick }: DayCellProps) => 
         ) : null}
       </span>
     </button>
-  );
-};
-
-const WorkoutList = ({ workouts }: { workouts: Workout[] }) => {
-  return (
-    <section aria-labelledby="my-workouts">
-      <div className="mb-3 flex items-baseline justify-between">
-        <h2
-          id="my-workouts"
-          className="text-sm font-semibold uppercase tracking-wide text-muted-foreground"
-        >
-          Meus treinos
-        </h2>
-        <span className="font-mono text-xs text-muted-foreground">
-          {workouts.length}
-        </span>
-      </div>
-
-      {workouts.length === 0 ? (
-        <EmptyState
-          icon={ListChecksIcon}
-          title="Monte seu primeiro treino"
-          description="Agrupe os exercícios de um dia (ex: Peito e Tríceps) em um treino e depois coloque-o na agenda."
-          action={
-            <Link
-              to={paths.newWorkout}
-              className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-bold text-accent-foreground"
-            >
-              <PlusIcon size={20} weight="bold" /> Criar treino
-            </Link>
-          }
-        />
-      ) : (
-        <ul className="flex flex-col gap-2">
-          {workouts.map((w) => (
-            <li key={w.id}>
-              <Link
-                to={paths.workout(w.id)}
-                className="flex w-full items-center gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-muted/50"
-              >
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate font-bold">{w.name}</span>
-                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <ListChecksIcon size={14} weight="bold" />
-                    {w.exerciseIds.length}{" "}
-                    {w.exerciseIds.length === 1 ? "exercício" : "exercícios"}
-                  </span>
-                </span>
-                <CaretRightIcon
-                  size={18}
-                  className="shrink-0 text-muted-foreground"
-                  weight="bold"
-                />
-              </Link>
-            </li>
-          ))}
-          <li>
-            <Link
-              to={paths.newWorkout}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border py-3.5 font-semibold text-muted-foreground transition-colors hover:border-accent hover:text-accent"
-            >
-              <PlusIcon size={20} weight="bold" />
-              Criar treino
-            </Link>
-          </li>
-        </ul>
-      )}
-    </section>
   );
 };

@@ -35,8 +35,12 @@ const HEADER_RULES: {
     resolve: () => ({ title: "Agenda", subtitle: "Organize seus treinos" }),
   },
   {
+    pattern: patterns.workouts,
+    resolve: () => ({ title: "Treinos", subtitle: "Monte e organize seus treinos" }),
+  },
+  {
     pattern: patterns.library,
-    resolve: () => ({ title: "Biblioteca", subtitle: "Todos os exercícios" }),
+    resolve: () => ({ title: "Exercícios", subtitle: "Todos os exercícios" }),
   },
   {
     pattern: patterns.history,

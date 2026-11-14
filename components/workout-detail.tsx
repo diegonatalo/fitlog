@@ -23,7 +23,7 @@ export const WorkoutDetail = () => {
   const workout = store.workouts.find((w) => w.id === id);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
-  if (!workout) return <Navigate to={paths.home} replace />;
+  if (!workout) return <Navigate to={paths.workouts} replace />;
 
   const exercises = workout.exerciseIds
     .map((id) => getExercise(id))
@@ -133,7 +133,7 @@ export const WorkoutDetail = () => {
           onCancelLabel="Cancelar"
           onConfirm={() => {
             store.removeWorkout(workout.id);
-            navigate(paths.home, { replace: true });
+            navigate(paths.workouts, { replace: true });
           }}
           onCancel={() => setConfirmDelete(false)}
         />

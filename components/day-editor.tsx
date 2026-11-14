@@ -148,7 +148,7 @@ export const DayEditor = ({
 
         {workouts.length === 0 && (
           <p className="mt-3 text-sm text-muted-foreground">
-            Você ainda não tem treinos. Crie um na lista abaixo do calendário.
+            Você ainda não tem treinos. Crie um na aba Treinos.
           </p>
         )}
 
