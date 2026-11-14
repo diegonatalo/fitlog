@@ -3,6 +3,7 @@ import {
   buildBackup,
   normalizeCardioProfile,
   normalizeCardioSession,
+  normalizeSchedule,
   normalizeList,
   normalizeSession,
   normalizeSet,
@@ -111,6 +112,32 @@ describe("cardio", () => {
   });
 });
 
+describe("normalizeSchedule", () => {
+  it("devolve agenda vazia para lixo", () => {
+    for (const v of [null, "x", [], 7, undefined]) {
+      expect(normalizeSchedule(v)).toEqual({ days: [], rules: [] });
+    }
+  });
+
+  it("descarta dias e regras inválidos e mantém os bons", () => {
+    const out = normalizeSchedule({
+      days: [
+        { date: "2026-11-02", plan: { type: "rest" } },
+        { date: "2026-02-30", plan: { type: "rest" } },
+        { date: "2026-11-03", plan: { type: "workout" } },
+        { date: "2026-11-04", plan: { type: "workout", workoutId: "w" } },
+      ],
+      rules: [
+        { id: "r", weekday: 2, from: "2026-11-03", plan: { type: "none" } },
+        { id: "r", weekday: 9, from: "2026-11-03", plan: { type: "rest" } },
+        { id: "", weekday: 1, from: "2026-11-03", plan: { type: "rest" } },
+      ],
+    });
+    expect(out.days.map((d) => d.date)).toEqual(["2026-11-02", "2026-11-04"]);
+    expect(out.rules).toHaveLength(1);
+  });
+});
+
 describe("normalizeList", () => {
   it("descarta itens inválidos e devolve null se não for lista", () => {
     const result = normalizeList([{ id: "w", name: "A" }, 1, null], normalizeWorkout);
@@ -127,6 +154,12 @@ describe("backup", () => {
     sessions: [{ id: "ss1", workoutId: "w1", name: "Push", startedAt: 4, finishedAt: 5 }],
     cardioSessions: [],
     cardioProfile: { weightKg: 70, age: 30, sex: "male" },
+    schedule: {
+      days: [{ date: "2026-11-02", plan: { type: "rest" } }],
+      rules: [
+        { id: "r1", weekday: 1, from: "2026-11-02", plan: { type: "workout", workoutId: "w1" } },
+      ],
+    },
   };
 
   it("exportar e importar devolve os mesmos dados", () => {
@@ -150,6 +183,12 @@ describe("backup", () => {
     const file = JSON.parse(buildBackup(data));
     file.exercises = [{ id: "e1", name: "Supino" }];
     expect(parseBackup(JSON.stringify(file))).toEqual(data);
+  });
+
+  it("aceita backup antigo sem agenda", () => {
+    const { schedule, ...old } = JSON.parse(buildBackup(data));
+    void schedule;
+    expect(parseBackup(JSON.stringify(old)).schedule).toEqual({ days: [], rules: [] });
   });
 
   it("recusa texto que não é JSON", () => {

@@ -1,6 +1,7 @@
 /** Central definition of every route in the app. */
 export const paths = {
   home: "/",
+  schedule: "/agenda",
   library: "/biblioteca",
   history: "/historico",
   cardio: "/cardio",
@@ -16,6 +17,7 @@ export const paths = {
 /** Route patterns, used for matching (header titles, active tab). */
 export const patterns = {
   home: "/",
+  schedule: "/agenda",
   library: "/biblioteca",
   history: "/historico",
   cardio: "/cardio",
@@ -31,6 +33,7 @@ export const patterns = {
 /** The bottom-nav tabs, which are the only screens without a back button. */
 export const tabPatterns: string[] = [
   patterns.home,
+  patterns.schedule,
   patterns.library,
   patterns.history,
   patterns.cardio,
