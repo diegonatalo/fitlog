@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { MoonIcon, XIcon } from "@phosphor-icons/react";
 import type { Plan, Workout } from "@/types";
 import { longDayLabel, weekdayOf, WEEKDAY_NAMES } from "@/lib/dates";
@@ -16,8 +17,6 @@ type DayEditorProps = {
   onClose: () => void;
 };
 
-const FOCUSABLE = "button, input";
-
 export const DayEditor = ({
   date,
   workouts,
@@ -31,31 +30,7 @@ export const DayEditor = ({
   const dialogRef = useRef<HTMLDivElement>(null);
   const weekday = WEEKDAY_NAMES[weekdayOf(date)];
 
-  // focus goes into the dialog, stays there and returns to the opener
-  useEffect(() => {
-    const opener = document.activeElement as HTMLElement | null;
-    dialogRef.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus();
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") return onClose();
-      if (e.key !== "Tab") return;
-      const items = dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE);
-      if (!items || items.length === 0) return;
-      const first = items[0];
-      const last = items[items.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      opener?.focus();
-    };
-  }, [onClose]);
+  useFocusTrap(dialogRef, onClose);
 
   const currentWorkoutId =
     current?.plan.type === "workout" ? current.plan.workoutId : null;

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import type { WorkoutSet } from "@/types";
 import { loadTypeMeta } from "@/types";
 import { cn } from "@/lib/cn";
@@ -16,11 +17,8 @@ export const EditSetDialog = ({ set, onClose, onSave }: EditSetDialogProps) => {
   const [reps, setReps] = useState(String(set.reps));
   const [note, setNote] = useState(set.note ?? "");
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, onClose);
 
   const loadNum = Number.parseFloat(load);
   const repsNum = meta.hasReps ? Number.parseInt(reps, 10) : 1;
@@ -36,7 +34,9 @@ export const EditSetDialog = ({ set, onClose, onSave }: EditSetDialogProps) => {
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
         role="dialog"
+        aria-modal="true"
         aria-label="Editar série"
         onClick={(e) => e.stopPropagation()}
         className="w-full rounded-t-2xl border-t border-border bg-card p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-w-md sm:rounded-2xl sm:border"

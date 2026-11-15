@@ -33,7 +33,7 @@ export const Stepper = ({
       >
         {label}
       </label>
-      <div className="flex items-center overflow-hidden rounded-xl border border-input bg-background">
+      <div className="flex items-center overflow-hidden rounded-xl border border-input bg-background focus-within:ring-2 focus-within:ring-ring">
         <button
           type="button"
           aria-label={`Diminuir ${label}`}
