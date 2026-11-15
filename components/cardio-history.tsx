@@ -78,7 +78,7 @@ export const CardioHistory = () => {
           title="Excluir sessão?"
           description="Ela será removida do histórico de cardio."
           confirmLabel="Excluir"
-          onCancelLabel="Cancelar"
+          cancelLabel="Cancelar"
           onConfirm={() => {
             removeCardioSession(toDelete);
             setToDelete(null);

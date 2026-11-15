@@ -113,7 +113,12 @@ export function useWorkoutStore() {
       setSets((prev) =>
         prev.map((s) =>
           s.id === id
-            ? { ...s, ...patch, note: patch.note?.trim() || undefined }
+            ? {
+                ...s,
+                ...patch,
+                // only touch the note when the patch carries one
+                note: "note" in patch ? patch.note?.trim() || undefined : s.note,
+              }
             : s,
         ),
       );
