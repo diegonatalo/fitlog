@@ -168,7 +168,7 @@ describe("backup", () => {
 
   it("o arquivo exportado identifica o app e a versão", () => {
     const file = JSON.parse(buildBackup(data));
-    expect(file).toMatchObject({ app: "treino-log", version: 1 });
+    expect(file).toMatchObject({ app: "fitlog", version: 1 });
     expect(new Date(file.exportedAt).toString()).not.toBe("Invalid Date");
   });
 
@@ -201,7 +201,7 @@ describe("backup", () => {
   });
 
   it("recusa backup incompleto", () => {
-    expect(() => parseBackup(JSON.stringify({ app: "treino-log", workouts: [] }))).toThrow(
+    expect(() => parseBackup(JSON.stringify({ app: "fitlog", workouts: [] }))).toThrow(
       "O backup está incompleto ou corrompido.",
     );
   });

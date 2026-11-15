@@ -194,14 +194,14 @@ export type BackupData = {
 };
 
 type BackupFile = BackupData & {
-  app: "treino-log";
+  app: "fitlog";
   version: 1;
   exportedAt: string;
 };
 
 export function buildBackup(data: BackupData): string {
   const file: BackupFile = {
-    app: "treino-log",
+    app: "fitlog",
     version: 1,
     exportedAt: new Date().toISOString(),
     ...data,
@@ -217,7 +217,7 @@ export function parseBackup(text: string): BackupData {
   } catch {
     throw new Error("O arquivo não é um JSON válido.");
   }
-  if (!isRecord(raw) || raw.app !== "treino-log") {
+  if (!isRecord(raw) || raw.app !== "fitlog") {
     throw new Error("Este arquivo não é um backup do FitLog.");
   }
   const sets = normalizeList(raw.sets, normalizeSet);
