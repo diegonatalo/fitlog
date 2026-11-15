@@ -130,7 +130,7 @@ export const WorkoutDetail = () => {
           title="Excluir treino?"
           description={`"${workout.name}" será removido. Os exercícios e o histórico não são afetados.`}
           confirmLabel="Excluir"
-          onCancelLabel="Cancelar"
+          cancelLabel="Cancelar"
           onConfirm={() => {
             store.removeWorkout(workout.id);
             navigate(paths.workouts, { replace: true });

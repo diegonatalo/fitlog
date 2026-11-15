@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useRef } from "react";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 type ConfirmDialogProps = {
   title: string;
   description: string;
   confirmLabel: string;
-  onCancelLabel: string;
+  cancelLabel: string;
   onConfirm: () => void;
   onCancel: () => void;
 };
@@ -13,15 +14,12 @@ export const ConfirmDialog = ({
   title,
   description,
   confirmLabel,
-  onCancelLabel,
+  cancelLabel,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) => {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onCancel();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onCancel]);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, onCancel);
 
   return (
     <div
@@ -29,7 +27,9 @@ export const ConfirmDialog = ({
       onClick={onCancel}
     >
       <div
+        ref={dialogRef}
         role="alertdialog"
+        aria-modal="true"
         aria-label={title}
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-sm rounded-2xl border border-border bg-card p-5 shadow-2xl"
@@ -43,7 +43,7 @@ export const ConfirmDialog = ({
             onClick={onCancel}
             className="flex-1 rounded-xl border border-border bg-background py-3 font-semibold text-foreground hover:bg-muted"
           >
-            {onCancelLabel}
+            {cancelLabel}
           </button>
           <button
             onClick={onConfirm}

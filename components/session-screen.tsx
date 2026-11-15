@@ -154,7 +154,7 @@ export const SessionScreen = () => {
           title="Descartar sessão?"
           description="As séries registradas nesta sessão serão apagadas e o treino não irá para o histórico."
           confirmLabel="Descartar"
-          onCancelLabel="Continuar treino"
+          cancelLabel="Continuar treino"
           onConfirm={() => {
             store.removeSession(session.id);
             navigate(paths.home, { replace: true });

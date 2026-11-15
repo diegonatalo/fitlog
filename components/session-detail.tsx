@@ -118,7 +118,7 @@ export const SessionDetail = () => {
           title="Excluir sessão?"
           description="A sessão e todas as séries registradas nela serão apagadas. Essa ação não pode ser desfeita."
           confirmLabel="Excluir"
-          onCancelLabel="Cancelar"
+          cancelLabel="Cancelar"
           onConfirm={() => {
             store.removeSession(session.id);
             navigate(paths.history, { replace: true });

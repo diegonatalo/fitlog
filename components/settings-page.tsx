@@ -124,7 +124,7 @@ export const SettingsPage = () => {
           title="Substituir seus dados?"
           description={`O backup tem ${pendingImport.workouts.length} treinos e ${pendingImport.sets.length} séries. Tudo o que está no app agora será substituído.`}
           confirmLabel="Importar"
-          onCancelLabel="Cancelar"
+          cancelLabel="Cancelar"
           onConfirm={() => {
             store.replaceAll(pendingImport);
             setPendingImport(null);
@@ -139,7 +139,7 @@ export const SettingsPage = () => {
           title="Apagar todos os dados?"
           description="Essa ação não pode ser desfeita. Exporte um backup antes se quiser guardar seu histórico."
           confirmLabel="Apagar tudo"
-          onCancelLabel="Cancelar"
+          cancelLabel="Cancelar"
           onConfirm={() => {
             store.clearAll();
             setConfirmClear(false);
