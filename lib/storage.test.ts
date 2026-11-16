@@ -1,91 +1,63 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { DEFAULT_WORKOUTS } from "@/lib/defaults";
 import {
   STORAGE_KEYS,
-  loadCardioProfile,
-  loadCardioSessions,
-  loadRestSeconds,
-  loadSessions,
-  loadSets,
-  loadWorkouts,
-  saveCardioProfile,
-  saveRestSeconds,
-  saveSets,
+  parseCardioProfile,
+  parseCardioSessions,
+  parseRestSeconds,
+  parseSessions,
+  parseSets,
+  parseWorkouts,
   uid,
 } from "@/lib/storage";
 import type { WorkoutSet } from "@/types";
 
-beforeEach(() => localStorage.clear());
-
 describe("chaves de armazenamento", () => {
-  it("seguem o formato app:nome:v1", () => {
+  it("seguem o formato <projeto>:<nome>:v1", () => {
     for (const key of Object.values(STORAGE_KEYS)) {
       expect(key).toMatch(/^fitlog:[a-z-]+:v1$/);
     }
   });
 });
 
-describe("loadWorkouts", () => {
-  it("na primeira vez grava e devolve os treinos padrão", () => {
-    expect(loadWorkouts()).toEqual(DEFAULT_WORKOUTS);
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.workouts)!)).toHaveLength(
-      DEFAULT_WORKOUTS.length,
-    );
+describe("parseWorkouts", () => {
+  it("sem nada salvo ou com lixo, usa os treinos padrão", () => {
+    expect(parseWorkouts(null)).toEqual(DEFAULT_WORKOUTS);
+    expect(parseWorkouts("quebrado")).toEqual(DEFAULT_WORKOUTS);
   });
 
-  it("lê o que foi salvo, sem voltar aos padrões", () => {
-    localStorage.setItem(
-      STORAGE_KEYS.workouts,
-      JSON.stringify([{ id: "w", name: "Meu", exerciseIds: [], createdAt: 1 }]),
-    );
-    expect(loadWorkouts().map((w) => w.id)).toEqual(["w"]);
-  });
-
-  it("volta aos padrões quando o JSON salvo está quebrado", () => {
-    localStorage.setItem(STORAGE_KEYS.workouts, "{quebrado");
-    expect(loadWorkouts()).toEqual(DEFAULT_WORKOUTS);
+  it("usa o que foi salvo, sem voltar aos padrões", () => {
+    expect(parseWorkouts([{ id: "w", name: "Meu", exerciseIds: [], createdAt: 1 }]).map((w) => w.id)).toEqual(["w"]);
   });
 });
 
 describe("listas sem padrão", () => {
   it("começam vazias", () => {
-    expect(loadSets()).toEqual([]);
-    expect(loadSessions()).toEqual([]);
-    expect(loadCardioSessions()).toEqual([]);
-    expect(loadCardioProfile()).toBeNull();
+    expect(parseSets(null)).toEqual([]);
+    expect(parseSessions(null)).toEqual([]);
+    expect(parseCardioSessions(null)).toEqual([]);
+    expect(parseCardioProfile(null)).toBeNull();
   });
 
-  it("guardam e leem séries", () => {
-    const sets: WorkoutSet[] = [
-      { id: "s1", exerciseId: "e1", loadType: "weight", load: 40, reps: 10, createdAt: 1 },
-    ];
-    saveSets(sets);
-    expect(loadSets()).toEqual(sets);
+  it("mantêm séries válidas e descartam as inválidas", () => {
+    const set: WorkoutSet = { id: "s1", exerciseId: "e1", loadType: "weight", load: 40, reps: 10, createdAt: 1 };
+    expect(parseSets([set, { id: 1 }])).toEqual([set]);
   });
 
-  it("guardam e leem o perfil de cardio", () => {
-    saveCardioProfile({ weightKg: 70, age: 30, sex: "male" });
-    expect(loadCardioProfile()).toEqual({ weightKg: 70, age: 30, sex: "male" });
-    saveCardioProfile(null);
-    expect(loadCardioProfile()).toBeNull();
+  it("leem o perfil de cardio", () => {
+    expect(parseCardioProfile({ weightKg: 70, age: 30, sex: "male" })).toEqual({ weightKg: 70, age: 30, sex: "male" });
   });
 });
 
 describe("tempo de descanso", () => {
-  it("usa 90 s por padrão", () => {
-    expect(loadRestSeconds()).toBe(90);
+  it("usa 90 s por padrão e ignora lixo", () => {
+    expect(parseRestSeconds(null)).toBe(90);
+    expect(parseRestSeconds("abc")).toBe(90);
   });
 
-  it("guarda e lê o valor", () => {
-    saveRestSeconds(120);
-    expect(loadRestSeconds()).toBe(120);
-  });
-
-  it("limita valores fora do intervalo e ignora lixo salvo", () => {
-    saveRestSeconds(99999);
-    expect(loadRestSeconds()).toBe(600);
-    localStorage.setItem(STORAGE_KEYS.restSeconds, '"abc"');
-    expect(loadRestSeconds()).toBe(90);
+  it("limita valores fora do intervalo", () => {
+    expect(parseRestSeconds(120)).toBe(120);
+    expect(parseRestSeconds(99999)).toBe(600);
   });
 });
 

@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import type { Store } from "@/hooks/use-workout-store";
 import { estimate } from "@/lib/cardio";
-import { StoreContext } from "@/lib/store-context";
+import { StoreContext } from "@/hooks/use-store";
 import type { CardioProfile, CardioSession } from "@/types";
 
 vi.mock("@/lib/router", () => ({

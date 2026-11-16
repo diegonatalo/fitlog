@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Store } from "@/hooks/use-workout-store";
 import { buildBackup } from "@/lib/schema";
-import { StoreContext } from "@/lib/store-context";
+import { StoreContext } from "@/hooks/use-store";
 
 vi.mock("@/components/cardio-profile-form", () => ({ CardioProfileForm: () => null }));
 

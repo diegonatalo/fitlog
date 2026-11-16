@@ -1,5 +1,7 @@
-import { useContext } from "react";
-import { StoreContext } from "@/lib/store-context";
+import { createContext, useContext } from "react";
+import type { Store } from "@/hooks/use-workout-store";
+
+export const StoreContext = createContext<Store | null>(null);
 
 export function useStore() {
   const store = useContext(StoreContext);
