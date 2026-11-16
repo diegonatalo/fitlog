@@ -2,7 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Store } from "@/hooks/use-workout-store";
-import { StoreContext } from "@/lib/store-context";
+import { StoreContext } from "@/hooks/use-store";
 import type { Workout } from "@/types";
 
 const router = vi.hoisted(() => ({

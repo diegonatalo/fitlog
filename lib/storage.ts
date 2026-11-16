@@ -33,89 +33,29 @@ export const THEME_KEY = "fitlog:theme:v1";
 export const uid = () =>
   Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 
-function readJson(key: string): unknown {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
+/* ---------- Parsers ----------
+ * Pure: they turn whatever was read from storage (already JSON-parsed, or null)
+ * into valid data. Reading and writing localStorage lives in usePersistedState.
+ */
 
-function write(key: string, value: unknown) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    /* quota / private mode — silently ignore */
-  }
-}
+const list = <T>(raw: unknown, normalize: (v: unknown) => T | null): T[] =>
+  normalizeList(raw, normalize) ?? [];
 
-/** Reads a list, dropping invalid entries; null when absent or not a list. */
-function readList<T>(
-  key: string,
-  normalize: (v: unknown) => T | null,
-): T[] | null {
-  return normalizeList(readJson(key), normalize);
-}
+export const parseSets = (raw: unknown): WorkoutSet[] => list(raw, normalizeSet);
 
-/* ---------- Loaders / savers ---------- */
+/** Missing or broken workouts fall back to the sample workouts. */
+export const parseWorkouts = (raw: unknown): Workout[] =>
+  normalizeList(raw, normalizeWorkout) ?? DEFAULT_WORKOUTS;
 
-export function loadSets(): WorkoutSet[] {
-  return readList(STORAGE_KEYS.sets, normalizeSet) ?? [];
-}
+export const parseSessions = (raw: unknown): WorkoutSession[] => list(raw, normalizeSession);
 
-export function saveSets(sets: WorkoutSet[]) {
-  write(STORAGE_KEYS.sets, sets);
-}
+export const parseCardioSessions = (raw: unknown): CardioSession[] =>
+  list(raw, normalizeCardioSession);
 
-export function loadWorkouts(): Workout[] {
-  const list = readList(STORAGE_KEYS.workouts, normalizeWorkout);
-  if (list) return list;
-  write(STORAGE_KEYS.workouts, DEFAULT_WORKOUTS);
-  return DEFAULT_WORKOUTS;
-}
+export const parseCardioProfile = (raw: unknown): CardioProfile | null =>
+  normalizeCardioProfile(raw);
 
-export function saveWorkouts(workouts: Workout[]) {
-  write(STORAGE_KEYS.workouts, workouts);
-}
+export const parseRestSeconds = (raw: unknown): number =>
+  typeof raw === "number" ? clampRest(raw) : DEFAULT_REST_SECONDS;
 
-export function loadSessions(): WorkoutSession[] {
-  return readList(STORAGE_KEYS.sessions, normalizeSession) ?? [];
-}
-
-export function saveSessions(sessions: WorkoutSession[]) {
-  write(STORAGE_KEYS.sessions, sessions);
-}
-
-export function loadCardioSessions(): CardioSession[] {
-  return readList(STORAGE_KEYS.cardioSessions, normalizeCardioSession) ?? [];
-}
-
-export function saveCardioSessions(sessions: CardioSession[]) {
-  write(STORAGE_KEYS.cardioSessions, sessions);
-}
-
-export function loadCardioProfile(): CardioProfile | null {
-  return normalizeCardioProfile(readJson(STORAGE_KEYS.cardioProfile));
-}
-
-export function saveCardioProfile(profile: CardioProfile | null) {
-  write(STORAGE_KEYS.cardioProfile, profile);
-}
-
-export function loadRestSeconds(): number {
-  const raw = readJson(STORAGE_KEYS.restSeconds);
-  return typeof raw === "number" ? clampRest(raw) : DEFAULT_REST_SECONDS;
-}
-
-export function saveRestSeconds(seconds: number) {
-  write(STORAGE_KEYS.restSeconds, clampRest(seconds));
-}
-
-export function loadSchedule(): Schedule {
-  return normalizeSchedule(readJson(STORAGE_KEYS.schedule));
-}
-
-export function saveSchedule(schedule: Schedule) {
-  write(STORAGE_KEYS.schedule, schedule);
-}
+export const parseSchedule = (raw: unknown): Schedule => normalizeSchedule(raw);

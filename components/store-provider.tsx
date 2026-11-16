@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore, type ReactNode } from "react";
 import { useWorkoutStore } from "@/hooks/use-workout-store";
-import { StoreContext } from "@/lib/store-context";
+import { StoreContext } from "@/hooks/use-store";
 
 const noopSubscribe = () => () => {};
 

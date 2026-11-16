@@ -20,19 +20,18 @@ afterEach(() => {
 
 describe("usePersistedState", () => {
   const KEY = "fitlog:test:v1";
-  const load = () => Number(localStorage.getItem(KEY) ?? 0);
-  const save = (n: number) => localStorage.setItem(KEY, String(n));
+  const parse = (raw: unknown) => (typeof raw === "number" ? raw : 0);
 
-  it("começa com o valor salvo e grava cada mudança", () => {
+  it("começa com o valor salvo e grava cada mudança como JSON", () => {
     localStorage.setItem(KEY, "3");
-    const { result } = renderHook(() => usePersistedState(KEY, load, save));
+    const { result } = renderHook(() => usePersistedState(KEY, parse));
     expect(result.current[0]).toBe(3);
     act(() => result.current[1](4));
     expect(localStorage.getItem(KEY)).toBe("4");
   });
 
   it("recarrega quando outra aba muda a mesma chave", () => {
-    const { result } = renderHook(() => usePersistedState(KEY, load, save));
+    const { result } = renderHook(() => usePersistedState(KEY, parse));
     act(() => {
       localStorage.setItem(KEY, "9");
       window.dispatchEvent(new StorageEvent("storage", { key: KEY }));
@@ -41,11 +40,17 @@ describe("usePersistedState", () => {
   });
 
   it("ignora mudanças de outras chaves", () => {
-    const { result } = renderHook(() => usePersistedState(KEY, load, save));
+    const { result } = renderHook(() => usePersistedState(KEY, parse));
     act(() => {
       localStorage.setItem(KEY, "7");
       window.dispatchEvent(new StorageEvent("storage", { key: "fitlog:outra:v1" }));
     });
+    expect(result.current[0]).toBe(0);
+  });
+
+  it("ignora JSON corrompido", () => {
+    localStorage.setItem(KEY, "{quebrado");
+    const { result } = renderHook(() => usePersistedState(KEY, parse));
     expect(result.current[0]).toBe(0);
   });
 });

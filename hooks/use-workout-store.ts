@@ -12,20 +12,13 @@ import type {
 import type { BackupData } from "@/lib/schema";
 import {
   STORAGE_KEYS,
-  loadCardioProfile,
-  loadCardioSessions,
-  loadRestSeconds,
-  loadSchedule,
-  loadSessions,
-  loadSets,
-  loadWorkouts,
-  saveCardioProfile,
-  saveCardioSessions,
-  saveRestSeconds,
-  saveSchedule,
-  saveSessions,
-  saveSets,
-  saveWorkouts,
+  parseCardioProfile,
+  parseCardioSessions,
+  parseRestSeconds,
+  parseSchedule,
+  parseSessions,
+  parseSets,
+  parseWorkouts,
   uid,
 } from "@/lib/storage";
 import { clampRest } from "@/lib/rest";
@@ -41,41 +34,21 @@ import { usePersistedState } from "./use-persisted-state";
 export type Store = ReturnType<typeof useWorkoutStore>;
 
 export function useWorkoutStore() {
-  const [sets, setSets] = usePersistedState(
-    STORAGE_KEYS.sets,
-    loadSets,
-    saveSets,
-  );
-  const [workouts, setWorkouts] = usePersistedState(
-    STORAGE_KEYS.workouts,
-    loadWorkouts,
-    saveWorkouts,
-  );
-  const [sessions, setSessions] = usePersistedState(
-    STORAGE_KEYS.sessions,
-    loadSessions,
-    saveSessions,
-  );
+  const [sets, setSets] = usePersistedState(STORAGE_KEYS.sets, parseSets);
+  const [workouts, setWorkouts] = usePersistedState(STORAGE_KEYS.workouts, parseWorkouts);
+  const [sessions, setSessions] = usePersistedState(STORAGE_KEYS.sessions, parseSessions);
   const [cardioSessions, setCardioSessions] = usePersistedState(
     STORAGE_KEYS.cardioSessions,
-    loadCardioSessions,
-    saveCardioSessions,
+    parseCardioSessions,
   );
   const [cardioProfile, setCardioProfile] = usePersistedState(
     STORAGE_KEYS.cardioProfile,
-    loadCardioProfile,
-    saveCardioProfile,
+    parseCardioProfile,
   );
-
-  const [schedule, setSchedule] = usePersistedState(
-    STORAGE_KEYS.schedule,
-    loadSchedule,
-    saveSchedule,
-  );
+  const [schedule, setSchedule] = usePersistedState(STORAGE_KEYS.schedule, parseSchedule);
   const [restSeconds, setRestSecondsState] = usePersistedState(
     STORAGE_KEYS.restSeconds,
-    loadRestSeconds,
-    saveRestSeconds,
+    parseRestSeconds,
   );
   const setRestSeconds = useCallback(
     (seconds: number) => setRestSecondsState(clampRest(seconds)),
