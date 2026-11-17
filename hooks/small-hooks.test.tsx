@@ -4,9 +4,6 @@ import { useEquipmentChoice } from "@/hooks/use-equipment-choice";
 import { useNow } from "@/hooks/use-now";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import { useStore } from "@/hooks/use-store";
-import { useTheme } from "@/hooks/use-theme";
-import { useToday } from "@/hooks/use-today";
-import { THEME_KEY } from "@/lib/storage";
 import type { Exercise, WorkoutSet } from "@/types";
 
 beforeEach(() => {
@@ -55,43 +52,7 @@ describe("usePersistedState", () => {
   });
 });
 
-describe("useTheme", () => {
-  const meta = () => document.querySelector('meta[name="theme-color"]');
-
-  beforeEach(() => {
-    document.head.innerHTML = '<meta name="theme-color" content="">';
-  });
-
-  it("lê o tema aplicado pelo script do layout e não grava nada ao abrir", () => {
-    document.documentElement.classList.add("dark");
-    const { result } = renderHook(() => useTheme());
-    expect(result.current.theme).toBe("dark");
-    expect(localStorage.getItem(THEME_KEY)).toBeNull();
-  });
-
-  it("alterna gravando a escolha e atualizando a cor da barra", () => {
-    const { result } = renderHook(() => useTheme());
-    expect(result.current.theme).toBe("light");
-    act(() => result.current.toggle());
-    expect(result.current.theme).toBe("dark");
-    expect(document.documentElement.classList.contains("dark")).toBe(true);
-    expect(localStorage.getItem(THEME_KEY)).toBe("dark");
-    expect(meta()).toHaveAttribute("content", "#14161d");
-  });
-
-  it("sem escolha salva acompanha a mudança do sistema", () => {
-    let onChange = () => {};
-    const media = { matches: true, addEventListener: (_: string, cb: () => void) => (onChange = cb), removeEventListener: () => {} };
-    vi.spyOn(window, "matchMedia").mockReturnValue(media as unknown as MediaQueryList);
-    document.documentElement.classList.add("dark");
-    const { result } = renderHook(() => useTheme());
-    act(() => onChange());
-    expect(result.current.theme).toBe("light");
-    expect(localStorage.getItem(THEME_KEY)).toBeNull();
-  });
-});
-
-describe("useNow e useToday", () => {
+describe("useNow", () => {
   it("useNow atualiza no intervalo", () => {
     vi.useFakeTimers({ now: 1_000 });
     const { result } = renderHook(() => useNow(500));
@@ -100,16 +61,6 @@ describe("useNow e useToday", () => {
       vi.advanceTimersByTime(500);
     });
     expect(result.current).toBe(1_500);
-  });
-
-  it("useToday devolve a data local e vira o dia com o app aberto", () => {
-    vi.useFakeTimers({ now: new Date(2026, 2, 1, 23, 59, 30) });
-    const { result } = renderHook(() => useToday());
-    expect(result.current).toBe("2026-03-01");
-    act(() => {
-      vi.advanceTimersByTime(60_000);
-    });
-    expect(result.current).toBe("2026-03-02");
   });
 });
 

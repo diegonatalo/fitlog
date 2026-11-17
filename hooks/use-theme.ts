@@ -1,68 +1,87 @@
-import { useSyncExternalStore } from "react";
-import { THEME_KEY } from "@/lib/storage";
+import { useCallback, useSyncExternalStore } from "react";
+import {
+  DARK_QUERY,
+  parseTheme,
+  type Theme,
+  type ThemeColors,
+} from "@/lib/theme";
 
-type Theme = "light" | "dark";
+const CHANGE_EVENT = "theme:change";
 
-const THEME_COLORS: Record<Theme, string> = {
-  dark: "#14161d",
-  light: "#f4f6f9",
-};
-
-const CHANGE_EVENT = "fitlog:theme-change";
-const LIGHT_QUERY = "(prefers-color-scheme: light)";
-
-const readChoice = (): Theme | null => {
+const readChoice = (key: string): Theme | null => {
   try {
-    const stored = localStorage.getItem(THEME_KEY);
-    return stored === "light" || stored === "dark" ? stored : null;
+    return parseTheme(localStorage.getItem(key));
   } catch {
     return null;
   }
 };
 
-const applyTheme = (theme: Theme) => {
+const systemTheme = (): Theme =>
+  window.matchMedia(DARK_QUERY).matches ? "dark" : "light";
+
+const applyTheme = (theme: Theme, colors?: ThemeColors) => {
   document.documentElement.classList.toggle("dark", theme === "dark");
-  document
-    .querySelector('meta[name="theme-color"]')
-    ?.setAttribute("content", THEME_COLORS[theme]);
+  if (colors) {
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", colors[theme]);
+  }
 };
 
-const systemTheme = (): Theme =>
-  window.matchMedia(LIGHT_QUERY).matches ? "light" : "dark";
-
-/** Tema em uso: a classe dark do <html>, aplicada pelo script do layout antes da primeira pintura. */
+/** Tema em uso: a classe `dark` do `<html>`, aplicada antes da pintura por `themeScript`. */
 const getSnapshot = (): Theme =>
   document.documentElement.classList.contains("dark") ? "dark" : "light";
 
-const subscribe = (onChange: () => void) => {
-  const media = window.matchMedia(LIGHT_QUERY);
-  // Sem escolha salva, acompanha o sistema.
-  const onSystemChange = () => {
-    if (readChoice() === null) applyTheme(systemTheme());
-    onChange();
-  };
-  media.addEventListener("change", onSystemChange);
-  window.addEventListener(CHANGE_EVENT, onChange);
-  return () => {
-    media.removeEventListener("change", onSystemChange);
-    window.removeEventListener(CHANGE_EVENT, onChange);
-  };
+// No servidor não há tema; o navegador corrige logo após a hidratação.
+const getServerSnapshot = (): Theme => "light";
+
+/**
+ * Tema claro/escuro. Só grava em `key` quando o usuário escolhe; sem escolha,
+ * acompanha o sistema. Sincroniza entre componentes e abas.
+ * `colors` deve ser uma constante de módulo.
+ */
+export const useTheme = (key: string, colors?: ThemeColors) => {
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      const media = window.matchMedia(DARK_QUERY);
+      const sync = () => {
+        applyTheme(readChoice(key) ?? systemTheme(), colors);
+        onChange();
+      };
+      const onStorage = (event: StorageEvent) => {
+        if (event.key === key || event.key === null) sync();
+      };
+      media.addEventListener("change", sync);
+      window.addEventListener("storage", onStorage);
+      window.addEventListener(CHANGE_EVENT, onChange);
+      return () => {
+        media.removeEventListener("change", sync);
+        window.removeEventListener("storage", onStorage);
+        window.removeEventListener(CHANGE_EVENT, onChange);
+      };
+    },
+    [key, colors],
+  );
+
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+  const setTheme = useCallback(
+    (next: Theme) => {
+      applyTheme(next, colors);
+      try {
+        localStorage.setItem(key, next);
+      } catch {
+        // Armazenamento bloqueado: o tema vale só nesta visita.
+      }
+      window.dispatchEvent(new Event(CHANGE_EVENT));
+    },
+    [key, colors],
+  );
+
+  const toggle = useCallback(
+    () => setTheme(getSnapshot() === "dark" ? "light" : "dark"),
+    [setTheme],
+  );
+
+  return { theme, setTheme, toggle };
 };
-
-/** Só grava no armazenamento quando o usuário alterna; sem escolha, segue o sistema. */
-export function useTheme() {
-  const theme = useSyncExternalStore<Theme>(subscribe, getSnapshot, () => "dark");
-
-  const toggle = () => {
-    const next: Theme = getSnapshot() === "dark" ? "light" : "dark";
-    applyTheme(next);
-    try {
-      localStorage.setItem(THEME_KEY, next);
-    } catch {
-      // Armazenamento bloqueado: o tema vale só nesta visita.
-    }
-    window.dispatchEvent(new Event(CHANGE_EVENT));
-  };
-
-  return { theme, toggle };
-}

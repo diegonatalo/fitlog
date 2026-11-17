@@ -1,3 +1,4 @@
+import type { ThemeColors } from "@/lib/theme";
 import type {
   CardioProfile,
   CardioSession,
@@ -29,6 +30,9 @@ export const STORAGE_KEYS = {
 } as const;
 
 export const THEME_KEY = "fitlog:theme:v1";
+
+/** Cor da barra do navegador em cada tema (fundo do app). */
+export const THEME_COLORS: ThemeColors = { dark: "#14161d", light: "#f4f6f9" };
 
 export const uid = () =>
   Date.now().toString(36) + Math.random().toString(36).slice(2, 8);

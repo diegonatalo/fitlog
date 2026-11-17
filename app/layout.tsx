@@ -4,6 +4,8 @@ import Script from "next/script";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { THEME_COLORS, THEME_KEY } from "@/lib/storage";
+import { themeScript } from "@/lib/theme";
 
 const inter = Inter({ subsets: ["latin"], variable: "--nf-inter", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--nf-mono", display: "swap" });
@@ -63,25 +65,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#14161d",
+  themeColor: THEME_COLORS.dark,
 };
-
-// aplica o tema salvo antes do primeiro paint, evitando flash de tema errado
-const THEME_BEFORE_PAINT = `
-(function () {
-  try {
-    var t = localStorage.getItem("fitlog:theme:v1");
-    var dark =
-      t === "dark" ||
-      (t !== "light" && !window.matchMedia("(prefers-color-scheme: light)").matches);
-    document.documentElement.classList.toggle("dark", dark);
-    if (!dark) {
-      var m = document.querySelector('meta[name="theme-color"]');
-      if (m) m.setAttribute("content", "#f4f6f9");
-    }
-  } catch (e) {}
-})();
-`;
 
 export default function RootLayout({
   children,
@@ -91,7 +76,7 @@ export default function RootLayout({
     <html lang="pt-BR" className={`${inter.variable} ${mono.variable}`} suppressHydrationWarning>
       <body>
         <Script id="tema" strategy="beforeInteractive">
-          {THEME_BEFORE_PAINT}
+          {themeScript(THEME_KEY, THEME_COLORS)}
         </Script>
         <noscript>O FitLog precisa de JavaScript para funcionar.</noscript>
         <Providers>{children}</Providers>
