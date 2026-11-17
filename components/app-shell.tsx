@@ -9,6 +9,7 @@ import { patterns, paths, tabPatterns } from "@/lib/paths";
 import { getExercise } from "@/lib/exercises";
 import { useStore } from "@/hooks/use-store";
 import { useTheme } from "@/hooks/use-theme";
+import { THEME_COLORS, THEME_KEY } from "@/lib/storage";
 import type { Store } from "@/hooks/use-workout-store";
 
 type HeaderInfo = {
@@ -86,7 +87,7 @@ const HEADER_RULES: {
 ];
 
 export const AppShell = ({ children }: { children: ReactNode }) => {
-  const { theme, toggle: onToggleTheme } = useTheme();
+  const { theme, toggle: onToggleTheme } = useTheme(THEME_KEY, THEME_COLORS);
   const store = useStore();
   const { pathname } = useLocation();
   const navigate = useNavigate();
