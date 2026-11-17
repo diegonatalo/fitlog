@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { THEME_KEY } from "@/lib/storage";
 
 type Theme = "light" | "dark";
@@ -8,36 +8,61 @@ const THEME_COLORS: Record<Theme, string> = {
   light: "#f4f6f9",
 };
 
-function getInitialTheme(): Theme {
+const CHANGE_EVENT = "fitlog:theme-change";
+const LIGHT_QUERY = "(prefers-color-scheme: light)";
+
+const readChoice = (): Theme | null => {
   try {
     const stored = localStorage.getItem(THEME_KEY);
-    if (stored === "light" || stored === "dark") return stored;
+    return stored === "light" || stored === "dark" ? stored : null;
   } catch {
-    /* ignore */
+    return null;
   }
-  return window.matchMedia("(prefers-color-scheme: light)").matches
-    ? "light"
-    : "dark";
-}
+};
 
+const applyTheme = (theme: Theme) => {
+  document.documentElement.classList.toggle("dark", theme === "dark");
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute("content", THEME_COLORS[theme]);
+};
+
+const systemTheme = (): Theme =>
+  window.matchMedia(LIGHT_QUERY).matches ? "light" : "dark";
+
+/** Tema em uso: a classe dark do <html>, aplicada pelo script do layout antes da primeira pintura. */
+const getSnapshot = (): Theme =>
+  document.documentElement.classList.contains("dark") ? "dark" : "light";
+
+const subscribe = (onChange: () => void) => {
+  const media = window.matchMedia(LIGHT_QUERY);
+  // Sem escolha salva, acompanha o sistema.
+  const onSystemChange = () => {
+    if (readChoice() === null) applyTheme(systemTheme());
+    onChange();
+  };
+  media.addEventListener("change", onSystemChange);
+  window.addEventListener(CHANGE_EVENT, onChange);
+  return () => {
+    media.removeEventListener("change", onSystemChange);
+    window.removeEventListener(CHANGE_EVENT, onChange);
+  };
+};
+
+/** Só grava no armazenamento quando o usuário alterna; sem escolha, segue o sistema. */
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const theme = useSyncExternalStore<Theme>(subscribe, getSnapshot, () => "dark");
 
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    document
-      .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", THEME_COLORS[theme]);
+  const toggle = () => {
+    const next: Theme = getSnapshot() === "dark" ? "light" : "dark";
+    applyTheme(next);
     try {
-      localStorage.setItem(THEME_KEY, theme);
+      localStorage.setItem(THEME_KEY, next);
     } catch {
-      /* ignore */
+      // Armazenamento bloqueado: o tema vale só nesta visita.
     }
-  }, [theme]);
-
-  const toggle = useCallback(() => {
-    setTheme((t) => (t === "dark" ? "light" : "dark"));
-  }, []);
+    window.dispatchEvent(new Event(CHANGE_EVENT));
+  };
 
   return { theme, toggle };
 }

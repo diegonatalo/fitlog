@@ -62,21 +62,32 @@ describe("useTheme", () => {
     document.head.innerHTML = '<meta name="theme-color" content="">';
   });
 
-  it("sem escolha salva segue o sistema; escuro por padrão", () => {
-    vi.spyOn(window, "matchMedia").mockReturnValue({ matches: false } as MediaQueryList);
+  it("lê o tema aplicado pelo script do layout e não grava nada ao abrir", () => {
+    document.documentElement.classList.add("dark");
     const { result } = renderHook(() => useTheme());
     expect(result.current.theme).toBe("dark");
-    expect(document.documentElement.classList.contains("dark")).toBe(true);
-    expect(meta()).toHaveAttribute("content", "#14161d");
+    expect(localStorage.getItem(THEME_KEY)).toBeNull();
   });
 
-  it("usa a escolha salva e alterna gravando a nova", () => {
-    localStorage.setItem(THEME_KEY, "light");
+  it("alterna gravando a escolha e atualizando a cor da barra", () => {
     const { result } = renderHook(() => useTheme());
     expect(result.current.theme).toBe("light");
     act(() => result.current.toggle());
     expect(result.current.theme).toBe("dark");
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
     expect(localStorage.getItem(THEME_KEY)).toBe("dark");
+    expect(meta()).toHaveAttribute("content", "#14161d");
+  });
+
+  it("sem escolha salva acompanha a mudança do sistema", () => {
+    let onChange = () => {};
+    const media = { matches: true, addEventListener: (_: string, cb: () => void) => (onChange = cb), removeEventListener: () => {} };
+    vi.spyOn(window, "matchMedia").mockReturnValue(media as unknown as MediaQueryList);
+    document.documentElement.classList.add("dark");
+    const { result } = renderHook(() => useTheme());
+    act(() => onChange());
+    expect(result.current.theme).toBe("light");
+    expect(localStorage.getItem(THEME_KEY)).toBeNull();
   });
 });
 
