@@ -3,6 +3,7 @@ import { useFocusTrap } from "@/hooks/use-focus-trap";
 import type { WorkoutSet } from "@/types";
 import { loadTypeMeta } from "@/types";
 import { cn } from "@/lib/cn";
+import { parseSetInput } from "@/lib/set-input";
 import { Stepper } from "./stepper";
 
 type EditSetDialogProps = {
@@ -20,13 +21,7 @@ export const EditSetDialog = ({ set, onClose, onSave }: EditSetDialogProps) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   useFocusTrap(dialogRef, onClose);
 
-  const loadNum = Number.parseFloat(load);
-  const repsNum = meta.hasReps ? Number.parseInt(reps, 10) : 1;
-  const valid =
-    Number.isFinite(loadNum) &&
-    (meta.allowZero ? loadNum >= 0 : loadNum > 0) &&
-    Number.isInteger(repsNum) &&
-    repsNum > 0;
+  const { load: loadNum, reps: repsNum, valid } = parseSetInput(load, reps, meta);
 
   return (
     <div
