@@ -1,7 +1,7 @@
 <!-- Arquivo gerado pelo readme-kit. Não edite aqui: altere docs/readme/ e rode "readme-kit build". -->
 <div align="center">
 
-<img src="docs/assets/banner.svg" alt="FitLog: O diário de treino que cabe no bolso. github.com/diegonatalo/fitlog. Stack: Next.js 16, React 19, TypeScript 5, Tailwind CSS 4" width="100%" />
+<img src="docs/assets/banner.svg" alt="FitLog: O diário de treino que cabe no bolso. github.com/diegonatalo/fitlog. Stack: Next.js 16, React 19, TypeScript 6, Tailwind CSS 4" width="100%" />
 
 <br />
 
@@ -12,7 +12,7 @@
 
 ![Next.js](https://img.shields.io/badge/Next.js_16-000000?style=flat-square&logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React_19-20232a?style=flat-square&logo=react&logoColor=61dafb)
-![TypeScript](https://img.shields.io/badge/TypeScript_5-3178c6?style=flat-square&logo=typescript&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript_6-3178c6?style=flat-square&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white)
 ![PWA](https://img.shields.io/badge/PWA-instal%C3%A1vel-5a0fc8?style=flat-square&logo=pwa&logoColor=white)
 ![Dados](https://img.shields.io/badge/dados-s%C3%B3_no_seu_navegador-9fe02e?style=flat-square)
@@ -109,7 +109,7 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 
 <div align="center">
 
-<img src="docs/assets/stack.svg" alt="Stack: Next.js 16, React 19, TypeScript 5, Tailwind CSS 4, PWA, Phosphor Icons" width="100%" />
+<img src="docs/assets/stack.svg" alt="Stack: Next.js 16, React 19, TypeScript 6, Tailwind CSS 4, PWA, Phosphor Icons" width="100%" />
 
 </div>
 
