@@ -138,6 +138,7 @@ Para testar no celular, abra o endereço de rede que o `pnpm dev` mostra (o IP d
 | `pnpm build` | Checa os tipos e gera o build de produção em `.next/` |
 | `pnpm start` | Serve o build de produção (o service worker só roda nele) |
 | `pnpm lint` | Roda o ESLint |
+| `pnpm test:e2e` | Roda os testes de ponta a ponta (Playwright) |
 
 ### 🔑 Variáveis de ambiente
 
@@ -156,6 +157,13 @@ pnpm test
 Usa [Vitest](https://vitest.dev). Os testes cobrem a calculadora de cardio, as estatísticas e recordes de carga, a normalização e o schema dos dados salvos, o backup, as chaves de armazenamento e os formatadores de data e duração.
 
 Para reexecutar ao salvar: `pnpm test:watch`.
+
+Os testes de ponta a ponta (Playwright, em `e2e/`) abrem o app no Chromium e percorrem os fluxos inteiros: montar um treino, registrar uma série e finalizar, recarregar no meio do treino, exportar, apagar e importar o backup, e abrir todas as telas sem erros.
+
+```bash
+pnpm exec playwright install chromium   # só na primeira vez
+pnpm test:e2e                           # gera o build e testa contra ele
+```
 
 <br />
 
@@ -180,6 +188,7 @@ Para reexecutar ao salvar: `pnpm test:watch`.
 │   ├── paths.ts      rotas centralizadas
 │   └── router.tsx    Link, useNavigate e useParams sobre o roteador do Next
 └── types/        modelos e metadados dos tipos de carga
+e2e/              testes de ponta a ponta (Playwright)
 public/           ícones, manifest, service worker e imagem Open Graph
 ```
 > [!NOTE]
