@@ -13,6 +13,7 @@
 │   ├── paths.ts      rotas centralizadas
 │   └── router.tsx    Link, useNavigate e useParams sobre o roteador do Next
 └── types/        modelos e metadados dos tipos de carga
+e2e/              testes de ponta a ponta (Playwright)
 public/           ícones, manifest, service worker e imagem Open Graph
 ```
 > [!NOTE]

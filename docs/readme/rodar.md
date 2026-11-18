@@ -15,6 +15,7 @@ Para testar no celular, abra o endereço de rede que o `pnpm dev` mostra (o IP d
 | `pnpm build` | Checa os tipos e gera o build de produção em `.next/` |
 | `pnpm start` | Serve o build de produção (o service worker só roda nele) |
 | `pnpm lint` | Roda o ESLint |
+| `pnpm test:e2e` | Roda os testes de ponta a ponta (Playwright) |
 
 ### 🔑 Variáveis de ambiente
 
