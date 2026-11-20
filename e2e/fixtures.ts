@@ -2,7 +2,7 @@ import { expect, type Page } from "@playwright/test";
 
 /** Cria um treino pela tela "Novo treino" com exercícios da biblioteca. */
 export const createWorkout = async (page: Page, name: string, exercises: string[]) => {
-  await page.goto("/treino/novo");
+  await page.goto("/app/treino/novo");
   await page.getByLabel("Nome do treino").fill(name);
   for (const exercise of exercises) {
     await page.getByLabel("Buscar exercício").fill(exercise);

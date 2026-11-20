@@ -66,7 +66,7 @@ describe("TodayCard", () => {
     expect(screen.getByText("Nada planejado para hoje")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /planejar na agenda/i })).toHaveAttribute(
       "href",
-      "/agenda",
+      "/app/agenda",
     );
     await userEvent.click(screen.getByRole("button", { name: /treino livre/i }));
     expect(onStartFree).toHaveBeenCalledTimes(1);

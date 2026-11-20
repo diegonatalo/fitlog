@@ -3,11 +3,11 @@ import { patterns, paths, tabPatterns } from "@/lib/paths";
 
 describe("paths", () => {
   it("monta as rotas com parâmetros", () => {
-    expect(paths.exercise("e1")).toBe("/exercicio/e1");
-    expect(paths.workout("w1")).toBe("/treino/w1");
-    expect(paths.editWorkout("w1")).toBe("/treino/w1/editar");
-    expect(paths.session("s1")).toBe("/sessao/s1");
-    expect(paths.sessionDetail("s1")).toBe("/historico/s1");
+    expect(paths.exercise("e1")).toBe("/app/exercicio/e1");
+    expect(paths.workout("w1")).toBe("/app/treino/w1");
+    expect(paths.editWorkout("w1")).toBe("/app/treino/w1/editar");
+    expect(paths.session("s1")).toBe("/app/sessao/s1");
+    expect(paths.sessionDetail("s1")).toBe("/app/historico/s1");
   });
 
   it("cada rota gerada casa com o padrão de mesmo nome", () => {

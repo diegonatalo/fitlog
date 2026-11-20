@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import NextLink from "next/link";
 import {
   BarbellIcon,
   CaretLeftIcon,
@@ -37,9 +38,13 @@ export const Header = ({
             <CaretLeftIcon size={22} weight="bold" />
           </button>
         ) : (
-          <span className="grid size-9 place-items-center rounded-xl bg-accent text-accent-foreground">
+          <NextLink
+            href="/"
+            aria-label="FitLog, página inicial"
+            className="grid size-9 place-items-center rounded-xl bg-accent text-accent-foreground"
+          >
             <BarbellIcon size={22} weight="fill" />
-          </span>
+          </NextLink>
         )}
 
         <div className="min-w-0 flex-1">

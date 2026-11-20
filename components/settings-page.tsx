@@ -68,7 +68,7 @@ export const SettingsPage = () => {
 
       <Section
         title="Backup"
-        description="Seus dados ficam apenas neste aparelho. Exporte um backup para guardá-los ou levá-los para outro dispositivo."
+        description="Seus dados ficam apenas neste aparelho. Exporte um backup para guardá-los ou levá-los para outro dispositivo. O arquivo leva treinos, séries, histórico e o perfil do cardio (peso, idade e sexo): guarde em lugar seguro."
       >
         <div className="grid gap-2 sm:grid-cols-2">
           <ActionButton onClick={exportBackup} icon={<DownloadSimpleIcon size={20} weight="bold" />}>
