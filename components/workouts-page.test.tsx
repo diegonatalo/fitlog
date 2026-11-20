@@ -26,7 +26,7 @@ describe("WorkoutsPage", () => {
       workout("b", "Vazio", []),
     ]);
     const push = screen.getByRole("link", { name: /Push/ });
-    expect(push).toHaveAttribute("href", "/treino/a");
+    expect(push).toHaveAttribute("href", "/app/treino/a");
     expect(push).toHaveTextContent("2 exercícios");
     expect(push).toHaveTextContent("Peito");
     expect(screen.getByRole("link", { name: /Vazio/ })).toHaveTextContent(
@@ -38,7 +38,7 @@ describe("WorkoutsPage", () => {
     renderWith([workout("a", "Push", [])]);
     expect(screen.getByRole("link", { name: /Criar treino/ })).toHaveAttribute(
       "href",
-      "/treino/novo",
+      "/app/treino/novo",
     );
   });
 
@@ -47,7 +47,7 @@ describe("WorkoutsPage", () => {
     expect(screen.getByText("Monte seu primeiro treino")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Criar treino/ })).toHaveAttribute(
       "href",
-      "/treino/novo",
+      "/app/treino/novo",
     );
   });
 
@@ -55,7 +55,7 @@ describe("WorkoutsPage", () => {
     renderWith([]);
     expect(screen.getByRole("link", { name: /Ver exercícios/ })).toHaveAttribute(
       "href",
-      "/biblioteca",
+      "/app/biblioteca",
     );
   });
 });

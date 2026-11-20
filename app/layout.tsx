@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { Providers } from "@/components/providers";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { THEME_COLORS, THEME_KEY } from "@/lib/storage";
 import { themeScript } from "@/lib/theme";
@@ -79,7 +78,7 @@ export default function RootLayout({
           {themeScript(THEME_KEY, THEME_COLORS)}
         </Script>
         <noscript>O FitLog precisa de JavaScript para funcionar.</noscript>
-        <Providers>{children}</Providers>
+        {children}
       </body>
     </html>
   );

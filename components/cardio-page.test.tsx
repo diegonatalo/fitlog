@@ -28,7 +28,7 @@ const setup = (cardioProfile: CardioProfile | null, cardioSessions: CardioSessio
 describe("CardioPage", () => {
   it("sem perfil, pede para preencher e não mostra estimativa", () => {
     setup(null);
-    expect(screen.getByRole("link", { name: "Preencher perfil" })).toHaveAttribute("href", "/ajustes");
+    expect(screen.getByRole("link", { name: "Preencher perfil" })).toHaveAttribute("href", "/app/ajustes");
     expect(screen.queryByText("Calorias")).toBeNull();
   });
 

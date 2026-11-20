@@ -1,13 +1,14 @@
 /* FitLog service worker: makes the app installable and usable offline. */
-const CACHE = "fitlog-v2";
-const SHELL = ["/", "/manifest.webmanifest", "/favicon.svg", "/icon-192.png"];
+const CACHE = "fitlog-v3";
+// The app lives under /app since the landing took "/".
+const SHELL = ["/app", "/manifest.webmanifest", "/favicon.svg", "/icon-192.png"];
 
 /** Caches the shell and the hashed JS/CSS files that the home page references. */
 async function precache() {
   const cache = await caches.open(CACHE);
   await cache.addAll(SHELL);
   try {
-    const html = await (await cache.match("/")).text();
+    const html = await (await cache.match("/app")).text();
     const assets = new Set(html.match(/\/_next\/static\/[^"'\\\s)]+/g) ?? []);
     await Promise.all(
       [...assets].map((url) => cache.add(url).catch(() => undefined)),
@@ -51,7 +52,7 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() =>
-          caches.match(request).then((cached) => cached || caches.match("/")),
+          caches.match(request).then((cached) => cached || caches.match("/app")),
         ),
     );
     return;

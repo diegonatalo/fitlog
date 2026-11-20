@@ -58,7 +58,7 @@ describe("WorkoutForm (novo)", () => {
     await userEvent.click(screen.getByRole("button", { name: "Subir Crucifixo" }));
     await userEvent.click(screen.getByRole("button", { name: "Criar treino" }));
     expect(store.addWorkout).toHaveBeenCalledWith("Peito", ["ex-crucifixo", "ex-supino-reto"]);
-    expect(router.navigate).toHaveBeenCalledWith("/treino/novo", { replace: true });
+    expect(router.navigate).toHaveBeenCalledWith("/app/treino/novo", { replace: true });
   });
 
   it("a busca filtra a biblioteca", async () => {
@@ -98,6 +98,6 @@ describe("WorkoutForm (editando)", () => {
   it("treino que não existe redireciona para a lista", () => {
     router.params = { id: "sumiu" };
     setup([push]);
-    expect(screen.getByText("redirecionado para /treinos")).toBeInTheDocument();
+    expect(screen.getByText("redirecionado para /app/treinos")).toBeInTheDocument();
   });
 });

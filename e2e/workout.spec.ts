@@ -18,7 +18,7 @@ test("monta um treino, registra uma série e salva no histórico", async ({ page
   await expect(title(page, "Treino A")).toBeVisible();
 
   // Depois de recarregar, a sessão continua no histórico.
-  await page.goto("/historico");
+  await page.goto("/app/historico");
   await page.reload();
   await expect(page.getByText("Treino A").first()).toBeVisible();
 });
@@ -37,6 +37,6 @@ test("o treino em andamento sobrevive a recarregar a página", async ({ page }) 
 });
 
 test("não cria treino sem nome", async ({ page }) => {
-  await page.goto("/treino/novo");
+  await page.goto("/app/treino/novo");
   await expect(page.getByRole("button", { name: "Criar treino" })).toBeDisabled();
 });
