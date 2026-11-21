@@ -6,6 +6,7 @@ import { buildBackup } from "@/lib/schema";
 import { StoreContext } from "@/hooks/use-store";
 
 vi.mock("@/components/cardio-profile-form", () => ({ CardioProfileForm: () => null }));
+vi.mock("@/components/account-section", () => ({ AccountSection: () => null }));
 
 import { SettingsPage } from "./settings-page";
 

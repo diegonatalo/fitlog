@@ -1,5 +1,4 @@
-import { expect, test } from "@playwright/test";
-import { createWorkout } from "./fixtures";
+import { createWorkout, expect, saved, test } from "./fixtures";
 
 test("exporta o backup, apaga tudo e importa de volta", async ({ page }, testInfo) => {
   await createWorkout(page, "Treino Costas", ["Supino reto"]);
@@ -16,6 +15,7 @@ test("exporta o backup, apaga tudo e importa de volta", async ({ page }, testInf
   await page.getByRole("button", { name: "Apagar todos os dados" }).click();
   await page.getByRole("button", { name: "Apagar tudo" }).click();
   await expect(page.getByRole("status")).toHaveText("Dados apagados.");
+  await saved(page);
   await page.goto("/app/treinos");
   await expect(page.getByText("Monte seu primeiro treino")).toBeVisible();
 
@@ -25,6 +25,7 @@ test("exporta o backup, apaga tudo e importa de volta", async ({ page }, testInf
   await expect(page.getByText(/O backup tem \d+ treinos/)).toBeVisible();
   await page.getByRole("button", { name: "Importar", exact: true }).click();
   await expect(page.getByRole("status")).toHaveText("Backup importado com sucesso.");
+  await saved(page);
 
   await page.goto("/app/treinos");
   await expect(page.getByRole("link", { name: /Treino Costas/ })).toBeVisible();

@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { PRIVACY_EMAIL, SOURCE_URL } from "@/lib/site";
 
 /** Data da última mudança nos textos (`AAAA-MM-DD`). */
-const UPDATED_AT = "2026-11-20";
+const UPDATED_AT = "2026-11-21";
 
 const linkClass = "font-semibold text-accent underline underline-offset-2";
 
@@ -35,7 +35,7 @@ export const PrivacyPage = () => (
     <LegalPage
       header={<Header />}
       title="Privacidade"
-      summary="O FitLog guarda seus treinos só no seu aparelho. Nada do que você registra vai para um servidor."
+      summary="O FitLog guarda seus treinos na sua conta, num banco de dados, para você acessar de qualquer aparelho. Só você vê o que registra."
       updatedAt={UPDATED_AT}
       sections={[
         {
@@ -44,14 +44,17 @@ export const PrivacyPage = () => (
           content: (
             <>
               <p>
-                Seus treinos, a agenda da semana, as séries registradas (carga e repetições), o histórico das sessões,
-                as sessões de cardio e o tempo de descanso. Se você preencher o perfil do cardio, também{" "}
-                <strong>peso, idade e sexo</strong>, usados só para estimar calorias e frequência cardíaca. E a sua
-                escolha de tema claro ou escuro.
+                Da sua conta: <strong>nome e e-mail</strong>, e a senha, guardada só como hash (não dá para ler a senha
+                a partir dele). Para manter você conectado, também o endereço IP e o navegador de cada sessão.
               </p>
               <p>
-                Tudo fica no armazenamento do navegador (localStorage), neste aparelho. Para funcionar sem internet, o
-                app também guarda uma cópia das próprias telas no navegador. Nós não temos acesso a nada disso.
+                Do app: seus treinos, a agenda da semana, as séries registradas (carga e repetições), o histórico das
+                sessões, as sessões de cardio e o tempo de descanso. Se você preencher o perfil do cardio, também{" "}
+                <strong>peso, idade e sexo</strong>, usados só para estimar calorias e frequência cardíaca.
+              </p>
+              <p>
+                Esses dados ficam num banco de dados Postgres, ligados à sua conta, e só são usados para o app
+                funcionar. No seu navegador ficam apenas o cookie de sessão e a escolha de tema claro ou escuro.
               </p>
             </>
           ),
@@ -60,10 +63,18 @@ export const PrivacyPage = () => (
           id: "terceiros",
           title: "Quem mais recebe dados",
           content: (
-            <p>
-              Só a <strong>Vercel</strong>, a hospedagem do site, que registra dados técnicos de acesso (como IP e
-              navegador) para entregar as páginas. Não usamos cookies, estatísticas de visita nem propaganda.
-            </p>
+            <>
+              <p>
+                A <strong>Vercel</strong>, a hospedagem do site, que registra dados técnicos de acesso (como IP e
+                navegador) para entregar as páginas, e o <strong>Neon</strong>, onde fica o banco de dados. Os dois só
+                guardam e processam os dados para o FitLog funcionar; nenhum deles usa seus dados para outra coisa.
+              </p>
+              <p>
+                O único cookie é o de sessão, necessário para manter você conectado. Não usamos estatísticas de
+                visita, propaganda nem cookies de rastreamento, e não vendemos nem compartilhamos dados com mais
+                ninguém.
+              </p>
+            </>
           ),
         },
         {
@@ -81,8 +92,9 @@ export const PrivacyPage = () => (
           title: "Como apagar",
           content: (
             <p>
-              Em Ajustes, use &quot;Apagar todos os dados&quot;, ou limpe os dados deste site nas configurações do
-              navegador. Depois disso, não há como recuperar, a não ser por um backup.
+              Em Ajustes, &quot;Apagar todos os dados&quot; apaga treinos, séries, histórico e cardio e mantém a conta.
+              &quot;Excluir conta&quot; apaga a conta e tudo o que está nela. Nos dois casos não há como recuperar, a
+              não ser por um backup.
             </p>
           ),
         },
@@ -137,8 +149,10 @@ export const TermsPage = () => (
           title: "Seus dados",
           content: (
             <p>
-              Os dados ficam só no seu aparelho, e fazer backup é responsabilidade sua: limpar o navegador, trocar de
-              aparelho ou usar uma aba anônima pode apagar tudo. Detalhes em{" "}
+              Para usar o app você cria uma conta com e-mail e senha; guarde a senha com você e não a compartilhe. Seus
+              dados ficam na sua conta, e você pode apagá-los ou excluir a conta a qualquer momento em Ajustes. O FitLog
+              é um projeto pessoal, sem garantia de que os dados nunca se percam: se eles importam para você, baixe um
+              backup de vez em quando. Detalhes em{" "}
               <Link href="/privacidade" className={linkClass}>
                 Privacidade
               </Link>

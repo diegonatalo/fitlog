@@ -4,8 +4,8 @@ export const HERO = {
   kicker: "Diário de treino",
   title: "O caderninho da academia, no bolso e mais esperto.",
   subtitle:
-    "Registre cada série em poucos toques, veja o que você fez no treino passado e saiba na hora quando bateu um recorde. Funciona no celular, até sem internet.",
-  note: "Grátis e sem cadastro. Seus dados ficam só no seu aparelho.",
+    "Registre cada série em poucos toques, veja o que você fez no treino passado e saiba na hora quando bateu um recorde. Funciona no celular e no computador, com tudo salvo na sua conta.",
+  note: "Grátis. Crie sua conta com e-mail e senha em poucos segundos.",
 };
 
 export type Step = { title: string; text: string };
@@ -25,7 +25,7 @@ export const STEPS: Step[] = [
   },
 ];
 
-export type FeatureIcon = "log" | "record" | "calendar" | "timer" | "cardio" | "offline";
+export type FeatureIcon = "log" | "record" | "calendar" | "timer" | "cardio" | "devices";
 
 export type Feature = { icon: FeatureIcon; title: string; text: string };
 
@@ -56,9 +56,9 @@ export const FEATURES: Feature[] = [
     text: "Estime calorias e frequência cardíaca na esteira a partir de velocidade, inclinação e tempo.",
   },
   {
-    icon: "offline",
-    title: "Instala como app",
-    text: "Adicione à tela inicial do celular e use mesmo sem internet na academia.",
+    icon: "devices",
+    title: "Em qualquer aparelho",
+    text: "Entre com sua conta no celular ou no computador e encontre seus treinos do jeito que deixou.",
   },
 ];
 
@@ -74,15 +74,15 @@ export const SCREENSHOT: Screenshot = {
 export type Faq = { question: string; answer: string };
 
 export const FAQ: Faq[] = [
-  { question: "É grátis?", answer: "É. Não tem plano pago, cadastro nem anúncio." },
+  { question: "É grátis?", answer: "É. Não tem plano pago nem anúncio; só pede uma conta com e-mail e senha." },
   {
     question: "Onde ficam os meus dados?",
-    answer: "Só no seu aparelho, no navegador. Nada do que você registra vai para um servidor.",
+    answer: "Na sua conta, num banco de dados protegido. Só você vê o que registra, e pode apagar tudo quando quiser.",
   },
   {
-    question: "Como levo para outro celular?",
+    question: "Como uso em outro celular?",
     answer:
-      "Em Ajustes, exporte o backup num aparelho e importe no outro. Limpar os dados do navegador apaga tudo, então guarde um backup.",
+      "É só entrar com a mesma conta: seus treinos, séries e histórico aparecem lá. Em Ajustes, você também pode baixar um backup.",
   },
   {
     question: "Substitui um profissional?",
@@ -99,4 +99,4 @@ export const PHOTOS = {
 } satisfies Record<string, Photo>;
 
 /** Fatos curtos da faixa logo abaixo do topo. */
-export const FACTS = ["Poucos toques por série", "Descanso que começa sozinho", "Recordes na hora", "Funciona sem internet"];
+export const FACTS = ["Poucos toques por série", "Descanso que começa sozinho", "Recordes na hora", "Salvo na sua conta"];

@@ -20,7 +20,7 @@ export const ErrorScreen = ({ error, retry }: ErrorScreenProps) => {
       <EmptyState
         icon={WarningIcon}
         title="Algo deu errado"
-        description="Esta tela encontrou um erro inesperado. Seus treinos continuam salvos neste aparelho."
+        description="Esta tela encontrou um erro inesperado. Seus treinos continuam salvos na sua conta."
         action={
           <div className="flex flex-wrap justify-center gap-2">
             <button

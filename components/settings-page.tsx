@@ -13,6 +13,7 @@ import { EXERCISES } from "@/lib/exercises";
 import { useStore } from "@/hooks/use-store";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { CardioProfileForm } from "@/components/cardio-profile-form";
+import { AccountSection } from "@/components/account-section";
 
 type Notice = { kind: "ok" | "error"; text: string } | null;
 
@@ -60,6 +61,13 @@ export const SettingsPage = () => {
   return (
     <div className="flex flex-col gap-6">
       <Section
+        title="Conta"
+        description="Seus dados ficam salvos nesta conta e aparecem em qualquer aparelho em que você entrar."
+      >
+        <AccountSection />
+      </Section>
+
+      <Section
         title="Perfil"
         description="Usado nas estimativas de calorias e frequência cardíaca da aba Cardio."
       >
@@ -68,7 +76,7 @@ export const SettingsPage = () => {
 
       <Section
         title="Backup"
-        description="Seus dados ficam apenas neste aparelho. Exporte um backup para guardá-los ou levá-los para outro dispositivo. O arquivo leva treinos, séries, histórico e o perfil do cardio (peso, idade e sexo): guarde em lugar seguro."
+        description="Baixe uma cópia dos seus dados ou traga um backup antigo para esta conta. O arquivo leva treinos, séries, histórico e o perfil do cardio (peso, idade e sexo): guarde em lugar seguro."
       >
         <div className="grid gap-2 sm:grid-cols-2">
           <ActionButton onClick={exportBackup} icon={<DownloadSimpleIcon size={20} weight="bold" />}>
@@ -104,7 +112,7 @@ export const SettingsPage = () => {
 
       <Section
         title="Zona de perigo"
-        description="Apaga treinos, sessões e registros deste aparelho."
+        description="Apaga treinos, sessões e registros da sua conta. A conta continua existindo."
       >
         <button
           onClick={() => setConfirmClear(true)}

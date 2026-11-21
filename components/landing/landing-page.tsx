@@ -22,7 +22,7 @@ const ICONS: Record<FeatureIcon, typeof TimerIcon> = {
   calendar: CalendarDotsIcon,
   timer: TimerIcon,
   cardio: HeartbeatIcon,
-  offline: DeviceMobileIcon,
+  devices: DeviceMobileIcon,
 };
 
 const WRAP = "mx-auto w-full max-w-6xl px-5";
@@ -170,7 +170,7 @@ export const LandingPage = () => (
           <p className="flex items-start gap-3 rounded-2xl border border-border bg-card p-5 text-sm">
             <ShieldCheckIcon size={22} weight="bold" className="mt-0.5 shrink-0 text-accent" aria-hidden="true" />
             <span>
-              Seus treinos são só seus: tudo fica no seu aparelho, sem conta nem cookies de rastreamento.{" "}
+              Seus treinos são só seus: ficam na sua conta, sem propaganda nem cookies de rastreamento.{" "}
               <Link href="/privacidade" className="font-semibold underline underline-offset-2">
                 Leia a política de privacidade
               </Link>

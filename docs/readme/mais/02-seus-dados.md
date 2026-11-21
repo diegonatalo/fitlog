@@ -1,12 +1,12 @@
 ### 🔒 Seus dados
 
-Tudo fica no `localStorage` do seu navegador. Não há conta, servidor nem rastreamento.
+Os dados ficam num banco Postgres ([Neon](https://neon.tech)), ligados à sua conta, e aparecem em qualquer aparelho em que você entrar. O login é por e-mail e senha, com [Better Auth](https://www.better-auth.com).
 
-- Ao carregar, cada registro é validado: dados corrompidos ou editados à mão são descartados em vez de quebrar o app.
-- Abas abertas ao mesmo tempo ficam sincronizadas.
-- O app pode ser instalado e funciona offline na versão publicada (service worker). As telas já abertas ficam guardadas; abrir pela primeira vez, sem rede, um link direto para uma tela nunca visitada leva ao início.
+- Toda tabela do app tem chave `(user_id, id)` e cada Server Action confere a sessão antes de ler ou gravar: uma conta nunca alcança as linhas de outra.
+- A tela atualiza na hora e a mudança é salva em segundo plano. Se um salvamento falhar, aparece um aviso para recarregar. Fechar a aba no meio de um salvamento pede confirmação.
+- O que chega ao servidor passa pela mesma validação do backup: dados inválidos são recusados.
+- No navegador ficam só o cookie de sessão e a escolha de tema. O service worker guarda em cache só arquivos estáticos e as páginas públicas, nunca as telas do app.
 
 > [!NOTE]
-> Limpar os dados do navegador apaga o histórico. Em **Ajustes**, use **Exportar backup** para
-> salvar um arquivo JSON (treinos, cardio e perfil) e **Importar backup** para restaurá-lo, inclusive em outro aparelho.
-> Backups feitos antes da aba Cardio continuam sendo importados normalmente.
+> Em **Ajustes**, **Exportar backup** salva um arquivo JSON (treinos, cardio e perfil) e **Importar backup** o traz para a conta.
+> **Apagar todos os dados** limpa a conta, e **Excluir conta** apaga a conta e tudo o que está nela.

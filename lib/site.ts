@@ -8,18 +8,11 @@ export const SITE_URL = (
   "https://dn-fitlog.vercel.app"
 ).replace(/\/+$/, "");
 
-/** Páginas públicas, listadas no sitemap. O resto do app são dados de cada pessoa. */
-export const ROUTES = [
-  "/",
-  "/app",
-  "/app/agenda",
-  "/app/treinos",
-  "/app/biblioteca",
-  "/app/historico",
-  "/app/cardio",
-  "/privacidade",
-  "/termos",
-];
+/**
+ * Páginas públicas, listadas no sitemap. O app (`/app`) pede login e as telas de
+ * entrar e criar conta não são indexadas.
+ */
+export const ROUTES = ["/", "/privacidade", "/termos"];
 
 /**
  * Contato para pedidos sobre dados pessoais (LGPD, art. 18), mostrado em `/privacidade`.
@@ -32,4 +25,4 @@ export const SOURCE_URL = "https://github.com/diegonatalo/fitlog";
 
 export const SITE_NAME = "FitLog";
 export const SITE_DESCRIPTION =
-  "FitLog é o diário de treino que cabe no bolso: registre séries, monte treinos, bata recordes, estime calorias e frequência cardíaca na esteira e acompanhe sua evolução. Grátis, offline e sem cadastro.";
+  "FitLog é o diário de treino que cabe no bolso: registre séries, monte treinos, bata recordes, estime calorias e frequência cardíaca na esteira e acompanhe sua evolução. Grátis, com seus dados salvos na sua conta.";
