@@ -4,6 +4,7 @@ import type { WorkoutSet } from "@/types";
 import { loadTypeMeta } from "@/types";
 import { cn } from "@/lib/cn";
 import { parseSetInput } from "@/lib/set-input";
+import { LIMITS } from "@/lib/schema";
 import { Stepper } from "./stepper";
 
 type EditSetDialogProps = {
@@ -70,7 +71,7 @@ export const EditSetDialog = ({ set, onClose, onSave }: EditSetDialogProps) => {
           id="set-note"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          maxLength={120}
+          maxLength={LIMITS.setNote}
           placeholder="Ex: falha na última, ajuste do banco..."
           className="w-full rounded-xl border border-input bg-background px-4 py-3 text-base outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"
         />

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  LIMITS,
   normalizeCardioProfile,
   normalizeCardioSession,
   normalizeSchedule,
@@ -141,5 +142,39 @@ describe("normalizeList", () => {
     expect(result).toHaveLength(1);
     expect(normalizeList({}, normalizeWorkout)).toBeNull();
     expect(normalizeList(undefined, normalizeWorkout)).toBeNull();
+  });
+});
+
+describe("limites", () => {
+  const long = (n: number) => "a".repeat(n);
+
+  it("recusa ids mais longos que o limite", () => {
+    expect(normalizeWorkout({ id: long(LIMITS.id + 1), name: "A" })).toBeNull();
+    expect(normalizeWorkout({ id: long(LIMITS.id), name: "A" })).not.toBeNull();
+  });
+
+  it("corta nomes e anotações longas", () => {
+    expect(normalizeWorkout({ id: "w", name: long(500) })?.name).toHaveLength(LIMITS.name);
+    const set = normalizeSet({ id: "s", exerciseId: "e", load: 1, reps: 1, note: long(1000) });
+    expect(set?.note).toHaveLength(LIMITS.setNote);
+    const session = normalizeSession({ id: "x", startedAt: 1, note: long(5000) });
+    expect(session?.note).toHaveLength(LIMITS.sessionNote);
+  });
+
+  it("limita e tira repetidos dos exercícios de um treino", () => {
+    const ids = Array.from({ length: LIMITS.exercisesPerWorkout + 50 }, (_, i) => `ex-${i}`);
+    expect(normalizeWorkout({ id: "w", name: "A", exerciseIds: ids })?.exerciseIds).toHaveLength(
+      LIMITS.exercisesPerWorkout,
+    );
+    expect(normalizeWorkout({ id: "w", name: "A", exerciseIds: ["a", "a", "b"] })?.exerciseIds).toEqual(["a", "b"]);
+  });
+
+  it("guarda só os dias mais recentes da agenda", () => {
+    const days = Array.from({ length: LIMITS.scheduleDays + 10 }, (_, i) => ({
+      date: `2026-01-${String((i % 28) + 1).padStart(2, "0")}`,
+      plan: { type: "rest" },
+    }));
+    const schedule = normalizeSchedule({ days, rules: [] });
+    expect(schedule.days).toHaveLength(LIMITS.scheduleDays);
   });
 });

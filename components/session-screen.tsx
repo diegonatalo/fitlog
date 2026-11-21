@@ -9,6 +9,7 @@ import { getExercise, setsForEquipment } from "@/lib/exercises";
 import { paths } from "@/lib/paths";
 import { formatClock } from "@/lib/format";
 import { isNewRecord } from "@/lib/stats";
+import { LIMITS } from "@/lib/schema";
 import { useStore } from "@/hooks/use-store";
 import { useNow } from "@/hooks/use-now";
 import { ConfirmDialog } from "@/components/confirm-dialog";
@@ -128,7 +129,7 @@ export const SessionScreen = () => {
             store.updateSession(session.id, { note: e.target.value })
           }
           rows={2}
-          maxLength={500}
+          maxLength={LIMITS.sessionNote}
           placeholder="Como foi o treino? Dores, energia, sono..."
           className="w-full resize-none rounded-xl border border-input bg-background px-4 py-3 text-base outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"
         />

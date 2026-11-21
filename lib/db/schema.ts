@@ -1,4 +1,5 @@
 import {
+  bigint,
   boolean,
   doublePrecision,
   index,
@@ -83,6 +84,17 @@ export const verification = pgTable(
   },
   (t) => [index("verification_identifier_idx").on(t.identifier)],
 );
+
+/**
+ * Tentativas de login e cadastro por IP. No banco, e não na memória, para o
+ * limite valer entre todas as instâncias do servidor na Vercel.
+ */
+export const rateLimit = pgTable("rate_limit", {
+  id: text("id").primaryKey(),
+  key: text("key").notNull().unique(),
+  count: integer("count").notNull(),
+  lastRequest: bigint("last_request", { mode: "number" }).notNull(),
+});
 
 /* ---------- FitLog ----------
  * Ids are generated in the browser (`uid`), so every key is (user_id, id):
