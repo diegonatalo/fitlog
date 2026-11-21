@@ -89,3 +89,14 @@ export const FAQ: Faq[] = [
     answer: "Não. O FitLog registra o que você faz; a orientação do treino é com um profissional de educação física.",
   },
 ];
+
+export type Photo = { src: string; alt: string };
+
+/** Fotos do Unsplash (licença livre), guardadas em `public/landing/`. */
+export const PHOTOS = {
+  hero: { src: "/landing/academia.webp", alt: "Mãos segurando dois halteres numa academia escura." },
+  rack: { src: "/landing/halteres.webp", alt: "Fileira de halteres num suporte de academia." },
+} satisfies Record<string, Photo>;
+
+/** Fatos curtos da faixa logo abaixo do topo. */
+export const FACTS = ["Poucos toques por série", "Descanso que começa sozinho", "Recordes na hora", "Funciona sem internet"];
