@@ -22,5 +22,12 @@ export default defineConfig({
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !CI,
     timeout: 180_000,
+    // O banco vem do DATABASE_URL (no CI, um Postgres só para os testes; aqui,
+    // a branch de dev do Neon no .env.local). Cada teste cria a própria conta,
+    // então o limite de tentativas de login fica desligado.
+    env: {
+      BETTER_AUTH_URL: `http://localhost:${PORT}`,
+      AUTH_RATE_LIMIT: "off",
+    },
   },
 });

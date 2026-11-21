@@ -16,7 +16,7 @@ import { isDateKey } from "./dates";
 
 /**
  * Runtime validation for everything that comes from outside the app's own
- * memory: localStorage (may be stale or hand-edited) and imported backups.
+ * memory: imported backups and whatever the browser sends to a Server Action.
  * Each normalizer returns a clean record, or null when it is unusable.
  */
 
@@ -191,6 +191,18 @@ export type BackupData = {
   cardioSessions: CardioSession[];
   cardioProfile: CardioProfile | null;
   schedule: Schedule;
+};
+
+/** Everything the app loads for the signed-in person: the backup plus preferences. */
+export type AppData = BackupData & { restSeconds: number };
+
+export const EMPTY_BACKUP: BackupData = {
+  sets: [],
+  workouts: [],
+  sessions: [],
+  cardioSessions: [],
+  cardioProfile: null,
+  schedule: { days: [], rules: [] },
 };
 
 type BackupFile = BackupData & {

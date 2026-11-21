@@ -1,5 +1,5 @@
-import { expect, test, type Page } from "@playwright/test";
-import { createWorkout } from "./fixtures";
+import type { Page } from "@playwright/test";
+import { createWorkout, expect, test } from "./fixtures";
 
 // Gera os prints da landing em public/landing/. Fica fora da suíte normal:
 // rode com `SCREENSHOTS=1 pnpm test:e2e e2e/screenshots.spec.ts`.

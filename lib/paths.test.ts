@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { patterns, paths, tabPatterns } from "@/lib/paths";
+import { patterns, paths, signInPath, tabPatterns } from "@/lib/paths";
 
 describe("paths", () => {
   it("monta as rotas com parâmetros", () => {
@@ -19,6 +19,12 @@ describe("paths", () => {
     expect(toRegex(patterns.editWorkout).test(paths.editWorkout("abc"))).toBe(true);
     expect(toRegex(patterns.session).test(paths.session("abc"))).toBe(true);
     expect(toRegex(patterns.sessionDetail).test(paths.sessionDetail("abc"))).toBe(true);
+  });
+
+  it("o link de login guarda a página de volta, menos quando é o início do app", () => {
+    expect(signInPath()).toBe("/entrar");
+    expect(signInPath("/app")).toBe("/entrar");
+    expect(signInPath("/app/treino/abc?x=1")).toBe("/entrar?de=%2Fapp%2Ftreino%2Fabc%3Fx%3D1");
   });
 
   it("as abas da barra inferior são as cinco telas principais", () => {

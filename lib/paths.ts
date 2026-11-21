@@ -13,7 +13,18 @@ export const paths = {
   editWorkout: (id: string) => `/app/treino/${id}/editar`,
   session: (id: string) => `/app/sessao/${id}`,
   sessionDetail: (id: string) => `/app/historico/${id}`,
+  signIn: "/entrar",
+  signUp: "/cadastro",
 } as const;
+
+/** Query param that carries the page to return to after signing in. */
+export const RETURN_PARAM = "de";
+
+/** Sign-in link that brings the person back to `from` afterwards. */
+export const signInPath = (from?: string) =>
+  from && from !== paths.home
+    ? `${paths.signIn}?${RETURN_PARAM}=${encodeURIComponent(from)}`
+    : paths.signIn;
 
 /** Route patterns, used for matching (header titles, active tab). */
 export const patterns = {

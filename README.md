@@ -15,7 +15,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript_6-3178c6?style=flat-square&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white)
 ![PWA](https://img.shields.io/badge/PWA-instal%C3%A1vel-5a0fc8?style=flat-square&logo=pwa&logoColor=white)
-![Dados](https://img.shields.io/badge/dados-s%C3%B3_no_seu_navegador-9fe02e?style=flat-square)
+![Dados](https://img.shields.io/badge/dados-na_sua_conta-9fe02e?style=flat-square)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-16a34a?style=flat-square)
 
 </div>
@@ -29,7 +29,7 @@
 </div>
 
 **O diário de treino que cabe no bolso.**<br />
-Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja sua evolução, sem cadastro e sem internet.
+Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja sua evolução, com tudo salvo na sua conta e disponível em qualquer aparelho.
 
 <br />
 
@@ -96,6 +96,7 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 <img src="docs/assets/f-10.svg" alt="Funcionalidade 10: Biblioteca. Busca, filtro por grupo muscular e 24 exercícios de exemplo. Exercícios com histórico são arquivados, não apagados." width="49%" />
 <br />
 <img src="docs/assets/f-11.svg" alt="Funcionalidade 11: Histórico de sessões. Duração, séries e anotações de cada treino concluído, com edição de qualquer série. Um seletor alterna entre Treinos e Cardio." width="49%" />
+<img src="docs/assets/f-12.svg" alt="Funcionalidade 12: Conta. Entre com e-mail e senha e encontre seus treinos em qualquer aparelho. Em Ajustes dá para sair, apagar os dados ou excluir a conta." width="49%" />
 
 </div>
 
@@ -109,7 +110,7 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 
 <div align="center">
 
-<img src="docs/assets/stack.svg" alt="Stack: Next.js 16, React 19, TypeScript 6, Tailwind CSS 4, PWA, Phosphor Icons" width="100%" />
+<img src="docs/assets/stack.svg" alt="Stack: Next.js 16, React 19, TypeScript 6, Tailwind CSS 4, Better Auth, Drizzle ORM, Neon Postgres, PWA, Phosphor Icons" width="100%" />
 
 </div>
 
@@ -121,13 +122,15 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 
 </div>
 
-Requer [Node.js](https://nodejs.org) e [pnpm](https://pnpm.io).
+Requer [Node.js](https://nodejs.org), [pnpm](https://pnpm.io) e um banco Postgres (uma branch `dev` no [Neon](https://neon.tech) serve).
 
 ```bash
 git clone https://github.com/diegonatalo/fitlog.git
 cd fitlog
 pnpm install
-pnpm dev        # http://localhost:3000
+cp .env.example .env.local   # preencha DATABASE_URL e BETTER_AUTH_SECRET
+pnpm db:migrate              # cria as tabelas no banco do .env.local
+pnpm dev                     # http://localhost:3000
 ```
 
 Para testar no celular, abra o endereço de rede que o `pnpm dev` mostra (o IP da sua máquina) na mesma rede Wi-Fi.
@@ -139,13 +142,19 @@ Para testar no celular, abra o endereço de rede que o `pnpm dev` mostra (o IP d
 | `pnpm start` | Serve o build de produção (o service worker só roda nele) |
 | `pnpm lint` | Roda o ESLint |
 | `pnpm test:e2e` | Roda os testes de ponta a ponta (Playwright) |
+| `pnpm db:generate` | Gera uma migração SQL em `drizzle/` depois de mudar `lib/db/schema.ts` |
+| `pnpm db:migrate` | Aplica as migrações pendentes no banco do `.env.local` |
 
 ### 🔑 Variáveis de ambiente
 
-Há uma só, e é opcional. Veja [`.env.example`](.env.example).
+Veja [`.env.example`](.env.example).
 
 | Variável | Descrição | Se não definir |
 |---|---|---|
+| `DATABASE_URL` | URL do Postgres, com pooler. Em desenvolvimento, use uma branch `dev`, nunca a de produção. | O app não abre |
+| `DATABASE_URL_UNPOOLED` | URL sem pooler, usada pelas migrações. | As migrações usam a `DATABASE_URL` |
+| `BETTER_AUTH_SECRET` | Segredo que assina os cookies de sessão. Gere com `openssl rand -base64 32`, um por ambiente. | Em produção, o login e o app dão erro |
+| `BETTER_AUTH_URL` | Endereço do site em desenvolvimento e nos testes, sem barra no final. Na Vercel não precisa: vale o `SITE_URL`. | Better Auth deduz pela requisição e avisa no log |
 | `NEXT_PUBLIC_SITE_URL` | URL pública do site, usada no `canonical`, nas tags Open Graph, no `robots.txt` e no `sitemap.xml`. Sem barra no final. | Usa `https://dn-fitlog.vercel.app` |
 
 ### 🧪 Testes
@@ -154,16 +163,18 @@ Há uma só, e é opcional. Veja [`.env.example`](.env.example).
 pnpm test
 ```
 
-Usa [Vitest](https://vitest.dev). Os testes cobrem a calculadora de cardio, as estatísticas e recordes de carga, a normalização e o schema dos dados salvos, o backup, as chaves de armazenamento e os formatadores de data e duração.
+Usa [Vitest](https://vitest.dev). Os testes cobrem a calculadora de cardio, as estatísticas e recordes de carga, a normalização e o schema dos dados, o backup, o store (com a persistência simulada), a conversão entre linhas do banco e registros do app, a validação dos formulários de login e os formatadores de data e duração.
 
 Para reexecutar ao salvar: `pnpm test:watch`.
 
-Os testes de ponta a ponta (Playwright, em `e2e/`) abrem o app no Chromium e percorrem os fluxos inteiros: montar um treino, registrar uma série e finalizar, recarregar no meio do treino, exportar, apagar e importar o backup, e abrir todas as telas sem erros.
+Os testes de ponta a ponta (Playwright, em `e2e/`) abrem o app no Chromium com um banco de verdade. Cada teste cria a própria conta e percorre os fluxos inteiros: criar conta, sair e entrar de novo com os dados no lugar, senha errada, e-mail repetido, uma conta não ver os dados de outra, excluir a conta, montar um treino e registrar uma série, recarregar no meio do treino, exportar, apagar e importar o backup, e abrir todas as telas sem erros.
 
 ```bash
 pnpm exec playwright install chromium   # só na primeira vez
-pnpm test:e2e                           # gera o build e testa contra ele
+pnpm test:e2e                           # gera o build e testa contra o banco do .env.local
 ```
+
+No CI, o E2E roda contra um Postgres descartável do próprio GitHub Actions, nunca contra o Neon.
 
 <br />
 
@@ -174,26 +185,32 @@ pnpm test:e2e                           # gera o build e testa contra ele
 </div>
 
 ```text
-├── app/          rotas do Next (App Router): landing (/), o app em app/app/ (uma pasta por tela), /privacidade, /termos, robots e sitemap;
-│                 a tela de cada rota fica ao lado do page.tsx (componentes de cliente)
-├── components/   interface reutilizável (log-form, rest-timer, progress-chart…) e StoreProvider (o estado do app, lido com useStore())
-├── hooks/        use-workout-store, use-persisted-state (lê e grava o localStorage), use-store, use-theme, use-now
+├── app/          rotas do Next (App Router): landing (/), o app em app/app/ (uma pasta por tela), /entrar, /cadastro,
+│                 /privacidade, /termos, a API do Better Auth (api/auth), robots e sitemap
+├── components/   interface (log-form, rest-timer, progress-chart, auth-form…), SignedInApp (confere a sessão e carrega
+│                 os dados) e StoreProvider (o estado do app, lido com useStore())
+├── hooks/        use-workout-store (estado em memória, salvo por Server Actions), use-store, use-theme, use-now
 ├── lib/
+│   ├── db/           schema do banco (Drizzle) e conexão com o Postgres
+│   ├── data/         consultas, Server Actions e conversão entre linhas do banco e registros do app
+│   ├── auth.ts       configuração do Better Auth (e-mail e senha)
+│   ├── auth-form.ts  validação dos formulários de entrar e criar conta
 │   ├── schema.ts     validação dos dados e formato do backup
-│   ├── storage.ts    chaves e leitura validada dos dados salvos
-│   ├── defaults.ts   exercícios e treinos de exemplo
+│   ├── defaults.ts   treinos de exemplo de cada conta nova
 │   ├── stats.ts      recordes, 1RM e série histórica
 │   ├── cardio.ts     calorias, FC estimada, zonas, comparação e dicas da esteira
 │   ├── format.ts     datas, durações e cargas
 │   ├── paths.ts      rotas centralizadas
 │   └── router.tsx    Link, useNavigate e useParams sobre o roteador do Next
-└── types/        modelos e metadados dos tipos de carga
+├── types/        modelos e metadados dos tipos de carga
+└── proxy.ts      sem cookie de sessão, /app redireciona para /entrar
+drizzle/          migrações SQL geradas pelo drizzle-kit
 e2e/              testes de ponta a ponta (Playwright)
 public/           ícones, manifest, service worker e imagem Open Graph
 ```
 > [!NOTE]
-> O estado vive em um único hook (`useWorkoutStore`), servido por Context e persistido por
-> `usePersistedState`.
+> O estado vive em um único hook (`useWorkoutStore`), servido por Context. Ele começa com os dados
+> que o servidor carregou e manda cada mudança para uma Server Action, que confere a sessão e valida a entrada.
 
 <br />
 
@@ -212,16 +229,16 @@ public/           ícones, manifest, service worker e imagem Open Graph
 
 ### 🔒 Seus dados
 
-Tudo fica no `localStorage` do seu navegador. Não há conta, servidor nem rastreamento.
+Os dados ficam num banco Postgres ([Neon](https://neon.tech)), ligados à sua conta, e aparecem em qualquer aparelho em que você entrar. O login é por e-mail e senha, com [Better Auth](https://www.better-auth.com).
 
-- Ao carregar, cada registro é validado: dados corrompidos ou editados à mão são descartados em vez de quebrar o app.
-- Abas abertas ao mesmo tempo ficam sincronizadas.
-- O app pode ser instalado e funciona offline na versão publicada (service worker). As telas já abertas ficam guardadas; abrir pela primeira vez, sem rede, um link direto para uma tela nunca visitada leva ao início.
+- Toda tabela do app tem chave `(user_id, id)` e cada Server Action confere a sessão antes de ler ou gravar: uma conta nunca alcança as linhas de outra.
+- A tela atualiza na hora e a mudança é salva em segundo plano. Se um salvamento falhar, aparece um aviso para recarregar. Fechar a aba no meio de um salvamento pede confirmação.
+- O que chega ao servidor passa pela mesma validação do backup: dados inválidos são recusados.
+- No navegador ficam só o cookie de sessão e a escolha de tema. O service worker guarda em cache só arquivos estáticos e as páginas públicas, nunca as telas do app.
 
 > [!NOTE]
-> Limpar os dados do navegador apaga o histórico. Em **Ajustes**, use **Exportar backup** para
-> salvar um arquivo JSON (treinos, cardio e perfil) e **Importar backup** para restaurá-lo, inclusive em outro aparelho.
-> Backups feitos antes da aba Cardio continuam sendo importados normalmente.
+> Em **Ajustes**, **Exportar backup** salva um arquivo JSON (treinos, cardio e perfil) e **Importar backup** o traz para a conta.
+> **Apagar todos os dados** limpa a conta, e **Excluir conta** apaga a conta e tudo o que está nela.
 
 ### 🧠 Como funciona
 
@@ -240,11 +257,12 @@ Tudo fica no `localStorage` do seu navegador. Não há conta, servidor nem rastr
 
 ### 🌐 Deploy
 
-Publicado na [Vercel](https://vercel.com) em [dn-fitlog.vercel.app](https://dn-fitlog.vercel.app).
+Publicado na [Vercel](https://vercel.com) em [dn-fitlog.vercel.app](https://dn-fitlog.vercel.app), com o banco no Neon (integração de Storage da Vercel).
 
-- A Vercel detecta o Next.js, então não há configuração extra. O acesso direto a páginas como `/biblioteca` funciona, e um endereço desconhecido volta para o início.
-- O `robots.txt` e o `sitemap.xml` vêm de `app/robots.ts` e `app/sitemap.ts`. A landing fica em `/` e o app em `/app` (os endereços antigos sem `/app` redirecionam com 308, em `lib/redirects.ts`). O sitemap lista a landing, as telas fixas do app, `/privacidade` e `/termos`. O app instala como PWA com `start_url` em `/app`.
-- Ao trocar de domínio, defina `NEXT_PUBLIC_SITE_URL` (ou altere o valor padrão em `lib/site.ts`). Sem isso, o Open Graph, o `canonical` e o sitemap continuam apontando para o endereço antigo.
+- O script `vercel-build` aplica as migrações pendentes (`drizzle-kit migrate`, pela `DATABASE_URL_UNPOOLED`) e depois gera o build. Só a `main` é publicada (`vercel.json`), então só ela migra o banco de produção.
+- Em produção, defina só `BETTER_AUTH_SECRET` (um segredo próprio, diferente do de desenvolvimento). Na Vercel, o endereço do login é o mesmo `SITE_URL` do SEO, e a `DATABASE_URL` vem da integração com o Neon.
+- O `robots.txt` e o `sitemap.xml` vêm de `app/robots.ts` e `app/sitemap.ts`. A landing fica em `/` e o app em `/app`, que pede login (os endereços antigos sem `/app` redirecionam com 308, em `lib/redirects.ts`). O sitemap lista só as páginas públicas: a landing, `/privacidade` e `/termos`.
+- Ao trocar de domínio, defina `NEXT_PUBLIC_SITE_URL` (ou altere o valor padrão em `lib/site.ts`).
 
 ### 🧭 Próximos passos
 

@@ -1,26 +1,18 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type {
   CardioProfile,
   CardioSession,
   Equipment,
   LoadType,
   Plan,
+  Schedule,
   Workout,
   WorkoutSession,
   WorkoutSet,
 } from "@/types";
-import type { BackupData } from "@/lib/schema";
-import {
-  STORAGE_KEYS,
-  parseCardioProfile,
-  parseCardioSessions,
-  parseRestSeconds,
-  parseSchedule,
-  parseSessions,
-  parseSets,
-  parseWorkouts,
-  uid,
-} from "@/lib/storage";
+import type { AppData, BackupData } from "@/lib/schema";
+import { EMPTY_BACKUP } from "@/lib/schema";
+import { uid } from "@/lib/storage";
 import { clampRest } from "@/lib/rest";
 import {
   clearDay,
@@ -29,30 +21,70 @@ import {
   setRepeat,
   stopRepeat,
 } from "@/lib/schedule";
-import { usePersistedState } from "./use-persisted-state";
 
 export type Store = ReturnType<typeof useWorkoutStore>;
 
-export function useWorkoutStore() {
-  const [sets, setSets] = usePersistedState(STORAGE_KEYS.sets, parseSets);
-  const [workouts, setWorkouts] = usePersistedState(STORAGE_KEYS.workouts, parseWorkouts);
-  const [sessions, setSessions] = usePersistedState(STORAGE_KEYS.sessions, parseSessions);
-  const [cardioSessions, setCardioSessions] = usePersistedState(
-    STORAGE_KEYS.cardioSessions,
-    parseCardioSessions,
-  );
-  const [cardioProfile, setCardioProfile] = usePersistedState(
-    STORAGE_KEYS.cardioProfile,
-    parseCardioProfile,
-  );
-  const [schedule, setSchedule] = usePersistedState(STORAGE_KEYS.schedule, parseSchedule);
-  const [restSeconds, setRestSecondsState] = usePersistedState(
-    STORAGE_KEYS.restSeconds,
-    parseRestSeconds,
-  );
+/** Where each change is saved. In the app these are the Server Actions. */
+export type Persistence = {
+  saveSet: (set: WorkoutSet) => Promise<void>;
+  deleteSet: (id: string) => Promise<void>;
+  saveWorkout: (workout: Workout) => Promise<void>;
+  deleteWorkout: (id: string) => Promise<void>;
+  saveSession: (session: WorkoutSession) => Promise<void>;
+  deleteSession: (id: string) => Promise<void>;
+  saveCardioSession: (session: CardioSession) => Promise<void>;
+  deleteCardioSession: (id: string) => Promise<void>;
+  saveSchedule: (schedule: Schedule) => Promise<void>;
+  saveCardioProfile: (profile: CardioProfile) => Promise<void>;
+  saveRestSeconds: (seconds: number) => Promise<void>;
+  replaceAllData: (data: BackupData) => Promise<void>;
+};
+
+/**
+ * The person's data, kept in memory and saved in the background: the screen
+ * updates at once and each change goes to `persist`; `saving` stays on until
+ * every change has arrived. If a save fails,
+ * `syncError` turns on so the app can ask for a reload (the database is the
+ * source of truth on the next visit).
+ */
+export function useWorkoutStore(initial: AppData, persist: Persistence) {
+  const [sets, setSets] = useState(initial.sets);
+  const [workouts, setWorkouts] = useState(initial.workouts);
+  const [sessions, setSessions] = useState(initial.sessions);
+  const [cardioSessions, setCardioSessions] = useState(initial.cardioSessions);
+  const [cardioProfile, setCardioProfile] = useState(initial.cardioProfile);
+  const [schedule, setSchedule] = useState(initial.schedule);
+  const [restSeconds, setRestSecondsState] = useState(initial.restSeconds);
+  const [syncError, setSyncError] = useState(false);
+  const [pendingSaves, setPendingSaves] = useState(0);
+
+  const sync = useCallback((save: Promise<void>) => {
+    setPendingSaves((n) => n + 1);
+    save
+      .catch((error: unknown) => {
+        console.error(error);
+        setSyncError(true);
+      })
+      .finally(() => setPendingSaves((n) => n - 1));
+  }, []);
+
   const setRestSeconds = useCallback(
-    (seconds: number) => setRestSecondsState(clampRest(seconds)),
-    [setRestSecondsState],
+    (seconds: number) => {
+      const next = clampRest(seconds);
+      setRestSecondsState(next);
+      sync(persist.saveRestSeconds(next));
+    },
+    [persist, sync],
+  );
+
+  /** Applies a schedule change and saves the result. */
+  const changeSchedule = useCallback(
+    (change: (prev: Schedule) => Schedule) => {
+      const next = change(schedule);
+      setSchedule(next);
+      sync(persist.saveSchedule(next));
+    },
+    [schedule, persist, sync],
   );
 
   /* ---------- Sets ---------- */
@@ -76,32 +108,34 @@ export function useWorkoutStore() {
         createdAt: Date.now(),
       };
       setSets((prev) => [set, ...prev]);
+      sync(persist.saveSet(set));
       return set;
     },
-    [setSets],
+    [persist, sync],
   );
 
   const updateSet = useCallback(
     (id: string, patch: Partial<Pick<WorkoutSet, "load" | "reps" | "note">>) => {
-      setSets((prev) =>
-        prev.map((s) =>
-          s.id === id
-            ? {
-                ...s,
-                ...patch,
-                // only touch the note when the patch carries one
-                note: "note" in patch ? patch.note?.trim() || undefined : s.note,
-              }
-            : s,
-        ),
-      );
+      const current = sets.find((s) => s.id === id);
+      if (!current) return;
+      const next: WorkoutSet = {
+        ...current,
+        ...patch,
+        // only touch the note when the patch carries one
+        note: "note" in patch ? patch.note?.trim() || undefined : current.note,
+      };
+      setSets((prev) => prev.map((s) => (s.id === id ? next : s)));
+      sync(persist.saveSet(next));
     },
-    [setSets],
+    [sets, persist, sync],
   );
 
   const removeSet = useCallback(
-    (id: string) => setSets((prev) => prev.filter((s) => s.id !== id)),
-    [setSets],
+    (id: string) => {
+      setSets((prev) => prev.filter((s) => s.id !== id));
+      sync(persist.deleteSet(id));
+    },
+    [persist, sync],
   );
 
   /* ---------- Workouts ---------- */
@@ -116,49 +150,49 @@ export function useWorkoutStore() {
         createdAt: Date.now(),
       };
       setWorkouts((prev) => [workout, ...prev]);
+      sync(persist.saveWorkout(workout));
       return workout;
     },
-    [setWorkouts],
+    [persist, sync],
   );
 
   const updateWorkout = useCallback(
     (id: string, patch: Partial<Pick<Workout, "name" | "exerciseIds">>) => {
-      setWorkouts((prev) =>
-        prev.map((w) =>
-          w.id === id
-            ? { ...w, ...patch, name: (patch.name ?? w.name).trim() || w.name }
-            : w,
-        ),
-      );
+      const current = workouts.find((w) => w.id === id);
+      if (!current) return;
+      const next: Workout = {
+        ...current,
+        ...patch,
+        name: (patch.name ?? current.name).trim() || current.name,
+      };
+      setWorkouts((prev) => prev.map((w) => (w.id === id ? next : w)));
+      sync(persist.saveWorkout(next));
     },
-    [setWorkouts],
+    [workouts, persist, sync],
   );
 
   const removeWorkout = useCallback(
     (id: string) => {
       setWorkouts((prev) => prev.filter((w) => w.id !== id));
-      setSchedule((prev) => removeWorkoutFromSchedule(prev, id));
+      sync(persist.deleteWorkout(id));
+      changeSchedule((prev) => removeWorkoutFromSchedule(prev, id));
     },
-    [setWorkouts, setSchedule],
+    [persist, sync, changeSchedule],
   );
 
   /* ---------- Schedule ---------- */
   const planDay = useCallback(
     (date: string, plan: Plan, repeatWeekly: boolean) => {
-      if (plan.type === "none") {
-        setSchedule((prev) => clearDay(prev, date));
-      } else if (repeatWeekly) {
-        setSchedule((prev) => setRepeat(prev, date, plan, uid()));
-      } else {
-        setSchedule((prev) => setDayPlan(prev, date, plan));
-      }
+      if (plan.type === "none") changeSchedule((prev) => clearDay(prev, date));
+      else if (repeatWeekly) changeSchedule((prev) => setRepeat(prev, date, plan, uid()));
+      else changeSchedule((prev) => setDayPlan(prev, date, plan));
     },
-    [setSchedule],
+    [changeSchedule],
   );
 
   const stopRepeating = useCallback(
-    (date: string) => setSchedule((prev) => stopRepeat(prev, date, uid())),
-    [setSchedule],
+    (date: string) => changeSchedule((prev) => stopRepeat(prev, date, uid())),
+    [changeSchedule],
   );
 
   /* ---------- Sessions ---------- */
@@ -179,35 +213,41 @@ export function useWorkoutStore() {
         finishedAt: null,
       };
       setSessions((prev) => [session, ...prev]);
+      sync(persist.saveSession(session));
       return session;
     },
-    [activeSession, setSessions],
+    [activeSession, persist, sync],
+  );
+
+  const changeSession = useCallback(
+    (id: string, change: (s: WorkoutSession) => WorkoutSession) => {
+      const current = sessions.find((s) => s.id === id);
+      if (!current) return;
+      const next = change(current);
+      setSessions((prev) => prev.map((s) => (s.id === id ? next : s)));
+      sync(persist.saveSession(next));
+    },
+    [sessions, persist, sync],
   );
 
   const finishSession = useCallback(
-    (id: string) => {
-      setSessions((prev) =>
-        prev.map((s) => (s.id === id ? { ...s, finishedAt: Date.now() } : s)),
-      );
-    },
-    [setSessions],
+    (id: string) => changeSession(id, (s) => ({ ...s, finishedAt: Date.now() })),
+    [changeSession],
   );
 
   const updateSession = useCallback(
-    (id: string, patch: Partial<Pick<WorkoutSession, "note">>) => {
-      setSessions((prev) =>
-        prev.map((s) => (s.id === id ? { ...s, ...patch } : s)),
-      );
-    },
-    [setSessions],
+    (id: string, patch: Partial<Pick<WorkoutSession, "note">>) =>
+      changeSession(id, (s) => ({ ...s, ...patch })),
+    [changeSession],
   );
 
   const removeSession = useCallback(
     (id: string) => {
       setSessions((prev) => prev.filter((s) => s.id !== id));
       setSets((prev) => prev.filter((s) => s.sessionId !== id));
+      sync(persist.deleteSession(id));
     },
-    [setSessions, setSets],
+    [persist, sync],
   );
 
   /* ---------- Cardio ---------- */
@@ -219,15 +259,26 @@ export function useWorkoutStore() {
         createdAt: Date.now(),
       };
       setCardioSessions((prev) => [session, ...prev]);
+      sync(persist.saveCardioSession(session));
       return session;
     },
-    [setCardioSessions],
+    [persist, sync],
   );
 
   const removeCardioSession = useCallback(
-    (id: string) =>
-      setCardioSessions((prev) => prev.filter((s) => s.id !== id)),
-    [setCardioSessions],
+    (id: string) => {
+      setCardioSessions((prev) => prev.filter((s) => s.id !== id));
+      sync(persist.deleteCardioSession(id));
+    },
+    [persist, sync],
+  );
+
+  const saveCardioProfile = useCallback(
+    (profile: CardioProfile) => {
+      setCardioProfile(profile);
+      sync(persist.saveCardioProfile(profile));
+    },
+    [persist, sync],
   );
 
   /* ---------- Bulk ---------- */
@@ -239,29 +290,12 @@ export function useWorkoutStore() {
       setCardioSessions(data.cardioSessions);
       setCardioProfile(data.cardioProfile);
       setSchedule(data.schedule);
+      sync(persist.replaceAllData(data));
     },
-    [
-      setSets,
-      setWorkouts,
-      setSessions,
-      setCardioSessions,
-      setCardioProfile,
-      setSchedule,
-    ],
+    [persist, sync],
   );
 
-  const clearAll = useCallback(
-    () =>
-      replaceAll({
-        sets: [],
-        workouts: [],
-        sessions: [],
-        cardioSessions: [],
-        cardioProfile: null,
-        schedule: { days: [], rules: [] },
-      }),
-    [replaceAll],
-  );
+  const clearAll = useCallback(() => replaceAll(EMPTY_BACKUP), [replaceAll]);
 
   /* ---------- Derived ---------- */
   const setsByExercise = useMemo(() => {
@@ -312,7 +346,7 @@ export function useWorkoutStore() {
     setRestSeconds,
     cardioSessions,
     cardioProfile,
-    saveCardioProfile: (profile: CardioProfile) => setCardioProfile(profile),
+    saveCardioProfile,
     addCardioSession,
     removeCardioSession,
     addSet,
@@ -327,5 +361,8 @@ export function useWorkoutStore() {
     removeSession,
     replaceAll,
     clearAll,
+    syncError,
+    /** true while a change is still on its way to the server */
+    saving: pendingSaves > 0,
   };
 }

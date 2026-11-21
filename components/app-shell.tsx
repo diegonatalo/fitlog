@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, type ReactNode } from "react";
+import { useEffect, useMemo, type ReactNode } from "react";
 import { GearSixIcon } from "@phosphor-icons/react";
 import { Link, matchPath, useLocation, useNavigate } from "@/lib/router";
 import { Header } from "./header";
@@ -105,8 +105,16 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
     return { title: "Treino Log" };
   }, [pathname, store]);
 
+  // fechar a aba no meio de um salvamento perderia a última mudança
+  useEffect(() => {
+    if (!store.saving) return;
+    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [store.saving]);
+
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex min-h-dvh flex-col" data-saving={store.saving || undefined}>
       <Header
         theme={theme}
         onToggleTheme={onToggleTheme}
@@ -128,6 +136,23 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
       />
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-28 pt-4">
+        {store.syncError && (
+          <div
+            role="alert"
+            className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-sm"
+          >
+            <span className="font-medium text-destructive">
+              Não foi possível salvar suas últimas mudanças.
+            </span>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="rounded-lg bg-destructive px-3 py-1.5 font-semibold text-destructive-foreground hover:opacity-90"
+            >
+              Recarregar
+            </button>
+          </div>
+        )}
         {children}
       </main>
 

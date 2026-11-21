@@ -11,7 +11,7 @@ const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--nf-mono", display
 
 const TITLE = "FitLog | Monitore sua evolução";
 const DESCRIPTION_OG =
-  "Registre séries, monte treinos, bata recordes, calcule o gasto do cardio na esteira e acompanhe sua evolução. Grátis, offline e sem cadastro.";
+  "Registre séries, monte treinos, bata recordes, calcule o gasto do cardio na esteira e acompanhe sua evolução. Grátis e em qualquer aparelho.";
 const DESCRIPTION_TWITTER =
   "Registre séries, monte treinos, bata recordes, calcule o gasto do cardio na esteira e acompanhe sua evolução.";
 const IMAGE_ALT = "FitLog: monitore sua evolução na academia";

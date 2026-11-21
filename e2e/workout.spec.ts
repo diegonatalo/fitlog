@@ -1,5 +1,4 @@
-import { expect, test } from "@playwright/test";
-import { createWorkout, title } from "./fixtures";
+import { createWorkout, expect, saved, test, title } from "./fixtures";
 
 test("monta um treino, registra uma série e salva no histórico", async ({ page }) => {
   await createWorkout(page, "Treino A", ["Supino reto"]);
@@ -16,6 +15,7 @@ test("monta um treino, registra uma série e salva no histórico", async ({ page
   await page.getByRole("button", { name: "Finalizar treino" }).click();
   await expect(page).toHaveURL(/\/historico\/[^/]+$/);
   await expect(title(page, "Treino A")).toBeVisible();
+  await saved(page);
 
   // Depois de recarregar, a sessão continua no histórico.
   await page.goto("/app/historico");
@@ -30,6 +30,7 @@ test("o treino em andamento sobrevive a recarregar a página", async ({ page }) 
   await page.getByRole("spinbutton", { name: "Peso (kg)" }).fill("40");
   await page.getByRole("spinbutton", { name: "Repetições" }).fill("12");
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
+  await saved(page);
 
   await page.reload();
   await expect(page.getByRole("main").getByText("Sessão ativa")).toBeVisible();
