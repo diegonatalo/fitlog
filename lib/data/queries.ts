@@ -23,22 +23,28 @@ import {
 /**
  * Primeira visita da conta: cria a linha de ajustes e os treinos de exemplo.
  * Depois disso nunca mais, mesmo que a pessoa apague tudo.
+ *
+ * Tudo numa transação: se duas requisições chegam juntas na primeira visita,
+ * a segunda espera a primeira terminar (a linha de ajustes ainda não gravada
+ * trava o insert dela) e já encontra os treinos de exemplo ao ler.
  */
 async function ensureAccountSetup(userId: string) {
-  const created = await db
-    .insert(userSettings)
-    .values({ userId, schedule: { days: [], rules: [] } })
-    .onConflictDoNothing()
-    .returning({ userId: userSettings.userId });
-  if (created.length === 0) return;
-  const now = Date.now();
-  await db
-    .insert(workouts)
-    .values(
-      // um milissegundo de diferença mantém Push, Pull, Legs nessa ordem
-      DEFAULT_WORKOUTS.map((w, i) => workoutToRow(userId, { ...w, createdAt: now - i })),
-    )
-    .onConflictDoNothing();
+  await db.transaction(async (tx) => {
+    const created = await tx
+      .insert(userSettings)
+      .values({ userId, schedule: { days: [], rules: [] } })
+      .onConflictDoNothing()
+      .returning({ userId: userSettings.userId });
+    if (created.length === 0) return;
+    const now = Date.now();
+    await tx
+      .insert(workouts)
+      .values(
+        // um milissegundo de diferença mantém Push, Pull, Legs nessa ordem
+        DEFAULT_WORKOUTS.map((w, i) => workoutToRow(userId, { ...w, createdAt: now - i })),
+      )
+      .onConflictDoNothing();
+  });
 }
 
 /** Tudo o que o app usa, da pessoa logada, do mais novo para o mais antigo. */

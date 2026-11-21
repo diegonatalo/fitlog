@@ -2,9 +2,16 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { useWorkoutStore, type Persistence } from "@/hooks/use-workout-store";
 import type { AppData } from "@/lib/schema";
-import { EMPTY_BACKUP } from "@/lib/schema";
 
-const EMPTY: AppData = { ...EMPTY_BACKUP, restSeconds: 90 };
+const EMPTY: AppData = {
+  sets: [],
+  workouts: [],
+  sessions: [],
+  cardioSessions: [],
+  cardioProfile: null,
+  schedule: { days: [], rules: [] },
+  restSeconds: 90,
+};
 
 const mockPersistence = (): Persistence => ({
   saveSet: vi.fn(async () => {}),
@@ -18,7 +25,7 @@ const mockPersistence = (): Persistence => ({
   saveSchedule: vi.fn(async () => {}),
   saveCardioProfile: vi.fn(async () => {}),
   saveRestSeconds: vi.fn(async () => {}),
-  replaceAllData: vi.fn(async () => {}),
+  clearAllData: vi.fn(async () => {}),
 });
 
 const setup = (initial: Partial<AppData> = {}) => {
@@ -241,8 +248,11 @@ describe("useWorkoutStore: geral", () => {
     expect(persist.saveRestSeconds).toHaveBeenCalledWith(store.current.restSeconds);
   });
 
-  it("apagar tudo zera os dados de uma vez", () => {
-    const { store, persist } = setup();
+  it("apagar tudo zera os dados de uma vez e mantém o descanso", () => {
+    const { store, persist } = setup({
+      restSeconds: 120,
+      cardioProfile: { weightKg: 70, age: 30, sex: "male" },
+    });
     act(() => {
       store.current.addWorkout("Peito", []);
       store.current.addSet("supino-reto", "barbell", "weight", 40, 10);
@@ -250,8 +260,10 @@ describe("useWorkoutStore: geral", () => {
     act(() => store.current.clearAll());
     expect(store.current.workouts).toEqual([]);
     expect(store.current.sets).toEqual([]);
+    expect(store.current.cardioProfile).toBeNull();
     expect(store.current.schedule).toEqual({ days: [], rules: [] });
-    expect(persist.replaceAllData).toHaveBeenCalledWith(EMPTY_BACKUP);
+    expect(store.current.restSeconds).toBe(120);
+    expect(persist.clearAllData).toHaveBeenCalledOnce();
   });
 
   it("saving fica ligado até o servidor responder", async () => {

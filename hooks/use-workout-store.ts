@@ -10,8 +10,7 @@ import type {
   WorkoutSession,
   WorkoutSet,
 } from "@/types";
-import type { AppData, BackupData } from "@/lib/schema";
-import { EMPTY_BACKUP } from "@/lib/schema";
+import type { AppData } from "@/lib/schema";
 import { uid } from "@/lib/storage";
 import { clampRest } from "@/lib/rest";
 import {
@@ -37,7 +36,7 @@ export type Persistence = {
   saveSchedule: (schedule: Schedule) => Promise<void>;
   saveCardioProfile: (profile: CardioProfile) => Promise<void>;
   saveRestSeconds: (seconds: number) => Promise<void>;
-  replaceAllData: (data: BackupData) => Promise<void>;
+  clearAllData: () => Promise<void>;
 };
 
 /**
@@ -282,20 +281,16 @@ export function useWorkoutStore(initial: AppData, persist: Persistence) {
   );
 
   /* ---------- Bulk ---------- */
-  const replaceAll = useCallback(
-    (data: BackupData) => {
-      setSets(data.sets);
-      setWorkouts(data.workouts);
-      setSessions(data.sessions);
-      setCardioSessions(data.cardioSessions);
-      setCardioProfile(data.cardioProfile);
-      setSchedule(data.schedule);
-      sync(persist.replaceAllData(data));
-    },
-    [persist, sync],
-  );
-
-  const clearAll = useCallback(() => replaceAll(EMPTY_BACKUP), [replaceAll]);
+  /** Erases every record of the account; the account and the rest timer stay. */
+  const clearAll = useCallback(() => {
+    setSets([]);
+    setWorkouts([]);
+    setSessions([]);
+    setCardioSessions([]);
+    setCardioProfile(null);
+    setSchedule({ days: [], rules: [] });
+    sync(persist.clearAllData());
+  }, [persist, sync]);
 
   /* ---------- Derived ---------- */
   const setsByExercise = useMemo(() => {
@@ -359,7 +354,6 @@ export function useWorkoutStore(initial: AppData, persist: Persistence) {
     finishSession,
     updateSession,
     removeSession,
-    replaceAll,
     clearAll,
     syncError,
     /** true while a change is still on its way to the server */

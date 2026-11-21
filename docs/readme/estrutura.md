@@ -9,7 +9,7 @@
 │   ├── data/         consultas, Server Actions e conversão entre linhas do banco e registros do app
 │   ├── auth.ts       configuração do Better Auth (e-mail e senha)
 │   ├── auth-form.ts  validação dos formulários de entrar e criar conta
-│   ├── schema.ts     validação dos dados e formato do backup
+│   ├── schema.ts     validação dos dados que chegam ao servidor
 │   ├── defaults.ts   treinos de exemplo de cada conta nova
 │   ├── stats.ts      recordes, 1RM e série histórica
 │   ├── cardio.ts     calorias, FC estimada, zonas, comparação e dicas da esteira

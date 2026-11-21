@@ -78,12 +78,12 @@ export const PrivacyPage = () => (
           ),
         },
         {
-          id: "backup",
-          title: "Backup",
+          id: "copia-dos-dados",
+          title: "Cópia dos seus dados",
           content: (
             <p>
-              O backup (em Ajustes) leva treinos, séries, histórico, agenda e o perfil do cardio, com peso, idade e
-              sexo. Depois de baixado, o arquivo fica sob o seu cuidado: guarde em lugar seguro.
+              Se quiser uma cópia de tudo o que está na sua conta, peça pelo contato abaixo, com o e-mail da conta.
+              Enviamos os dados num arquivo para esse mesmo e-mail.
             </p>
           ),
         },
@@ -93,8 +93,7 @@ export const PrivacyPage = () => (
           content: (
             <p>
               Em Ajustes, &quot;Apagar todos os dados&quot; apaga treinos, séries, histórico e cardio e mantém a conta.
-              &quot;Excluir conta&quot; apaga a conta e tudo o que está nela. Nos dois casos não há como recuperar, a
-              não ser por um backup.
+              &quot;Excluir conta&quot; apaga a conta e tudo o que está nela. Nos dois casos não há como recuperar.
             </p>
           ),
         },
@@ -151,8 +150,7 @@ export const TermsPage = () => (
             <p>
               Para usar o app você cria uma conta com e-mail e senha; guarde a senha com você e não a compartilhe. Seus
               dados ficam na sua conta, e você pode apagá-los ou excluir a conta a qualquer momento em Ajustes. O FitLog
-              é um projeto pessoal, sem garantia de que os dados nunca se percam: se eles importam para você, baixe um
-              backup de vez em quando. Detalhes em{" "}
+              é um projeto pessoal, sem garantia de que os dados nunca se percam. Detalhes em{" "}
               <Link href="/privacidade" className={linkClass}>
                 Privacidade
               </Link>

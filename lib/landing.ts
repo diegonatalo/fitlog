@@ -82,7 +82,7 @@ export const FAQ: Faq[] = [
   {
     question: "Como uso em outro celular?",
     answer:
-      "É só entrar com a mesma conta: seus treinos, séries e histórico aparecem lá. Em Ajustes, você também pode baixar um backup.",
+      "É só entrar com a mesma conta: seus treinos, séries e histórico aparecem lá.",
   },
   {
     question: "Substitui um profissional?",

@@ -16,7 +16,7 @@ import { isDateKey } from "./dates";
 
 /**
  * Runtime validation for everything that comes from outside the app's own
- * memory: imported backups and whatever the browser sends to a Server Action.
+ * memory: whatever the browser sends to a Server Action.
  * Each normalizer returns a clean record, or null when it is unusable.
  */
 
@@ -182,74 +182,15 @@ export function normalizeList<T>(
   return raw.map(normalize).filter((x): x is T => x !== null);
 }
 
-/* ---------- Backup file ---------- */
+/* ---------- App data ---------- */
 
-export type BackupData = {
+/** Everything the app loads for the signed-in person. */
+export type AppData = {
   sets: WorkoutSet[];
   workouts: Workout[];
   sessions: WorkoutSession[];
   cardioSessions: CardioSession[];
   cardioProfile: CardioProfile | null;
   schedule: Schedule;
+  restSeconds: number;
 };
-
-/** Everything the app loads for the signed-in person: the backup plus preferences. */
-export type AppData = BackupData & { restSeconds: number };
-
-export const EMPTY_BACKUP: BackupData = {
-  sets: [],
-  workouts: [],
-  sessions: [],
-  cardioSessions: [],
-  cardioProfile: null,
-  schedule: { days: [], rules: [] },
-};
-
-type BackupFile = BackupData & {
-  app: "fitlog";
-  version: 1;
-  exportedAt: string;
-};
-
-export function buildBackup(data: BackupData): string {
-  const file: BackupFile = {
-    app: "fitlog",
-    version: 1,
-    exportedAt: new Date().toISOString(),
-    ...data,
-  };
-  return JSON.stringify(file, null, 2);
-}
-
-/** Parses and validates a backup; throws an Error with a user-facing message. */
-export function parseBackup(text: string): BackupData {
-  let raw: unknown;
-  try {
-    raw = JSON.parse(text);
-  } catch {
-    throw new Error("O arquivo não é um JSON válido.");
-  }
-  if (!isRecord(raw) || raw.app !== "fitlog") {
-    throw new Error("Este arquivo não é um backup do FitLog.");
-  }
-  const sets = normalizeList(raw.sets, normalizeSet);
-  const workouts = normalizeList(raw.workouts, normalizeWorkout);
-  const sessions = normalizeList(raw.sessions, normalizeSession);
-  if (!sets || !workouts || !sessions) {
-    throw new Error("O backup está incompleto ou corrompido.");
-  }
-  // older backups predate the cardio tab
-  const cardioSessions =
-    normalizeList(raw.cardioSessions, normalizeCardioSession) ?? [];
-  const cardioProfile = normalizeCardioProfile(raw.cardioProfile);
-  // older backups predate the agenda
-  const schedule = normalizeSchedule(raw.schedule);
-  return {
-    sets,
-    workouts,
-    sessions,
-    cardioSessions,
-    cardioProfile,
-    schedule,
-  };
-}
