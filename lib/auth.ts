@@ -22,6 +22,7 @@ export const auth = betterAuth({
       session: schema.session,
       account: schema.account,
       verification: schema.verification,
+      rateLimit: schema.rateLimit,
     },
     transaction: true,
   }),
@@ -37,9 +38,14 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 30, // 30 dias
     updateAge: 60 * 60 * 24, // renova uma vez por dia de uso
   },
-  // limite de tentativas por IP (ligado em produção). Os testes E2E criam
-  // muitas contas seguidas do mesmo IP e o desligam com AUTH_RATE_LIMIT=off.
-  rateLimit: { enabled: process.env.AUTH_RATE_LIMIT !== "off" && process.env.NODE_ENV === "production" },
+  // limite de tentativas por IP (ligado em produção), contado no banco para
+  // valer em todas as instâncias. Os testes E2E criam muitas contas seguidas
+  // do mesmo IP e o desligam com AUTH_RATE_LIMIT=off.
+  rateLimit: {
+    enabled: process.env.AUTH_RATE_LIMIT !== "off" && process.env.NODE_ENV === "production",
+    storage: "database",
+    modelName: "rateLimit",
+  },
   // precisa ser o último: grava o cookie quando o login roda numa Server Action
   plugins: [nextCookies()],
 });

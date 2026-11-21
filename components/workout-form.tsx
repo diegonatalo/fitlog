@@ -13,6 +13,7 @@ import { MuscleBadge } from "@/components/muscle-badge";
 import { EXERCISES, getExercise } from "@/lib/exercises";
 import { cn } from "@/lib/cn";
 import { paths } from "@/lib/paths";
+import { LIMITS } from "@/lib/schema";
 import { useStore } from "@/hooks/use-store";
 
 export const WorkoutForm = () => {
@@ -88,6 +89,7 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
           id="wk-name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          maxLength={LIMITS.name}
           autoFocus
           placeholder="Ex: Treino A — Peito e Tríceps"
           className="w-full rounded-xl border border-input bg-background px-4 py-3 text-base outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"

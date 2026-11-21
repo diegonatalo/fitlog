@@ -233,7 +233,8 @@ Os dados ficam num banco Postgres ([Neon](https://neon.tech)), ligados à sua co
 
 - Toda tabela do app tem chave `(user_id, id)` e cada Server Action confere a sessão antes de ler ou gravar: uma conta nunca alcança as linhas de outra.
 - A tela atualiza na hora e a mudança é salva em segundo plano. Se um salvamento falhar, aparece um aviso para recarregar. Fechar a aba no meio de um salvamento pede confirmação.
-- O que chega ao servidor é validado antes de ser gravado: dados inválidos são recusados.
+- O que chega ao servidor é validado antes de ser gravado: dados inválidos são recusados, e nomes, anotações e listas têm tamanho máximo (`LIMITS` em `lib/schema.ts`).
+- Login e cadastro têm limite de tentativas por IP, contado no banco para valer em todas as instâncias da Vercel. Todas as páginas saem com cabeçalhos de segurança (`lib/security-headers.ts`), entre eles o que impede abrir o site dentro de um iframe de outro site.
 - No navegador ficam só o cookie de sessão e a escolha de tema. O service worker guarda em cache só arquivos estáticos e as páginas públicas, nunca as telas do app.
 
 > [!NOTE]
