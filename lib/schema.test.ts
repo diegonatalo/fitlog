@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  buildBackup,
   normalizeCardioProfile,
   normalizeCardioSession,
   normalizeSchedule,
@@ -8,8 +7,6 @@ import {
   normalizeSession,
   normalizeSet,
   normalizeWorkout,
-  parseBackup,
-  type BackupData,
 } from "@/lib/schema";
 
 describe("normalizeSet", () => {
@@ -144,65 +141,5 @@ describe("normalizeList", () => {
     expect(result).toHaveLength(1);
     expect(normalizeList({}, normalizeWorkout)).toBeNull();
     expect(normalizeList(undefined, normalizeWorkout)).toBeNull();
-  });
-});
-
-describe("backup", () => {
-  const data: BackupData = {
-    sets: [{ id: "s1", exerciseId: "e1", loadType: "weight", load: 40, reps: 10, createdAt: 2 }],
-    workouts: [{ id: "w1", name: "Push", exerciseIds: ["e1"], createdAt: 3 }],
-    sessions: [{ id: "ss1", workoutId: "w1", name: "Push", startedAt: 4, finishedAt: 5 }],
-    cardioSessions: [],
-    cardioProfile: { weightKg: 70, age: 30, sex: "male" },
-    schedule: {
-      days: [{ date: "2026-11-02", plan: { type: "rest" } }],
-      rules: [
-        { id: "r1", weekday: 1, from: "2026-11-02", plan: { type: "workout", workoutId: "w1" } },
-      ],
-    },
-  };
-
-  it("exportar e importar devolve os mesmos dados", () => {
-    expect(parseBackup(buildBackup(data))).toEqual(data);
-  });
-
-  it("o arquivo exportado identifica o app e a versão", () => {
-    const file = JSON.parse(buildBackup(data));
-    expect(file).toMatchObject({ app: "fitlog", version: 1 });
-    expect(new Date(file.exportedAt).toString()).not.toBe("Invalid Date");
-  });
-
-  it("aceita backup antigo sem cardio", () => {
-    const { cardioSessions, cardioProfile, ...old } = JSON.parse(buildBackup(data));
-    void cardioSessions;
-    void cardioProfile;
-    expect(parseBackup(JSON.stringify(old))).toMatchObject({ cardioSessions: [], cardioProfile: null });
-  });
-
-  it("aceita backup antigo que ainda traz exercícios, ignorando-os", () => {
-    const file = JSON.parse(buildBackup(data));
-    file.exercises = [{ id: "e1", name: "Supino" }];
-    expect(parseBackup(JSON.stringify(file))).toEqual(data);
-  });
-
-  it("aceita backup antigo sem agenda", () => {
-    const { schedule, ...old } = JSON.parse(buildBackup(data));
-    void schedule;
-    expect(parseBackup(JSON.stringify(old)).schedule).toEqual({ days: [], rules: [] });
-  });
-
-  it("recusa texto que não é JSON", () => {
-    expect(() => parseBackup("{quebrado")).toThrow("O arquivo não é um JSON válido.");
-  });
-
-  it("recusa JSON de outro app", () => {
-    expect(() => parseBackup(JSON.stringify({ app: "outro" }))).toThrow("Este arquivo não é um backup do FitLog.");
-    expect(() => parseBackup("[]")).toThrow("Este arquivo não é um backup do FitLog.");
-  });
-
-  it("recusa backup incompleto", () => {
-    expect(() => parseBackup(JSON.stringify({ app: "fitlog", workouts: [] }))).toThrow(
-      "O backup está incompleto ou corrompido.",
-    );
   });
 });

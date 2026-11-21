@@ -84,7 +84,7 @@ export const AccountSection = () => {
       {confirmDelete && (
         <ConfirmDialog
           title="Excluir sua conta?"
-          description="A conta e todos os treinos, séries, sessões e dados do cardio são apagados para sempre. Exporte um backup antes se quiser guardar algo."
+          description="A conta e todos os treinos, séries, sessões e dados do cardio são apagados para sempre. Essa ação não pode ser desfeita."
           confirmLabel="Excluir conta"
           cancelLabel="Cancelar"
           onConfirm={deleteAccount}

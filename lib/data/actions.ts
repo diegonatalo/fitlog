@@ -1,7 +1,6 @@
 "use server";
 
 import { and, eq } from "drizzle-orm";
-import type { PgTable } from "drizzle-orm/pg-core";
 import { db } from "@/lib/db";
 import {
   cardioSessions,
@@ -14,7 +13,6 @@ import { clampRest } from "@/lib/rest";
 import {
   normalizeCardioProfile,
   normalizeCardioSession,
-  normalizeList,
   normalizeSchedule,
   normalizeSession,
   normalizeSet,
@@ -158,49 +156,16 @@ export async function saveRestSeconds(input: unknown) {
 
 /* ---------- Bulk ---------- */
 
-/** O Postgres aceita até 65535 parâmetros por comando: insere em partes. */
-const CHUNK = 1000;
-
-async function insertChunked<T extends Record<string, unknown>>(
-  tx: Pick<typeof db, "insert">,
-  table: PgTable,
-  rows: T[],
-) {
-  for (let i = 0; i < rows.length; i += CHUNK) {
-    await tx.insert(table).values(rows.slice(i, i + CHUNK));
-  }
-}
-
-/** Um backup editado à mão pode repetir ids, o que quebraria a chave primária. */
-const uniqueById = <T extends { id: string }>(list: T[]): T[] => [
-  ...new Map(list.map((item) => [item.id, item])).values(),
-];
-
-/** Troca tudo o que a pessoa tem pelos dados recebidos (importar backup, apagar tudo). */
-export async function replaceAllData(input: unknown) {
+/** "Apagar todos os dados": limpa os registros e mantém a conta e o descanso. */
+export async function clearAllData() {
   const userId = await requireUserId();
-  const raw = (typeof input === "object" && input !== null ? input : {}) as Record<
-    string,
-    unknown
-  >;
-  const sets = uniqueById(valid(normalizeList(raw.sets, normalizeSet)));
-  const workoutList = uniqueById(valid(normalizeList(raw.workouts, normalizeWorkout)));
-  const sessions = uniqueById(valid(normalizeList(raw.sessions, normalizeSession)));
-  const cardio = uniqueById(valid(normalizeList(raw.cardioSessions, normalizeCardioSession)));
-  const cardioProfile = normalizeCardioProfile(raw.cardioProfile);
-  const schedule = normalizeSchedule(raw.schedule);
-
   await db.transaction(async (tx) => {
     for (const table of [workoutSets, workouts, workoutSessions, cardioSessions]) {
       await tx.delete(table).where(eq(table.userId, userId));
     }
-    await insertChunked(tx, workoutSets, sets.map((s) => setToRow(userId, s)));
-    await insertChunked(tx, workouts, workoutList.map((w) => workoutToRow(userId, w)));
-    await insertChunked(tx, workoutSessions, sessions.map((s) => sessionToRow(userId, s)));
-    await insertChunked(tx, cardioSessions, cardio.map((c) => cardioToRow(userId, c)));
     await tx
       .update(userSettings)
-      .set({ cardioProfile, schedule })
+      .set({ cardioProfile: null, schedule: { days: [], rules: [] } })
       .where(eq(userSettings.userId, userId));
   });
 }

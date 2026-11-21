@@ -163,11 +163,11 @@ Veja [`.env.example`](.env.example).
 pnpm test
 ```
 
-Usa [Vitest](https://vitest.dev). Os testes cobrem a calculadora de cardio, as estatísticas e recordes de carga, a normalização e o schema dos dados, o backup, o store (com a persistência simulada), a conversão entre linhas do banco e registros do app, a validação dos formulários de login e os formatadores de data e duração.
+Usa [Vitest](https://vitest.dev). Os testes cobrem a calculadora de cardio, as estatísticas e recordes de carga, a normalização e o schema dos dados, o store (com a persistência simulada), a conversão entre linhas do banco e registros do app, a validação dos formulários de login e os formatadores de data e duração.
 
 Para reexecutar ao salvar: `pnpm test:watch`.
 
-Os testes de ponta a ponta (Playwright, em `e2e/`) abrem o app no Chromium com um banco de verdade. Cada teste cria a própria conta e percorre os fluxos inteiros: criar conta, sair e entrar de novo com os dados no lugar, senha errada, e-mail repetido, uma conta não ver os dados de outra, excluir a conta, montar um treino e registrar uma série, recarregar no meio do treino, exportar, apagar e importar o backup, e abrir todas as telas sem erros.
+Os testes de ponta a ponta (Playwright, em `e2e/`) abrem o app no Chromium com um banco de verdade. Cada teste cria a própria conta e percorre os fluxos inteiros: criar conta, sair e entrar de novo com os dados no lugar, senha errada, e-mail repetido, uma conta não ver os dados de outra, excluir a conta, montar um treino e registrar uma série, recarregar no meio do treino, apagar todos os dados, e abrir todas as telas sem erros.
 
 ```bash
 pnpm exec playwright install chromium   # só na primeira vez
@@ -195,7 +195,7 @@ No CI, o E2E roda contra um Postgres descartável do próprio GitHub Actions, nu
 │   ├── data/         consultas, Server Actions e conversão entre linhas do banco e registros do app
 │   ├── auth.ts       configuração do Better Auth (e-mail e senha)
 │   ├── auth-form.ts  validação dos formulários de entrar e criar conta
-│   ├── schema.ts     validação dos dados e formato do backup
+│   ├── schema.ts     validação dos dados que chegam ao servidor
 │   ├── defaults.ts   treinos de exemplo de cada conta nova
 │   ├── stats.ts      recordes, 1RM e série histórica
 │   ├── cardio.ts     calorias, FC estimada, zonas, comparação e dicas da esteira
@@ -233,12 +233,12 @@ Os dados ficam num banco Postgres ([Neon](https://neon.tech)), ligados à sua co
 
 - Toda tabela do app tem chave `(user_id, id)` e cada Server Action confere a sessão antes de ler ou gravar: uma conta nunca alcança as linhas de outra.
 - A tela atualiza na hora e a mudança é salva em segundo plano. Se um salvamento falhar, aparece um aviso para recarregar. Fechar a aba no meio de um salvamento pede confirmação.
-- O que chega ao servidor passa pela mesma validação do backup: dados inválidos são recusados.
+- O que chega ao servidor é validado antes de ser gravado: dados inválidos são recusados.
 - No navegador ficam só o cookie de sessão e a escolha de tema. O service worker guarda em cache só arquivos estáticos e as páginas públicas, nunca as telas do app.
 
 > [!NOTE]
-> Em **Ajustes**, **Exportar backup** salva um arquivo JSON (treinos, cardio e perfil) e **Importar backup** o traz para a conta.
-> **Apagar todos os dados** limpa a conta, e **Excluir conta** apaga a conta e tudo o que está nela.
+> Em **Ajustes**, **Apagar todos os dados** limpa a conta, e **Excluir conta** apaga a conta e tudo o que está nela.
+> Uma cópia dos dados pode ser pedida pelo contato da página de privacidade.
 
 ### 🧠 Como funciona
 
