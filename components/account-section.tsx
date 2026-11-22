@@ -5,7 +5,7 @@ import { SignOutIcon, UserCircleIcon } from "@phosphor-icons/react";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { useAccount } from "@/hooks/use-store";
 import { authClient } from "@/lib/auth-client";
-import { ACCOUNT_HEADER } from "@/lib/auth-form";
+import { ACCOUNT_HEADER, deleteErrorMessage } from "@/lib/auth-form";
 
 /**
  * Navegação completa de propósito, não `router.push`: descarta o store e o
@@ -18,6 +18,12 @@ export const AccountSection = () => {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [password, setPassword] = useState("");
+
+  const closeDelete = () => {
+    setConfirmDelete(false);
+    setPassword("");
+  };
 
   const signOut = async () => {
     setPending(true);
@@ -32,21 +38,16 @@ export const AccountSection = () => {
   };
 
   const deleteAccount = async () => {
-    setConfirmDelete(false);
+    const typed = password;
+    closeDelete();
     setPending(true);
     setError(null);
     const { error } = await authClient
-      .deleteUser({ fetchOptions: { headers: { [ACCOUNT_HEADER]: account.id } } })
+      .deleteUser({ password: typed, fetchOptions: { headers: { [ACCOUNT_HEADER]: account.id } } })
       .catch(() => ({ error: { code: "NETWORK" } }));
     if (error) {
       setPending(false);
-      setError(
-        error.code === "ACCOUNT_CHANGED"
-          ? "Outra conta entrou neste navegador. Entre com a sua para poder excluí-la."
-          : error.code === "SESSION_EXPIRED"
-            ? "Por segurança, saia e entre de novo antes de excluir a conta."
-            : "Não foi possível excluir a conta. Tente de novo.",
-      );
+      setError(deleteErrorMessage(error.code));
       return;
     }
     leave();
@@ -91,8 +92,21 @@ export const AccountSection = () => {
           confirmLabel="Excluir conta"
           cancelLabel="Cancelar"
           onConfirm={deleteAccount}
-          onCancel={() => setConfirmDelete(false)}
-        />
+          onCancel={closeDelete}
+          confirmDisabled={!password}
+        >
+          <label htmlFor="delete-password" className="text-sm font-semibold">
+            Sua senha
+          </label>
+          <input
+            id="delete-password"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2.5"
+          />
+        </ConfirmDialog>
       )}
     </div>
   );

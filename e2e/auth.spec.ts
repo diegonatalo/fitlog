@@ -90,6 +90,7 @@ test("excluir a conta apaga tudo e não deixa entrar de novo", async ({ page, ba
   const email = await signUpByApi(page.request, baseURL!);
   await page.goto("/app/ajustes");
   await page.getByRole("button", { name: "Excluir conta" }).click();
+  await page.getByRole("alertdialog").getByLabel("Sua senha").fill(PASSWORD);
   await page.getByRole("alertdialog").getByRole("button", { name: "Excluir conta" }).click();
   await expect(page).toHaveURL("/");
 
@@ -98,4 +99,16 @@ test("excluir a conta apaga tudo e não deixa entrar de novo", async ({ page, ba
   await page.getByLabel("Senha", { exact: true }).fill(PASSWORD);
   await page.getByRole("button", { name: "Entrar" }).click();
   await expect(page.getByRole("main").getByRole("alert")).toHaveText("E-mail ou senha incorretos.");
+});
+
+test("excluir a conta com a senha errada não apaga nada", async ({ page, baseURL }) => {
+  await signUpByApi(page.request, baseURL!);
+  await page.goto("/app/ajustes");
+  await page.getByRole("button", { name: "Excluir conta" }).click();
+  await page.getByRole("alertdialog").getByLabel("Sua senha").fill("senha-errada-123");
+  await page.getByRole("alertdialog").getByRole("button", { name: "Excluir conta" }).click();
+  await expect(page.getByRole("main").getByRole("alert")).toHaveText("Senha incorreta. A conta não foi excluída.");
+
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Excluir conta" })).toBeVisible();
 });

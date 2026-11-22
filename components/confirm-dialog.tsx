@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 
 type ConfirmDialogProps = {
@@ -8,6 +8,9 @@ type ConfirmDialogProps = {
   cancelLabel: string;
   onConfirm: () => void;
   onCancel: () => void;
+  /** Campos entre o texto e os botões (ex.: a senha para excluir a conta); Enter confirma. */
+  children?: ReactNode;
+  confirmDisabled?: boolean;
 };
 
 export const ConfirmDialog = ({
@@ -17,6 +20,8 @@ export const ConfirmDialog = ({
   cancelLabel,
   onConfirm,
   onCancel,
+  children,
+  confirmDisabled = false,
 }: ConfirmDialogProps) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   useFocusTrap(dialogRef, onCancel);
@@ -34,24 +39,34 @@ export const ConfirmDialog = ({
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-sm rounded-2xl border border-border bg-card p-5 shadow-2xl"
       >
-        <h2 className="text-lg font-bold text-balance">{title}</h2>
-        <p className="mt-1.5 text-sm text-muted-foreground text-pretty">
-          {description}
-        </p>
-        <div className="mt-5 flex gap-2">
-          <button
-            onClick={onCancel}
-            className="flex-1 rounded-xl border border-border bg-background py-3 font-semibold text-foreground hover:bg-muted"
-          >
-            {cancelLabel}
-          </button>
-          <button
-            onClick={onConfirm}
-            className="flex-1 rounded-xl bg-destructive py-3 font-bold text-destructive-foreground hover:opacity-90"
-          >
-            {confirmLabel}
-          </button>
-        </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!confirmDisabled) onConfirm();
+          }}
+        >
+          <h2 className="text-lg font-bold text-balance">{title}</h2>
+          <p className="mt-1.5 text-sm text-muted-foreground text-pretty">
+            {description}
+          </p>
+          {children && <div className="mt-4">{children}</div>}
+          <div className="mt-5 flex gap-2">
+            <button
+              type="button"
+              onClick={onCancel}
+              className="flex-1 rounded-xl border border-border bg-background py-3 font-semibold text-foreground hover:bg-muted"
+            >
+              {cancelLabel}
+            </button>
+            <button
+              type="submit"
+              disabled={confirmDisabled}
+              className="flex-1 rounded-xl bg-destructive py-3 font-bold text-destructive-foreground hover:opacity-90 disabled:opacity-50"
+            >
+              {confirmLabel}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -78,6 +78,20 @@ export function authErrorMessage(error: AuthError): string {
   }
 }
 
+/** Mensagem para um erro ao excluir a conta (códigos do Better Auth e de lib/auth-guard.ts). */
+export function deleteErrorMessage(code: string | undefined): string {
+  switch (code) {
+    case "ACCOUNT_CHANGED":
+      return "Outra conta entrou neste navegador. Entre com a sua para poder excluí-la.";
+    case "INVALID_PASSWORD":
+      return "Senha incorreta. A conta não foi excluída.";
+    case "PASSWORD_REQUIRED":
+      return "Digite sua senha para excluir a conta.";
+    default:
+      return "Não foi possível excluir a conta. Tente de novo.";
+  }
+}
+
 /**
  * Para onde voltar depois de entrar. Só aceita caminhos do próprio app, para que
  * um link `?de=https://...` não leve a pessoa a outro site.

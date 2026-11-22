@@ -1,4 +1,4 @@
-import { createWorkout, expect, signUpByApi, test, title } from "./fixtures";
+import { PASSWORD, createWorkout, expect, signUpByApi, test, title } from "./fixtures";
 
 // Aparelho dividido: A deixou uma aba aberta e B entrou em outra.
 
@@ -44,6 +44,7 @@ test("excluir conta na aba de A não apaga a conta de B", async ({ page, baseURL
   await other.goto("/app");
   await expect(title(other, "FitLog")).toBeVisible();
 
+  await page.getByRole("alertdialog").getByLabel("Sua senha").fill(PASSWORD);
   await page.getByRole("alertdialog").getByRole("button", { name: "Excluir conta" }).click();
   await expect(page.getByRole("alert").filter({ hasText: "Outra conta entrou" })).toBeVisible();
 

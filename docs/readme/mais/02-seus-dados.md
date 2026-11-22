@@ -9,5 +9,5 @@ Os dados ficam num banco Postgres ([Neon](https://neon.tech)), ligados à sua co
 - No navegador ficam só o cookie de sessão e a escolha de tema. O service worker guarda em cache só arquivos estáticos e as páginas públicas, nunca as telas do app.
 
 > [!NOTE]
-> Em **Ajustes**, **Apagar todos os dados** limpa a conta, e **Excluir conta** apaga a conta e tudo o que está nela.
+> Em **Ajustes**, **Apagar todos os dados** limpa a conta, e **Excluir conta** (com a sua senha) apaga a conta e tudo o que está nela.
 > Uma cópia dos dados pode ser pedida pelo contato da página de privacidade.
