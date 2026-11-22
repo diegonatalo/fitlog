@@ -73,6 +73,7 @@ describe("useWorkoutStore: séries", () => {
     expect(store.current.sets[0]).toMatchObject({ load: 45, note: "pegada fechada" });
     expect(persist.saveSet).toHaveBeenLastCalledWith(
       expect.objectContaining({ id, load: 45, note: "pegada fechada" }),
+      expect.objectContaining({ id, load: 40, note: "pegada fechada" }),
     );
     act(() => store.current.updateSet(id, { note: "   " }));
     expect(store.current.sets[0].note).toBeUndefined();
@@ -123,10 +124,11 @@ describe("useWorkoutStore: treinos", () => {
     expect(store.current.workouts[0].name).toBe("Peito e tríceps");
     expect(persist.saveWorkout).toHaveBeenLastCalledWith(
       expect.objectContaining({ id, name: "Peito e tríceps" }),
+      expect.objectContaining({ id, name: "Peito" }),
     );
   });
 
-  it("remover o treino também tira ele da agenda, e salva os dois", () => {
+  it("remover o treino tira ele da agenda sem mandar a agenda da tela por cima da salva", () => {
     const { store, persist } = setup();
     act(() => {
       store.current.addWorkout("Peito", []);
@@ -138,7 +140,8 @@ describe("useWorkoutStore: treinos", () => {
     expect(store.current.workouts.find((w) => w.id === id)).toBeUndefined();
     expect(store.current.schedule.days).toHaveLength(0);
     expect(persist.deleteWorkout).toHaveBeenCalledWith(id);
-    expect(persist.saveSchedule).toHaveBeenLastCalledWith({ days: [], rules: [] });
+    // só o salvamento de planejar o dia: quem limpa a agenda salva é o servidor
+    expect(persist.saveSchedule).toHaveBeenCalledOnce();
   });
 });
 
@@ -147,9 +150,10 @@ describe("useWorkoutStore: agenda", () => {
     const { store, persist } = setup();
     act(() => store.current.planDay("2026-03-02", { type: "rest" }, true));
     expect(store.current.schedule.rules).toHaveLength(1);
-    expect(persist.saveSchedule).toHaveBeenCalledWith(store.current.schedule);
+    const planned = store.current.schedule;
+    expect(persist.saveSchedule).toHaveBeenCalledWith(planned, { days: [], rules: [] });
     act(() => store.current.stopRepeating("2026-03-09"));
-    expect(persist.saveSchedule).toHaveBeenCalledTimes(2);
+    expect(persist.saveSchedule).toHaveBeenLastCalledWith(store.current.schedule, planned);
   });
 });
 
@@ -181,6 +185,7 @@ describe("useWorkoutStore: sessões", () => {
     expect(store.current.finishedSessions.map((s) => s.id)).toEqual([id]);
     expect(persist.saveSession).toHaveBeenLastCalledWith(
       expect.objectContaining({ id, finishedAt: expect.any(Number) }),
+      expect.objectContaining({ id, finishedAt: null }),
     );
   });
 
@@ -194,6 +199,7 @@ describe("useWorkoutStore: sessões", () => {
     expect(store.current.sessions[0].note).toBe("pesado hoje");
     expect(persist.saveSession).toHaveBeenLastCalledWith(
       expect.objectContaining({ id, note: "pesado hoje" }),
+      expect.objectContaining({ id }),
     );
   });
 
@@ -281,6 +287,16 @@ describe("useWorkoutStore: geral", () => {
     expect(store.current.saving).toBe(true);
     await act(async () => finish());
     expect(store.current.saving).toBe(false);
+  });
+
+  it("se outro aparelho mudou a mesma coisa, avisa com syncConflict", async () => {
+    const { store, persist } = setup();
+    vi.mocked(persist.saveWorkout).mockResolvedValueOnce("conflict");
+    act(() => {
+      store.current.addWorkout("Peito", []);
+    });
+    await waitFor(() => expect(store.current.syncConflict).toBe(true));
+    expect(store.current.syncError).toBe(false);
   });
 
   it("se salvar falhar, avisa com syncError", async () => {

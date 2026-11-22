@@ -10,6 +10,7 @@ import type {
   WorkoutSession,
   WorkoutSet,
 } from "@/types";
+import type { SaveResult } from "@/lib/merge";
 import type { AppData } from "@/lib/schema";
 import { uid } from "@/lib/storage";
 import { clampRest } from "@/lib/rest";
@@ -23,18 +24,23 @@ import {
 
 export type Store = ReturnType<typeof useWorkoutStore>;
 
-/** Where each change is saved. In the app these are the Server Actions. */
+type Saving = Promise<SaveResult | void>;
+
+/**
+ * Where each change is saved. In the app these are the Server Actions. An edit also
+ * sends how it was before, so a stale screen does not undo another device's save.
+ */
 export type Persistence = {
-  saveSet: (set: WorkoutSet) => Promise<void>;
+  saveSet: (set: WorkoutSet, before?: WorkoutSet) => Saving;
   deleteSet: (id: string) => Promise<void>;
-  saveWorkout: (workout: Workout) => Promise<void>;
+  saveWorkout: (workout: Workout, before?: Workout) => Saving;
   deleteWorkout: (id: string) => Promise<void>;
-  saveSession: (session: WorkoutSession) => Promise<void>;
+  saveSession: (session: WorkoutSession, before?: WorkoutSession) => Saving;
   deleteSession: (id: string) => Promise<void>;
   saveCardioSession: (session: CardioSession) => Promise<void>;
   deleteCardioSession: (id: string) => Promise<void>;
-  saveSchedule: (schedule: Schedule) => Promise<void>;
-  saveCardioProfile: (profile: CardioProfile) => Promise<void>;
+  saveSchedule: (schedule: Schedule, before: Schedule) => Saving;
+  saveCardioProfile: (profile: CardioProfile, before?: CardioProfile) => Saving;
   saveRestSeconds: (seconds: number) => Promise<void>;
   clearAllData: () => Promise<void>;
 };
@@ -44,7 +50,8 @@ export type Persistence = {
  * updates at once and each change goes to `persist`; `saving` stays on until
  * every change has arrived. If a save fails,
  * `syncError` turns on so the app can ask for a reload (the database is the
- * source of truth on the next visit).
+ * source of truth on the next visit); `syncConflict` does the same when
+ * another device changed the same thing.
  */
 export function useWorkoutStore(initial: AppData, persist: Persistence) {
   const [sets, setSets] = useState(initial.sets);
@@ -55,11 +62,15 @@ export function useWorkoutStore(initial: AppData, persist: Persistence) {
   const [schedule, setSchedule] = useState(initial.schedule);
   const [restSeconds, setRestSecondsState] = useState(initial.restSeconds);
   const [syncError, setSyncError] = useState(false);
+  const [syncConflict, setSyncConflict] = useState(false);
   const [pendingSaves, setPendingSaves] = useState(0);
 
-  const sync = useCallback((save: Promise<void>) => {
+  const sync = useCallback((save: Saving) => {
     setPendingSaves((n) => n + 1);
     save
+      .then((result) => {
+        if (result === "conflict") setSyncConflict(true);
+      })
       .catch((error: unknown) => {
         console.error(error);
         setSyncError(true);
@@ -81,7 +92,7 @@ export function useWorkoutStore(initial: AppData, persist: Persistence) {
     (change: (prev: Schedule) => Schedule) => {
       const next = change(schedule);
       setSchedule(next);
-      sync(persist.saveSchedule(next));
+      sync(persist.saveSchedule(next, schedule));
     },
     [schedule, persist, sync],
   );
@@ -124,7 +135,7 @@ export function useWorkoutStore(initial: AppData, persist: Persistence) {
         note: "note" in patch ? patch.note?.trim() || undefined : current.note,
       };
       setSets((prev) => prev.map((s) => (s.id === id ? next : s)));
-      sync(persist.saveSet(next));
+      sync(persist.saveSet(next, current));
     },
     [sets, persist, sync],
   );
@@ -165,7 +176,7 @@ export function useWorkoutStore(initial: AppData, persist: Persistence) {
         name: (patch.name ?? current.name).trim() || current.name,
       };
       setWorkouts((prev) => prev.map((w) => (w.id === id ? next : w)));
-      sync(persist.saveWorkout(next));
+      sync(persist.saveWorkout(next, current));
     },
     [workouts, persist, sync],
   );
@@ -173,10 +184,11 @@ export function useWorkoutStore(initial: AppData, persist: Persistence) {
   const removeWorkout = useCallback(
     (id: string) => {
       setWorkouts((prev) => prev.filter((w) => w.id !== id));
+      // the server removes it from the saved schedule, which may be newer than this one
+      setSchedule((prev) => removeWorkoutFromSchedule(prev, id));
       sync(persist.deleteWorkout(id));
-      changeSchedule((prev) => removeWorkoutFromSchedule(prev, id));
     },
-    [persist, sync, changeSchedule],
+    [persist, sync],
   );
 
   /* ---------- Schedule ---------- */
@@ -224,7 +236,7 @@ export function useWorkoutStore(initial: AppData, persist: Persistence) {
       if (!current) return;
       const next = change(current);
       setSessions((prev) => prev.map((s) => (s.id === id ? next : s)));
-      sync(persist.saveSession(next));
+      sync(persist.saveSession(next, current));
     },
     [sessions, persist, sync],
   );
@@ -275,9 +287,9 @@ export function useWorkoutStore(initial: AppData, persist: Persistence) {
   const saveCardioProfile = useCallback(
     (profile: CardioProfile) => {
       setCardioProfile(profile);
-      sync(persist.saveCardioProfile(profile));
+      sync(persist.saveCardioProfile(profile, cardioProfile ?? undefined));
     },
-    [persist, sync],
+    [cardioProfile, persist, sync],
   );
 
   /* ---------- Bulk ---------- */
@@ -356,6 +368,8 @@ export function useWorkoutStore(initial: AppData, persist: Persistence) {
     removeSession,
     clearAll,
     syncError,
+    /** true when another device changed what this screen tried to save */
+    syncConflict,
     /** true while a change is still on its way to the server */
     saving: pendingSaves > 0,
   };
