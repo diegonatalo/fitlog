@@ -1,7 +1,11 @@
 import "server-only";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
+import { assertDevDatabase } from "@/lib/dev-database";
 import * as schema from "./schema";
+
+// só no `next dev`: a trava não roda no site publicado
+if (process.env.NODE_ENV === "development") assertDevDatabase(process.env);
 
 /**
  * One pool per server instance. `DATABASE_URL` is the pooled Neon URL in
