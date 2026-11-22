@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type FormEvent, type ReactNode } from "react";
+import { useId, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import {
   PASSWORD_MIN,
@@ -25,6 +25,8 @@ const COPY = {
   "sign-up": { submit: "Criar conta", pending: "Criando conta…" },
 } as const;
 
+const noSubscribe = () => () => {};
+
 export const AuthForm = ({ mode, onSubmit }: Props) => {
   const id = useId();
   const [values, setValues] = useState<SignUpInput>({ name: "", email: "", password: "" });
@@ -32,6 +34,7 @@ export const AuthForm = ({ mode, onSubmit }: Props) => {
   const [formError, setFormError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const hydrated = useSyncExternalStore(noSubscribe, () => true, () => false);
   const signUp = mode === "sign-up";
 
   const change = (field: keyof SignUpInput) => (value: string) => {
@@ -66,8 +69,10 @@ export const AuthForm = ({ mode, onSubmit }: Props) => {
     }
   };
 
+  // `post` e o botão desligado até hidratar: antes do JavaScript carregar, o envio
+  // nativo (GET por padrão) poria a senha na URL, no histórico e nos logs.
   return (
-    <form noValidate onSubmit={submit} className="flex flex-col gap-4">
+    <form method="post" noValidate onSubmit={submit} className="flex flex-col gap-4">
       {signUp && (
         <Field
           id={`${id}-name`}
@@ -125,7 +130,7 @@ export const AuthForm = ({ mode, onSubmit }: Props) => {
 
       <button
         type="submit"
-        disabled={pending}
+        disabled={!hydrated || pending}
         className="mt-1 rounded-xl bg-accent py-3 font-semibold text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
       >
         {pending ? COPY[mode].pending : COPY[mode].submit}
