@@ -136,14 +136,15 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
       />
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-28 pt-4">
-        {store.syncError && (
+        {(store.syncError || store.syncConflict) && (
           <div
             role="alert"
             className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-sm"
           >
             <span className="font-medium text-destructive">
-              Não foi possível salvar suas últimas mudanças: a conexão falhou ou outra conta entrou
-              neste navegador.
+              {store.syncConflict
+                ? "Este dado mudou em outro aparelho, e a sua última mudança não foi salva. Copie o que você escreveu e recarregue."
+                : "Não foi possível salvar suas últimas mudanças: a conexão falhou ou outra conta entrou neste navegador."}
             </span>
             <button
               type="button"

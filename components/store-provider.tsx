@@ -10,16 +10,16 @@ const noopSubscribe = () => () => {};
 
 /** As ações presas ao dono dos dados: com outra conta logada, o servidor recusa. */
 const persistenceFor = (owner: string): Persistence => ({
-  saveSet: (set) => actions.saveSet(owner, set),
+  saveSet: (set, before) => actions.saveSet(owner, set, before),
   deleteSet: (id) => actions.deleteSet(owner, id),
-  saveWorkout: (workout) => actions.saveWorkout(owner, workout),
+  saveWorkout: (workout, before) => actions.saveWorkout(owner, workout, before),
   deleteWorkout: (id) => actions.deleteWorkout(owner, id),
-  saveSession: (session) => actions.saveSession(owner, session),
+  saveSession: (session, before) => actions.saveSession(owner, session, before),
   deleteSession: (id) => actions.deleteSession(owner, id),
   saveCardioSession: (session) => actions.saveCardioSession(owner, session),
   deleteCardioSession: (id) => actions.deleteCardioSession(owner, id),
-  saveSchedule: (schedule) => actions.saveSchedule(owner, schedule),
-  saveCardioProfile: (profile) => actions.saveCardioProfile(owner, profile),
+  saveSchedule: (schedule, before) => actions.saveSchedule(owner, schedule, before),
+  saveCardioProfile: (profile, before) => actions.saveCardioProfile(owner, profile, before),
   saveRestSeconds: (seconds) => actions.saveRestSeconds(owner, seconds),
   clearAllData: () => actions.clearAllData(owner),
 });
