@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { renderToString } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import { AuthForm } from "@/components/auth-form";
 
@@ -70,5 +71,19 @@ describe("AuthForm: criar conta", () => {
     render(<AuthForm mode="sign-up" onSubmit={async () => null} />);
     expect(screen.getByLabelText("Senha")).toHaveAttribute("autocomplete", "new-password");
     expect(screen.getByLabelText("E-mail")).toHaveAttribute("autocomplete", "email");
+  });
+});
+
+describe("AuthForm: antes de o JavaScript carregar", () => {
+  it.each(["sign-in", "sign-up"] as const)("%s não consegue mandar a senha na URL", (mode) => {
+    const html = document.createElement("div");
+    html.innerHTML = renderToString(<AuthForm mode={mode} onSubmit={async () => null} />);
+    expect(html.querySelector("form")).toHaveAttribute("method", "post");
+    expect(html.querySelector('button[type="submit"]')).toBeDisabled();
+  });
+
+  it("depois de carregar, o botão liga", () => {
+    render(<AuthForm mode="sign-in" onSubmit={async () => null} />);
+    expect(screen.getByRole("button", { name: "Entrar" })).toBeEnabled();
   });
 });
