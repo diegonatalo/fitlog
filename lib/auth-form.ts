@@ -7,6 +7,9 @@ export const PASSWORD_MIN = 8;
 export const PASSWORD_MAX = 128;
 export const NAME_MAX = 60;
 
+/** Cabeçalho com a conta da tela, exigido para excluir a conta. */
+export const ACCOUNT_HEADER = "x-account-id";
+
 export type SignInInput = { email: string; password: string };
 export type SignUpInput = SignInInput & { name: string };
 

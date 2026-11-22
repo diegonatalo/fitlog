@@ -10,7 +10,7 @@ export function useStore() {
 }
 
 /** The signed-in person, as shown in the app (never the session itself). */
-export type Account = { name: string; email: string };
+export type Account = { id: string; name: string; email: string };
 
 export const AccountContext = createContext<Account | null>(null);
 
