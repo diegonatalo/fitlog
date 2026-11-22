@@ -1,5 +1,15 @@
 import { createHash } from "node:crypto";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { parseEnv } from "node:util";
 import { defineConfig, devices } from "@playwright/test";
+import { assertDevDatabase } from "./lib/dev-database";
+
+// Para antes do build se o banco não for de desenvolvimento, lendo os .env como o `next start`.
+const envFiles = [".env", ".env.production", ".env.local", ".env.production.local"]
+  .map((name) => join(__dirname, name))
+  .filter((file) => existsSync(file));
+assertDevDatabase(Object.assign({}, ...envFiles.map((file) => parseEnv(readFileSync(file, "utf8"))), process.env));
 
 const CI = Boolean(process.env.CI);
 // Uma porta por pasta (20000 a 29999), para um projeto nunca testar o servidor de outro,

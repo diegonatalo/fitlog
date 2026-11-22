@@ -27,7 +27,7 @@ Veja [`.env.example`](.env.example).
 
 | Variável | Descrição | Se não definir |
 |---|---|---|
-| `DATABASE_URL` | URL do Postgres, com pooler. Em desenvolvimento, use uma branch `dev`, nunca a de produção. | O app não abre |
+| `DATABASE_URL` | URL do Postgres, com pooler. Em desenvolvimento, use uma branch `dev`, nunca a de produção, num banco com nome terminado em `_dev` (senão o `pnpm dev`, o E2E e as migrações param). | O app não abre |
 | `DATABASE_URL_UNPOOLED` | URL sem pooler, usada pelas migrações. | As migrações usam a `DATABASE_URL` |
 | `BETTER_AUTH_SECRET` | Segredo que assina os cookies de sessão. Gere com `openssl rand -base64 32`, um por ambiente. | Em produção, o login e o app dão erro |
 | `BETTER_AUTH_URL` | Endereço do site em desenvolvimento e nos testes, sem barra no final. Na Vercel não precisa: vale o `SITE_URL`. | Better Auth deduz pela requisição e avisa no log |
