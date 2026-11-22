@@ -77,7 +77,8 @@ export const FAQ: Faq[] = [
   { question: "É grátis?", answer: "É. Não tem plano pago nem anúncio; só pede uma conta com e-mail e senha." },
   {
     question: "Onde ficam os meus dados?",
-    answer: "Na sua conta, num banco de dados protegido. Só você vê o que registra, e pode apagar tudo quando quiser.",
+    answer:
+      "Na sua conta, num banco de dados em São Paulo, processado por um servidor nos Estados Unidos. No app, cada conta vê só os próprios dados. Quem mantém o FitLog administra o banco e tecnicamente consegue ler. Você pode apagar tudo quando quiser.",
   },
   {
     question: "Como uso em outro celular?",
