@@ -2,7 +2,11 @@ import "server-only";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { assertDevDatabase } from "@/lib/dev-database";
+import { hideQueryValues } from "./safe-errors";
 import * as schema from "./schema";
+
+// o erro de uma consulta nunca leva os valores dela para o log
+hideQueryValues();
 
 // só no `next dev`: a trava não roda no site publicado
 if (process.env.NODE_ENV === "development") assertDevDatabase(process.env);
