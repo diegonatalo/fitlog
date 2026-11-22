@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { PRIVACY_EMAIL, SOURCE_URL } from "@/lib/site";
 
 /** Data da última mudança nos textos (`AAAA-MM-DD`). */
-const UPDATED_AT = "2026-11-21";
+const UPDATED_AT = "2026-11-22";
 
 const linkClass = "font-semibold text-accent underline underline-offset-2";
 
@@ -35,7 +35,7 @@ export const PrivacyPage = () => (
     <LegalPage
       header={<Header />}
       title="Privacidade"
-      summary="O FitLog guarda seus treinos na sua conta, num banco de dados, para você acessar de qualquer aparelho. Só você vê o que registra."
+      summary="O FitLog guarda seus treinos na sua conta, num banco de dados, para você acessar de qualquer aparelho. Esta página diz o que é guardado, quem consegue ler e como apagar."
       updatedAt={UPDATED_AT}
       sections={[
         {
@@ -45,7 +45,8 @@ export const PrivacyPage = () => (
             <>
               <p>
                 Da sua conta: <strong>nome e e-mail</strong>, e a senha, guardada só como hash (não dá para ler a senha
-                a partir dele). Para manter você conectado, também o endereço IP e o navegador de cada sessão.
+                a partir dele). Para manter você conectado, também o endereço IP e o navegador de cada sessão. Para
+                limitar tentativas de login, um contador por endereço IP, que não fica ligado à conta.
               </p>
               <p>
                 Do app: seus treinos, a agenda da semana, as séries registradas (carga e repetições), o histórico das
@@ -60,14 +61,30 @@ export const PrivacyPage = () => (
           ),
         },
         {
+          id: "quem-consegue-ler",
+          title: "Quem consegue ler",
+          content: (
+            <>
+              <p>No app, cada conta vê só os próprios dados.</p>
+              <p>
+                Fora do app, <strong>quem mantém o FitLog</strong> (Diego Natalo) administra o banco e a hospedagem e
+                tecnicamente consegue ler o que você registra, inclusive peso, idade e sexo. Os dados{" "}
+                <strong>não têm criptografia de ponta a ponta</strong>.
+              </p>
+            </>
+          ),
+        },
+        {
           id: "terceiros",
           title: "Quem mais recebe dados",
           content: (
             <>
               <p>
                 A <strong>Vercel</strong>, a hospedagem do site, que registra dados técnicos de acesso (como IP e
-                navegador) para entregar as páginas, e o <strong>Neon</strong>, onde fica o banco de dados. Os dois só
-                guardam e processam os dados para o FitLog funcionar; nenhum deles usa seus dados para outra coisa.
+                navegador) para entregar as páginas, e o <strong>Neon</strong>, onde fica o banco de dados. Os dois recebem
+                os dados para o FitLog funcionar. O banco fica em São Paulo, mas o servidor que lê e grava roda nos{" "}
+                <strong>Estados Unidos</strong>: seus dados, inclusive peso, idade e sexo,{" "}
+                <strong>passam por fora do Brasil</strong> (transferência internacional, LGPD, art. 33).
               </p>
               <p>
                 O único cookie é o de sessão, necessário para manter você conectado. Não usamos estatísticas de
@@ -93,7 +110,9 @@ export const PrivacyPage = () => (
           content: (
             <p>
               Em Ajustes, &quot;Apagar todos os dados&quot; apaga treinos, séries, histórico e cardio e mantém a conta.
-              &quot;Excluir conta&quot; apaga a conta e tudo o que está nela. Nos dois casos não há como recuperar.
+              &quot;Excluir conta&quot; apaga a conta e tudo o que está nela. Nos dois casos você não consegue
+              recuperar. Cópias podem continuar por um tempo no histórico de recuperação do Neon e em cópias de
+              segurança feitas para manutenção. O contador de tentativas por IP não é apagado com a conta.
             </p>
           ),
         },
