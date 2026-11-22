@@ -60,36 +60,43 @@ describe("AccountSection", () => {
     expect(authClient.deleteUser).not.toHaveBeenCalled();
   });
 
-  it("confirmar exclui a conta e sai do app", async () => {
-    authClient.deleteUser.mockResolvedValue({ error: null });
+  const confirmWith = async (password: string) => {
+    await userEvent.click(screen.getByRole("button", { name: "Excluir conta" }));
+    const dialog = screen.getByRole("alertdialog");
+    await userEvent.type(screen.getByLabelText("Sua senha"), password);
+    await userEvent.click(dialog.querySelector("button[type=submit]") as HTMLElement);
+  };
+
+  it("sem a senha, o botão de excluir fica desabilitado", async () => {
     setup();
     await userEvent.click(screen.getByRole("button", { name: "Excluir conta" }));
-    await userEvent.click(
-      screen.getByRole("alertdialog").querySelector("button:last-of-type") as HTMLElement,
-    );
-    expect(authClient.deleteUser).toHaveBeenCalledWith({ fetchOptions: { headers: { "x-account-id": "ana" } } });
+    expect(screen.getByRole("alertdialog").querySelector("button[type=submit]")).toBeDisabled();
+  });
+
+  it("confirmar com a senha exclui a conta e sai do app", async () => {
+    authClient.deleteUser.mockResolvedValue({ error: null });
+    setup();
+    await confirmWith("minha-senha-123");
+    expect(authClient.deleteUser).toHaveBeenCalledWith({
+      password: "minha-senha-123",
+      fetchOptions: { headers: { "x-account-id": "ana" } },
+    });
     expect(assign).toHaveBeenCalledWith(new URL("http://localhost:3000/"));
+  });
+
+  it("senha errada avisa e não sai", async () => {
+    authClient.deleteUser.mockResolvedValue({ error: { code: "INVALID_PASSWORD" } });
+    setup();
+    await confirmWith("errada-123");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Senha incorreta");
+    expect(assign).not.toHaveBeenCalled();
   });
 
   it("se outra conta entrou, avisa e não sai", async () => {
     authClient.deleteUser.mockResolvedValue({ error: { code: "ACCOUNT_CHANGED" } });
     setup();
-    await userEvent.click(screen.getByRole("button", { name: "Excluir conta" }));
-    await userEvent.click(
-      screen.getByRole("alertdialog").querySelector("button:last-of-type") as HTMLElement,
-    );
+    await confirmWith("minha-senha-123");
     expect(await screen.findByRole("alert")).toHaveTextContent("Outra conta entrou");
-    expect(assign).not.toHaveBeenCalled();
-  });
-
-  it("sessão antiga demais pede para entrar de novo antes de excluir", async () => {
-    authClient.deleteUser.mockResolvedValue({ error: { code: "SESSION_EXPIRED" } });
-    setup();
-    await userEvent.click(screen.getByRole("button", { name: "Excluir conta" }));
-    await userEvent.click(
-      screen.getByRole("alertdialog").querySelector("button:last-of-type") as HTMLElement,
-    );
-    expect(await screen.findByRole("alert")).toHaveTextContent("saia e entre de novo");
     expect(assign).not.toHaveBeenCalled();
   });
 });

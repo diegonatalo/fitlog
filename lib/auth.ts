@@ -1,11 +1,11 @@
 import "server-only";
 import { betterAuth } from "better-auth";
-import { APIError, createAuthMiddleware, getSessionFromCtx } from "better-auth/api";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { db } from "@/lib/db";
 import * as schema from "@/lib/db/schema";
-import { ACCOUNT_HEADER, PASSWORD_MAX, PASSWORD_MIN } from "@/lib/auth-form";
+import { ACCOUNT_HEADER, NAME_MAX, PASSWORD_MAX, PASSWORD_MIN } from "@/lib/auth-form";
+import { guardAccountRoutes, limitUser } from "@/lib/auth-guard";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -33,15 +33,14 @@ export const auth = betterAuth({
     maxPasswordLength: PASSWORD_MAX,
     autoSignIn: true,
   },
-  hooks: {
-    before: createAuthMiddleware(async (ctx) => {
-      if (ctx.path !== "/delete-user") return;
-      // uma aba antiga não pode apagar a conta de quem entrou depois
-      const current = await getSessionFromCtx(ctx);
-      if (current && ctx.headers?.get(ACCOUNT_HEADER) !== current.user.id) {
-        throw new APIError("CONFLICT", { code: "ACCOUNT_CHANGED", message: "Account changed" });
-      }
-    }),
+  // excluir a conta pede a senha, e uma aba antiga não apaga a conta de quem entrou depois
+  hooks: { before: guardAccountRoutes({ accountHeader: ACCOUNT_HEADER }) },
+  // nome e e-mail com limite de tamanho, no cadastro e na edição (lib/auth-guard.ts)
+  databaseHooks: {
+    user: {
+      create: { before: async (user) => ({ data: limitUser(user, NAME_MAX) }) },
+      update: { before: async (user) => ({ data: limitUser(user, NAME_MAX) }) },
+    },
   },
   // excluir a conta apaga tudo em cascata (user_id nas tabelas do app)
   user: { deleteUser: { enabled: true } },
@@ -56,6 +55,8 @@ export const auth = betterAuth({
     enabled: process.env.AUTH_RATE_LIMIT !== "off" && process.env.NODE_ENV === "production",
     storage: "database",
     modelName: "rateLimit",
+    // a senha de quem já está logado não pode ser adivinhada pela exclusão da conta
+    customRules: { "/delete-user": { window: 60, max: 5 } },
   },
   // precisa ser o último: grava o cookie quando o login roda numa Server Action
   plugins: [nextCookies()],
