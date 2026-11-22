@@ -78,7 +78,7 @@ export const FAQ: Faq[] = [
   {
     question: "Onde ficam os meus dados?",
     answer:
-      "Na sua conta, num banco de dados em São Paulo, processado por um servidor nos Estados Unidos. No app, cada conta vê só os próprios dados. Quem mantém o FitLog administra o banco e tecnicamente consegue ler. Você pode apagar tudo quando quiser.",
+      "Na sua conta, num banco de dados em São Paulo, onde também roda o servidor. As empresas de hospedagem são estrangeiras e podem tratar dados fora do Brasil. No app, cada conta vê só os próprios dados. Quem mantém o FitLog administra o banco e tecnicamente consegue ler. Você pode apagar tudo quando quiser.",
   },
   {
     question: "Como uso em outro celular?",
