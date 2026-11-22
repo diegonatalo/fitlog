@@ -262,6 +262,7 @@ Publicado na [Vercel](https://vercel.com) em [dn-fitlog.vercel.app](https://dn-f
 
 - O script `vercel-build` aplica as migrações pendentes (`drizzle-kit migrate`, pela `DATABASE_URL_UNPOOLED`) e depois gera o build. Só a `main` é publicada (`vercel.json`), então só ela migra o banco de produção.
 - Em produção, defina só `BETTER_AUTH_SECRET` (um segredo próprio, diferente do de desenvolvimento). Na Vercel, o endereço do login é o mesmo `SITE_URL` do SEO, e a `DATABASE_URL` vem da integração com o Neon.
+- As funções rodam em São Paulo (`gru1`), junto do banco: é escolhido em Settings > Functions > Function Regions, na Vercel, e vale a partir do deploy seguinte. Se mudar, atualize a política de privacidade.
 - O `robots.txt` e o `sitemap.xml` vêm de `app/robots.ts` e `app/sitemap.ts`. A landing fica em `/` e o app em `/app`, que pede login (os endereços antigos sem `/app` redirecionam com 308, em `lib/redirects.ts`). O sitemap lista só as páginas públicas: a landing, `/privacidade` e `/termos`.
 - Ao trocar de domínio, defina `NEXT_PUBLIC_SITE_URL` (ou altere o valor padrão em `lib/site.ts`).
 

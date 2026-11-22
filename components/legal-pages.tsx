@@ -82,9 +82,10 @@ export const PrivacyPage = () => (
               <p>
                 A <strong>Vercel</strong>, a hospedagem do site, que registra dados técnicos de acesso (como IP e
                 navegador) para entregar as páginas, e o <strong>Neon</strong>, onde fica o banco de dados. Os dois recebem
-                os dados para o FitLog funcionar. O banco fica em São Paulo, mas o servidor que lê e grava roda nos{" "}
-                <strong>Estados Unidos</strong>: seus dados, inclusive peso, idade e sexo,{" "}
-                <strong>passam por fora do Brasil</strong> (transferência internacional, LGPD, art. 33).
+                os dados para o FitLog funcionar. O banco e o servidor que lê e grava ficam em{" "}
+                <strong>São Paulo</strong>. Mas a Vercel e o Neon são empresas estrangeiras e{" "}
+                <strong>podem tratar dados fora do Brasil</strong>, inclusive peso, idade e sexo, por exemplo em
+                suporte, manutenção e registros técnicos (transferência internacional, LGPD, art. 33).
               </p>
               <p>
                 O único cookie é o de sessão, necessário para manter você conectado. Não usamos estatísticas de
