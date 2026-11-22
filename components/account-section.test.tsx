@@ -15,7 +15,7 @@ const assign = vi.fn();
 
 const setup = () =>
   render(
-    <AccountContext value={{ name: "Ana", email: "ana@exemplo.com" }}>
+    <AccountContext value={{ id: "ana", name: "Ana", email: "ana@exemplo.com" }}>
       <AccountSection />
     </AccountContext>,
   );
@@ -67,8 +67,19 @@ describe("AccountSection", () => {
     await userEvent.click(
       screen.getByRole("alertdialog").querySelector("button:last-of-type") as HTMLElement,
     );
-    expect(authClient.deleteUser).toHaveBeenCalled();
+    expect(authClient.deleteUser).toHaveBeenCalledWith({ fetchOptions: { headers: { "x-account-id": "ana" } } });
     expect(assign).toHaveBeenCalledWith(new URL("http://localhost:3000/"));
+  });
+
+  it("se outra conta entrou, avisa e não sai", async () => {
+    authClient.deleteUser.mockResolvedValue({ error: { code: "ACCOUNT_CHANGED" } });
+    setup();
+    await userEvent.click(screen.getByRole("button", { name: "Excluir conta" }));
+    await userEvent.click(
+      screen.getByRole("alertdialog").querySelector("button:last-of-type") as HTMLElement,
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent("Outra conta entrou");
+    expect(assign).not.toHaveBeenCalled();
   });
 
   it("sessão antiga demais pede para entrar de novo antes de excluir", async () => {

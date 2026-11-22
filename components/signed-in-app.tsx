@@ -15,7 +15,7 @@ export const SignedInApp = async ({ children }: { children: ReactNode }) => {
   if (!user) redirect(paths.signIn);
   const data = await loadAppData(user.id);
   return (
-    <Providers initialData={data} account={{ name: user.name, email: user.email }}>
+    <Providers initialData={data} account={{ id: user.id, name: user.name, email: user.email }}>
       {children}
     </Providers>
   );

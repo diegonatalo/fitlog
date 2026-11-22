@@ -1,10 +1,11 @@
 import "server-only";
 import { betterAuth } from "better-auth";
+import { APIError, createAuthMiddleware, getSessionFromCtx } from "better-auth/api";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { db } from "@/lib/db";
 import * as schema from "@/lib/db/schema";
-import { PASSWORD_MAX, PASSWORD_MIN } from "@/lib/auth-form";
+import { ACCOUNT_HEADER, PASSWORD_MAX, PASSWORD_MIN } from "@/lib/auth-form";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -31,6 +32,16 @@ export const auth = betterAuth({
     minPasswordLength: PASSWORD_MIN,
     maxPasswordLength: PASSWORD_MAX,
     autoSignIn: true,
+  },
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path !== "/delete-user") return;
+      // uma aba antiga não pode apagar a conta de quem entrou depois
+      const current = await getSessionFromCtx(ctx);
+      if (current && ctx.headers?.get(ACCOUNT_HEADER) !== current.user.id) {
+        throw new APIError("CONFLICT", { code: "ACCOUNT_CHANGED", message: "Account changed" });
+      }
+    }),
   },
   // excluir a conta apaga tudo em cascata (user_id nas tabelas do app)
   user: { deleteUser: { enabled: true } },

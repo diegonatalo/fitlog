@@ -5,6 +5,7 @@ import { SignOutIcon, UserCircleIcon } from "@phosphor-icons/react";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { useAccount } from "@/hooks/use-store";
 import { authClient } from "@/lib/auth-client";
+import { ACCOUNT_HEADER } from "@/lib/auth-form";
 
 /**
  * Navegação completa de propósito, não `router.push`: descarta o store e o
@@ -35,14 +36,16 @@ export const AccountSection = () => {
     setPending(true);
     setError(null);
     const { error } = await authClient
-      .deleteUser()
+      .deleteUser({ fetchOptions: { headers: { [ACCOUNT_HEADER]: account.id } } })
       .catch(() => ({ error: { code: "NETWORK" } }));
     if (error) {
       setPending(false);
       setError(
-        error && typeof error === "object" && error.code === "SESSION_EXPIRED"
-          ? "Por segurança, saia e entre de novo antes de excluir a conta."
-          : "Não foi possível excluir a conta. Tente de novo.",
+        error.code === "ACCOUNT_CHANGED"
+          ? "Outra conta entrou neste navegador. Entre com a sua para poder excluí-la."
+          : error.code === "SESSION_EXPIRED"
+            ? "Por segurança, saia e entre de novo antes de excluir a conta."
+            : "Não foi possível excluir a conta. Tente de novo.",
       );
       return;
     }

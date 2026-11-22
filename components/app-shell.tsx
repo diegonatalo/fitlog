@@ -142,7 +142,8 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
             className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-sm"
           >
             <span className="font-medium text-destructive">
-              Não foi possível salvar suas últimas mudanças.
+              Não foi possível salvar suas últimas mudanças: a conexão falhou ou outra conta entrou
+              neste navegador.
             </span>
             <button
               type="button"
