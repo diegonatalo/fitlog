@@ -6,7 +6,7 @@ import { Link, useNavigate } from "@/lib/router";
 import type { MuscleGroup } from "@/types";
 import { muscleLabel } from "@/types";
 import { dashboardStats } from "@/lib/dashboard";
-import { dateKey } from "@/lib/dates";
+import { WEEKDAY_SHORT, dateKey } from "@/lib/dates";
 import { getExercise } from "@/lib/exercises";
 import { formatSet, formatTime, relativeDay } from "@/lib/format";
 import { averageMinutes } from "@/lib/workout-stats";
@@ -51,7 +51,13 @@ export const HomePage = () => {
         const exercise = getExercise(id);
         if (!exercise) return [];
         const last = store.setsByExercise.get(id)?.[0];
-        return [{ name: exercise.name, last: last ? formatSet(last) : undefined }];
+        return [
+          {
+            name: exercise.name,
+            last: last ? formatSet(last) : undefined,
+            group: muscleLabel(exercise.muscleGroup),
+          },
+        ];
       }),
       minutes: averageMinutes(store.sessions, todayWorkout.id),
     };
@@ -87,6 +93,20 @@ export const HomePage = () => {
   };
 
   const maxSets = stats?.muscles30[0]?.sets ?? 1;
+  // os três últimos treinos terminados, para a coluna da direita nas telas largas
+  const recent = store.finishedSessions.slice(0, 3).map((s) => {
+    const started = new Date(s.startedAt);
+    const volume = (store.setsBySession.get(s.id) ?? [])
+      .filter((x) => x.loadType === "weight")
+      .reduce((n, x) => n + x.load * x.reps, 0);
+    const minutes = Math.max(1, Math.round(((s.finishedAt as number) - s.startedAt) / 60_000));
+    return {
+      id: s.id,
+      name: s.name,
+      day: `${WEEKDAY_SHORT[started.getDay()]} ${started.getDate()}`,
+      meta: `${minutes} min · ${volumeText(volume)}`,
+    };
+  });
   const weekDone = week?.filter((d) => d.status === "done").length ?? 0;
   // dias com treino na agenda, feitos ou não
   const weekPlanned =
@@ -99,7 +119,8 @@ export const HomePage = () => {
   const hasData = store.finishedSessions.length > 0;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-5">
+      <div className="flex min-w-0 flex-col gap-4">
       {activeSession && (
         <Link
           to={paths.session(activeSession.id)}
@@ -124,7 +145,11 @@ export const HomePage = () => {
         </Link>
       )}
 
-      {week && <WeekStrip days={week} />}
+      {week && (
+        <div className="lg:hidden">
+          <WeekStrip days={week} />
+        </div>
+      )}
 
       {today && (
         <TodayCard
@@ -133,11 +158,20 @@ export const HomePage = () => {
           busy={!!activeSession}
           onStart={() => start(todayWorkout)}
           onStartFree={() => start(null)}
+          editHref={todayWorkout ? paths.editWorkout(todayWorkout.id) : undefined}
         />
+      )}
+      </div>
+
+      <aside aria-label="Seu ritmo" className="flex min-w-0 flex-col gap-3">
+      {week && (
+        <div className="hidden lg:block">
+          <WeekStrip days={week} />
+        </div>
       )}
 
       {stats && (
-        <section aria-labelledby="progresso" className="mt-3 flex flex-col gap-3">
+        <section aria-labelledby="progresso" className="mt-3 flex flex-col gap-3 lg:mt-0">
           <div className="flex items-baseline justify-between gap-3">
             <h2 id="progresso" className="text-xl font-extrabold font-stretch-semi-expanded">
               Seu ritmo
@@ -224,8 +258,26 @@ export const HomePage = () => {
               </ul>
             </div>
           )}
+
+          {recent.length > 0 && (
+            <div className="hidden rounded-[22px] border border-border bg-card px-4 py-2 lg:block">
+              <h3 className="py-2.5 text-xs font-semibold text-muted-foreground">Últimos treinos</h3>
+              <ul>
+                {recent.map((r) => (
+                  <li key={r.id} className="border-t border-border">
+                    <Link to={paths.sessionDetail(r.id)} className="flex items-center gap-3 py-3 hover:opacity-80">
+                      <span className="w-14 shrink-0 font-mono text-[13px] uppercase text-muted-foreground">{r.day}</span>
+                      <span className="min-w-0 flex-1 truncate font-bold">{r.name}</span>
+                      <span className="shrink-0 font-mono text-xs text-muted-foreground">{r.meta}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </section>
       )}
+      </aside>
     </div>
   );
 };
@@ -236,6 +288,10 @@ const Stat = ({ label, children }: { label: string; children: React.ReactNode })
     {children}
   </div>
 );
+
+/** O mesmo, como texto simples: "850 kg", "12,4 t". */
+const volumeText = (kg: number) =>
+  kg >= 1000 ? `${(kg / 1000).toLocaleString("pt-BR", { maximumFractionDigits: 1 })} t` : `${kg.toLocaleString("pt-BR")} kg`;
 
 /** Volume em kg, ou em toneladas a partir de 1.000 kg: "850 kg", "12,4 t". */
 const formatVolume = (kg: number) =>

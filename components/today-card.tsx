@@ -3,6 +3,7 @@ import type { MuscleGroup } from "@/types";
 import { Link } from "@/lib/router";
 import { paths } from "@/lib/paths";
 import { MuscleBadge } from "@/components/muscle-badge";
+import { cn } from "@/lib/cn";
 
 export type TodayPlan =
   | {
@@ -11,7 +12,7 @@ export type TodayPlan =
       exercises: number;
       groups: MuscleGroup[];
       /** os exercícios, na ordem do treino, com a última série de cada um */
-      rows?: { name: string; last?: string }[];
+      rows?: { name: string; last?: string; group?: string }[];
       /** duração média das vezes em que o treino foi feito */
       minutes?: number | null;
     }
@@ -26,6 +27,8 @@ type TodayCardProps = {
   busy: boolean;
   onStart: () => void;
   onStartFree: () => void;
+  /** link para editar o treino de hoje, mostrado nas telas largas */
+  editHref?: string;
 };
 
 const SHOWN_EXERCISES = 3;
@@ -41,7 +44,7 @@ const Shell = ({ children }: { children: React.ReactNode }) => (
   </section>
 );
 
-export const TodayCard = ({ plan, doneToday, busy, onStart, onStartFree }: TodayCardProps) => {
+export const TodayCard = ({ plan, doneToday, busy, onStart, onStartFree, editHref }: TodayCardProps) => {
   if (plan?.kind === "rest") {
     return (
       <Shell>
@@ -62,7 +65,6 @@ export const TodayCard = ({ plan, doneToday, busy, onStart, onStartFree }: Today
 
   if (plan?.kind === "workout") {
     const rows = plan.rows ?? [];
-    const shown = rows.slice(0, SHOWN_EXERCISES);
     const others = rows.slice(SHOWN_EXERCISES).map((r) => r.name);
     return (
       <Shell>
@@ -75,7 +77,9 @@ export const TodayCard = ({ plan, doneToday, busy, onStart, onStartFree }: Today
               <span className="font-mono text-xs text-muted-foreground">~{plan.minutes} min</span>
             )}
           </div>
-          <p className="truncate text-[2rem] leading-none font-extrabold font-stretch-semi-expanded">{plan.name}</p>
+          <p className="truncate text-[2rem] leading-none font-extrabold font-stretch-semi-expanded lg:text-[40px] lg:leading-[1.05] lg:whitespace-normal">
+            {plan.name}
+          </p>
           <p className="text-sm text-muted-foreground">
             {plan.exercises} {plan.exercises === 1 ? "exercício" : "exercícios"}
           </p>
@@ -88,21 +92,28 @@ export const TodayCard = ({ plan, doneToday, busy, onStart, onStartFree }: Today
           )}
         </div>
 
-        {shown.length > 0 && (
+        {rows.length > 0 && (
           <ol className="mt-4 px-5">
-            {shown.map((row, i) => (
-              <li key={row.name} className="flex items-center gap-3 border-t border-border py-2.5">
+            {rows.map((row, i) => (
+              <li
+                key={row.name}
+                className={cn(
+                  "flex items-center gap-3 border-t border-border py-2.5 lg:py-3.5",
+                  i >= SHOWN_EXERCISES && "hidden lg:flex",
+                )}
+              >
                 <span className="w-5 shrink-0 font-mono text-xs text-muted-foreground">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="min-w-0 flex-1 truncate font-semibold">{row.name}</span>
+                <span className="min-w-0 flex-1 truncate font-semibold lg:text-base lg:font-bold">{row.name}</span>
+                {row.group && <span className="hidden w-36 shrink-0 text-sm text-muted-foreground lg:block">{row.group}</span>}
                 {row.last && (
                   <span className="shrink-0 font-mono text-[13px] text-muted-foreground">{row.last}</span>
                 )}
               </li>
             ))}
             {others.length > 0 && (
-              <li className="flex items-center gap-3 border-t border-border py-2.5 text-sm text-muted-foreground">
+              <li className="flex items-center gap-3 border-t border-border py-2.5 text-sm text-muted-foreground lg:hidden">
                 <span className="w-5 shrink-0 font-mono text-xs">+{others.length}</span>
                 <span className="min-w-0 truncate">{LIST.format(others)}</span>
               </li>
@@ -116,6 +127,7 @@ export const TodayCard = ({ plan, doneToday, busy, onStart, onStartFree }: Today
               <CheckCircleIcon size={18} weight="fill" className="text-accent-text" /> Treino de hoje feito
             </p>
           )}
+          <div className="flex flex-col gap-3 sm:flex-row">
           <button
             onClick={onStart}
             disabled={plan.exercises === 0 || busy}
@@ -124,6 +136,15 @@ export const TodayCard = ({ plan, doneToday, busy, onStart, onStartFree }: Today
             <PlayIcon size={20} weight="fill" />
             {busy ? "Outro treino em andamento" : doneToday ? "Treinar de novo" : "Iniciar treino"}
           </button>
+          {editHref && (
+            <Link
+              to={editHref}
+              className="hidden h-14 shrink-0 items-center justify-center rounded-2xl border border-input px-6 font-bold hover:bg-muted lg:flex"
+            >
+              Editar treino
+            </Link>
+          )}
+          </div>
         </div>
       </Shell>
     );

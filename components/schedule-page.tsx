@@ -21,6 +21,7 @@ import { useStore } from "@/hooks/use-store";
 import { useToday } from "@/hooks/use-today";
 import { DayEditor } from "@/components/day-editor";
 import { workoutInitial } from "@/lib/workout-stats";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 type View = { year: number; month: number };
 
@@ -29,6 +30,9 @@ export const SchedulePage = () => {
   const today = useToday();
   const [view, setView] = useState<View | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
+  // telas largas: o painel do dia fica fixo ao lado do calendário, com hoje por padrão
+  const wideScreen = useMediaQuery("(min-width: 64rem)");
+  const panelDate = selected ?? today;
 
   const current: View | null = today
     ? { year: Number(today.slice(0, 4)), month: Number(today.slice(5, 7)) - 1 }
@@ -59,9 +63,29 @@ export const SchedulePage = () => {
     return null;
   };
 
+  const editor = (date: string, inline: boolean) => (
+    <DayEditor
+      key={inline ? date : undefined}
+      inline={inline}
+      date={date}
+      workouts={store.workouts}
+      current={resolvePlan(store.schedule, date)}
+      repeating={isRepeating(store.schedule, date)}
+      onApply={(plan, repeatWeekly) => {
+        store.planDay(date, plan, repeatWeekly);
+        setSelected(null);
+      }}
+      onStopRepeating={() => {
+        store.stopRepeating(date);
+        setSelected(null);
+      }}
+      onClose={() => setSelected(null)}
+    />
+  );
+
   return (
-    <div className="flex flex-col gap-4">
-      <section aria-label="Calendário">
+    <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-5">
+      <section aria-label="Calendário" className="lg:rounded-[28px] lg:border lg:border-border lg:bg-card lg:p-6">
         {shown ? (
           <>
             <div className="mb-3 flex items-center justify-between">
@@ -84,7 +108,7 @@ export const SchedulePage = () => {
               </button>
             </div>
 
-            <div className="grid grid-cols-7 gap-1.5 text-center">
+            <div className="grid grid-cols-7 gap-1.5 text-center lg:gap-2">
               {WEEKDAY_SHORT.map((d) => (
                 <span
                   key={d}
@@ -111,10 +135,12 @@ export const SchedulePage = () => {
                         .filter(Boolean)
                         .join(", ")}
                       kind={plan?.kind ?? null}
+                      name={plan?.name ?? null}
                       initial={plan?.kind === "workout" ? workoutInitial(plan.name) : null}
                       done={done}
                       isToday={key === today}
                       isPast={!!today && key < today}
+                      isSelected={wideScreen && key === panelDate}
                       onClick={() => setSelected(key)}
                     />
                   );
@@ -144,23 +170,7 @@ export const SchedulePage = () => {
         )}
       </section>
 
-      {selected && (
-        <DayEditor
-          date={selected}
-          workouts={store.workouts}
-          current={resolvePlan(store.schedule, selected)}
-          repeating={isRepeating(store.schedule, selected)}
-          onApply={(plan, repeatWeekly) => {
-            store.planDay(selected, plan, repeatWeekly);
-            setSelected(null);
-          }}
-          onStopRepeating={() => {
-            store.stopRepeating(selected);
-            setSelected(null);
-          }}
-          onClose={() => setSelected(null)}
-        />
-      )}
+      {wideScreen ? panelDate && <aside aria-label="Dia escolhido">{editor(panelDate, true)}</aside> : selected && editor(selected, false)}
     </div>
   );
 };
@@ -169,6 +179,10 @@ type DayCellProps = {
   day: number;
   label: string;
   kind: "workout" | "rest" | null;
+  /** nome do plano, escrito na célula nas telas largas */
+  name: string | null;
+  /** dia aberto no painel ao lado (telas largas) */
+  isSelected?: boolean;
   /** letra do treino planejado */
   initial: string | null;
   done: boolean;
@@ -177,7 +191,7 @@ type DayCellProps = {
   onClick: () => void;
 };
 
-const DayCell = ({ day, label, kind, initial, done, isToday, isPast, onClick }: DayCellProps) => {
+const DayCell = ({ day, label, kind, name, initial, done, isToday, isPast, isSelected, onClick }: DayCellProps) => {
   const missed = kind === "workout" && !done && isPast;
   return (
     <button
@@ -185,6 +199,8 @@ const DayCell = ({ day, label, kind, initial, done, isToday, isPast, onClick }: 
       aria-label={label}
       className={cn(
         "relative flex aspect-[1/1.1] flex-col items-center justify-center gap-0.5 rounded-[14px] border text-sm font-semibold transition-colors",
+        // telas largas: célula alta com o número no topo e o nome do plano embaixo
+        "lg:aspect-auto lg:min-h-24 lg:items-stretch lg:justify-between lg:p-2.5 lg:text-left",
         // cada caso define uma só cor de borda: classes de cor juntas brigam pela ordem do CSS
         done
           ? "border-accent bg-accent text-accent-foreground"
@@ -197,12 +213,15 @@ const DayCell = ({ day, label, kind, initial, done, isToday, isPast, onClick }: 
                 : isPast || kind === "rest"
                   ? "border-transparent text-muted-foreground hover:bg-muted/60"
                   : "border-border bg-card hover:bg-muted/60",
-        isToday && done && "ring-2 ring-foreground ring-offset-2 ring-offset-background",
+        (isSelected || (isToday && done)) && "ring-2 ring-foreground ring-offset-2 ring-offset-background",
       )}
     >
-      <span className="font-mono font-bold">{day}</span>
-      <span aria-hidden="true" className="flex h-3 items-center text-[10px] leading-none font-extrabold">
+      <span className="font-mono font-bold lg:text-base">{day}</span>
+      <span aria-hidden="true" className="flex h-3 items-center text-[10px] leading-none font-extrabold lg:hidden">
         {kind === "rest" ? <MoonIcon size={12} weight="fill" /> : kind === "workout" ? initial : done ? <CheckIcon size={12} weight="bold" /> : null}
+      </span>
+      <span aria-hidden="true" className="hidden truncate text-xs leading-tight font-bold lg:block">
+        {done ? `✓ ${name ?? "Feito"}` : kind === "workout" ? `${initial} · ${name}` : name}
       </span>
     </button>
   );

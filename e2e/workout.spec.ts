@@ -3,7 +3,7 @@ import { createWorkout, expect, saved, test, title } from "./fixtures";
 test("monta um treino, registra uma série e salva no histórico", async ({ page }) => {
   await createWorkout(page, "Treino A", ["Supino reto"]);
 
-  await page.getByRole("button", { name: "Iniciar treino" }).click();
+  await page.getByRole("main").getByRole("button", { name: "Iniciar treino" }).click();
   await expect(page).toHaveURL(/\/sessao\/[^/]+$/);
 
   await page.getByRole("spinbutton", { name: "Peso (kg)" }).fill("60");
@@ -24,7 +24,7 @@ test("monta um treino, registra uma série e salva no histórico", async ({ page
 
 test("o treino em andamento sobrevive a recarregar a página", async ({ page }) => {
   await createWorkout(page, "Treino B", ["Supino reto"]);
-  await page.getByRole("button", { name: "Iniciar treino" }).click();
+  await page.getByRole("main").getByRole("button", { name: "Iniciar treino" }).click();
   await page.getByRole("spinbutton", { name: "Peso (kg)" }).fill("40");
   await page.getByRole("spinbutton", { name: "Repetições" }).fill("12");
   await page.getByRole("button", { name: "Salvar", exact: true }).click();

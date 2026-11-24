@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from "react";
+import { useId, useRef, useState, type ReactNode } from "react";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { XIcon } from "@phosphor-icons/react";
 import type { Plan, Workout } from "@/types";
@@ -15,6 +15,8 @@ type DayEditorProps = {
   onApply: (plan: Plan, repeatWeekly: boolean) => void;
   onStopRepeating: () => void;
   onClose: () => void;
+  /** painel fixo ao lado do calendário (telas largas) em vez de um modal */
+  inline?: boolean;
 };
 
 type Option = { key: string; plan: Plan; name: string; sub: string };
@@ -33,6 +35,7 @@ export const DayEditor = ({
   onApply,
   onStopRepeating,
   onClose,
+  inline = false,
 }: DayEditorProps) => {
   const options: Option[] = [
     ...workouts.map((w) => ({
@@ -46,11 +49,8 @@ export const DayEditor = ({
   ];
   const [selected, setSelected] = useState(current ? planKey(current.plan) : "none");
   const [repeat, setRepeat] = useState(repeating);
-  const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const weekday = weekdayOf(date);
-
-  useFocusTrap(dialogRef, onClose);
 
   const save = () => {
     const plan = options.find((o) => o.key === selected)?.plan ?? { type: "none" };
@@ -59,20 +59,8 @@ export const DayEditor = ({
     onApply(plan, repeat && plan.type !== "none");
   };
 
-  return (
-    <div
-      className="fixed inset-0 z-40 flex items-end justify-center bg-black/60 backdrop-blur-sm sm:items-center"
-      onClick={onClose}
-    >
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[92dvh] w-full flex-col gap-3.5 overflow-y-auto rounded-t-[32px] border-t border-border bg-card px-5 pt-3 pb-[calc(1.75rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-w-md sm:rounded-[30px] sm:border sm:pt-5"
-      >
-        <span aria-hidden="true" className="h-1.5 w-10 self-center rounded-full bg-input sm:hidden" />
+  const body = (
+      <>
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 flex-col gap-1">
             <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
@@ -82,6 +70,7 @@ export const DayEditor = ({
               O que fazer neste dia?
             </h2>
           </div>
+          {!inline && (
           <button
             onClick={onClose}
             aria-label="Fechar"
@@ -89,6 +78,7 @@ export const DayEditor = ({
           >
             <XIcon size={18} weight="bold" />
           </button>
+          )}
         </div>
 
         <div role="radiogroup" aria-label="Plano do dia" className="flex flex-col gap-2">
@@ -149,6 +139,44 @@ export const DayEditor = ({
         >
           Salvar dia
         </button>
+      </>
+  );
+
+  if (inline) {
+    return (
+      <section aria-labelledby={titleId} className="flex flex-col gap-3.5 rounded-[28px] border border-border bg-card p-5">
+        {body}
+      </section>
+    );
+  }
+  return (
+    <DialogFrame titleId={titleId} onClose={onClose}>
+      {body}
+    </DialogFrame>
+  );
+};
+
+type DialogFrameProps = { titleId: string; onClose: () => void; children: ReactNode };
+
+/** Modal de baixo para cima no celular, centralizado a partir de sm. */
+const DialogFrame = ({ titleId, onClose, children }: DialogFrameProps) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, onClose);
+  return (
+    <div
+      className="fixed inset-0 z-40 flex items-end justify-center bg-black/60 backdrop-blur-sm sm:items-center"
+      onClick={onClose}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        onClick={(e) => e.stopPropagation()}
+        className="flex max-h-[92dvh] w-full flex-col gap-3.5 overflow-y-auto rounded-t-[32px] border-t border-border bg-card px-5 pt-3 pb-[calc(1.75rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-w-md sm:rounded-[30px] sm:border sm:pt-5"
+      >
+        <span aria-hidden="true" className="h-1.5 w-10 self-center rounded-full bg-input sm:hidden" />
+        {children}
       </div>
     </div>
   );

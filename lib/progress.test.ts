@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { WorkoutSet } from "@/types";
+import type { WorkoutSession, WorkoutSet } from "@/types";
 import {
   consistencyGrid,
+  consistencySummary,
+  previousBest,
   recentRecords,
   weekOverWeek,
   weekStart,
@@ -108,5 +110,50 @@ describe("recentRecords", () => {
     const leve1 = set("2026-11-11", 20, 10, { exerciseId: "ex-rosca" });
     const leve2 = set("2026-11-12", 22, 10, { exerciseId: "ex-rosca" });
     expect(recentRecords([pesado, leve1, leve2], 5).map((r) => r.id)).toEqual([leve2.id]);
+  });
+});
+
+describe("previousBest", () => {
+  it("devolve a série mais pesada do mesmo exercício antes do recorde", () => {
+    const a = set("2026-11-03", 60, 10);
+    const b = set("2026-11-10", 57.5, 12);
+    const outro = set("2026-11-11", 100, 5, { exerciseId: "ex-agachamento" });
+    const recorde = set("2026-11-17", 62.5, 10);
+    const depois = set("2026-11-20", 70, 5);
+    expect(previousBest([a, b, outro, recorde, depois], recorde)?.id).toBe(a.id);
+  });
+
+  it("compara só o mesmo tipo de carga e devolve null sem marca anterior", () => {
+    const halter = set("2026-11-03", 30, 10, { equipment: "dumbbell" });
+    const barra = set("2026-11-10", 60, 10, { equipment: "barbell" });
+    expect(previousBest([halter, barra], barra)).toBeNull();
+  });
+});
+
+describe("consistencySummary", () => {
+  const session = (day: string, minutes: number | null, id = `s${seq++}`): WorkoutSession => ({
+    id,
+    workoutId: null,
+    name: "Treino",
+    startedAt: at(day),
+    finishedAt: minutes === null ? null : at(day) + minutes * 60_000,
+  });
+
+  it("conta os treinos terminados nas semanas, a média por semana e a duração média", () => {
+    const summary = consistencySummary(
+      [
+        session("2026-11-24", 50),
+        session("2026-11-18", 60),
+        session("2026-09-01", 40), // antes das 12 semanas
+        session("2026-11-23", null), // em andamento
+      ],
+      TODAY,
+      12,
+    );
+    expect(summary).toEqual({ sessions: 2, perWeek: 0.2, averageMinutes: 55 });
+  });
+
+  it("sem treinos, a duração média é null", () => {
+    expect(consistencySummary([], TODAY, 12)).toEqual({ sessions: 0, perWeek: 0, averageMinutes: null });
   });
 });
