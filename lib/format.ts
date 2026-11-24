@@ -56,15 +56,18 @@ export function formatClock(totalSeconds: number) {
   return h > 0 ? `${h}:${pad(m)}:${pad(s % 60)}` : `${pad(m)}:${pad(s % 60)}`;
 }
 
+// vírgula decimal e ponto de milhar, como no resto do app: "62,5", "1.000"
+const loadNumber = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 });
+
 /** The number and its unit, split so layouts can style them separately. */
 export function loadParts(loadType: LoadType, load: number) {
   const { unit } = loadTypeMeta(loadType);
   if (loadType === "bodyweight") {
     return load === 0
       ? { value: "0", unit: "corporal" }
-      : { value: `+${load}`, unit };
+      : { value: `+${loadNumber.format(load)}`, unit };
   }
-  return { value: String(load), unit };
+  return { value: loadNumber.format(load), unit };
 }
 
 export function formatLoad(loadType: LoadType, load: number) {
