@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { MinusIcon, PlusIcon, TimerIcon, XIcon } from "@phosphor-icons/react";
+import { MinusIcon, PlusIcon, TimerIcon } from "@phosphor-icons/react";
 import { useNow } from "@/hooks/use-now";
 import { cn } from "@/lib/cn";
 import { formatClock } from "@/lib/format";
@@ -45,8 +45,7 @@ export const RestTimer = ({
     <div
       role="timer"
       className={cn(
-        "flex flex-col gap-3 rounded-3xl p-4 transition-colors",
-        done ? "bg-accent text-accent-foreground" : "border border-border bg-card",
+        "flex flex-col gap-3 rounded-3xl bg-accent p-4 text-accent-foreground",
       )}
     >
       <div className="flex items-center gap-4">
@@ -62,13 +61,13 @@ export const RestTimer = ({
             strokeDasharray={RING}
             strokeDashoffset={RING * (1 - progress)}
             transform="rotate(-90 32 32)"
-            className={done ? "stroke-current" : "stroke-accent"}
+            className="stroke-current"
           />
           <TimerIcon x="22" y="22" size={20} weight="fill" />
         </svg>
 
         <div className="min-w-0 flex-1">
-          <p className={cn("font-mono text-[11px] font-bold uppercase tracking-[0.1em]", !done && "text-muted-foreground")}>
+          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.1em]">
             {done ? "Descanso concluído" : "Descansando"}
           </p>
           <p className="font-mono text-[34px] leading-none font-bold tabular-nums">
@@ -78,13 +77,9 @@ export const RestTimer = ({
 
         <button
           onClick={onDismiss}
-          aria-label="Dispensar timer"
-          className={cn(
-            "grid size-11 shrink-0 place-items-center rounded-[14px]",
-            done ? "bg-accent-foreground/10 hover:bg-accent-foreground/20" : "bg-muted text-muted-foreground hover:text-foreground",
-          )}
+          className="h-11 shrink-0 rounded-[12px] bg-accent-foreground px-4 text-sm font-extrabold text-accent"
         >
-          <XIcon size={18} weight="bold" />
+          {done ? "Fechar" : "Pular"}
         </button>
       </div>
 
@@ -94,7 +89,7 @@ export const RestTimer = ({
             onClick={() => onDurationChange(duration - REST_STEP_SECONDS)}
             disabled={duration <= MIN_REST_SECONDS}
             aria-label="Diminuir descanso"
-            className="grid size-9 place-items-center rounded-xl hover:bg-current/10 disabled:opacity-30"
+            className="grid size-9 place-items-center rounded-xl hover:bg-accent-foreground/10 disabled:opacity-30"
           >
             <MinusIcon size={16} weight="bold" />
           </button>
@@ -105,7 +100,7 @@ export const RestTimer = ({
             onClick={() => onDurationChange(duration + REST_STEP_SECONDS)}
             disabled={duration >= MAX_REST_SECONDS}
             aria-label="Aumentar descanso"
-            className="grid size-9 place-items-center rounded-xl hover:bg-current/10 disabled:opacity-30"
+            className="grid size-9 place-items-center rounded-xl hover:bg-accent-foreground/10 disabled:opacity-30"
           >
             <PlusIcon size={16} weight="bold" />
           </button>
@@ -118,11 +113,7 @@ export const RestTimer = ({
               aria-pressed={p === duration}
               className={cn(
                 "h-9 rounded-xl px-2.5 font-mono text-xs font-bold transition-colors",
-                p === duration
-                  ? done
-                    ? "bg-accent-foreground text-accent"
-                    : "bg-foreground text-background"
-                  : "opacity-70 hover:opacity-100",
+                p === duration ? "bg-accent-foreground text-accent" : "hover:bg-accent-foreground/10",
               )}
             >
               {p}s

@@ -20,7 +20,7 @@ const secondDevice = async (page: Page, browser: Browser, baseURL: string, url =
 const warning = (page: Page) => page.getByRole("alert").filter({ hasText: "mudou em outro aparelho" });
 
 const editWorkout = async (page: Page) => {
-  await page.getByRole("link", { name: "Editar", exact: true }).click();
+  await page.getByRole("link", { name: "Editar treino", exact: true }).click();
   await expect(page.getByLabel("Nome do treino")).toHaveValue(NAME);
 };
 
@@ -31,7 +31,7 @@ const addExercise = async (page: Page, exercise: string) => {
 
 const saveWorkout = async (page: Page) => {
   await page.getByRole("button", { name: "Salvar treino" }).click();
-  await expect(page.getByRole("link", { name: "Editar", exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Editar treino", exact: true })).toBeVisible();
 };
 
 test("mudar os exercícios numa tela desatualizada mantém o nome que o outro salvou", async ({ page, browser, baseURL }) => {
@@ -105,7 +105,8 @@ test("cada aparelho planeja um dia e os dois ficam", async ({ page, browser, bas
       .getByRole("button", { name: /^(domingo|segunda|terça|quarta|quinta|sexta|sábado)/i });
   const rest = async (device: Page, index: number) => {
     await days(device).nth(index).click();
-    await device.getByRole("dialog").getByRole("button", { name: "Dia de descanso" }).click();
+    await device.getByRole("dialog").getByRole("radio", { name: /Descanso/ }).click();
+    await device.getByRole("dialog").getByRole("button", { name: "Salvar dia" }).click();
     await saved(device);
   };
 
@@ -121,7 +122,6 @@ test("cada aparelho planeja um dia e os dois ficam", async ({ page, browser, bas
 test("editar a série numa tela desatualizada mantém a carga que o outro salvou", async ({ page, browser, baseURL }) => {
   await createWorkout(page, NAME, ["Supino reto"]);
   await page.getByRole("button", { name: "Iniciar treino" }).click();
-  await page.getByRole("button", { name: "Registrar série" }).click();
   await page.getByRole("spinbutton", { name: "Peso (kg)" }).fill("60");
   await page.getByRole("spinbutton", { name: "Repetições" }).fill("10");
   await page.getByRole("button", { name: "Salvar", exact: true }).click();

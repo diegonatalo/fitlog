@@ -28,19 +28,19 @@ export type WeekDay = {
 };
 
 /**
- * Os sete dias da semana de `today`, de domingo a sábado, como na agenda.
+ * Os sete dias da semana de `today`, de segunda a domingo.
  * Um treino feito conta mais que o plano do dia.
  */
 export function weekStrip(today: string, schedule: Schedule, doneDays: ReadonlySet<string>): WeekDay[] {
-  const sunday = addDays(today, -weekdayOf(today));
+  const monday = addDays(today, -((weekdayOf(today) + 6) % 7));
   return Array.from({ length: 7 }, (_, i) => {
-    const key = addDays(sunday, i);
+    const key = addDays(monday, i);
     const plan = resolvePlan(schedule, key)?.plan;
     let status: WeekDayStatus = "free";
     if (doneDays.has(key)) status = "done";
     else if (plan?.type === "rest") status = "rest";
     else if (plan?.type === "workout") status = key < today ? "missed" : "planned";
-    return { key, letter: WEEKDAY_LETTER[i], day: parseKey(key).getDate(), isToday: key === today, status };
+    return { key, letter: WEEKDAY_LETTER[weekdayOf(key)], day: parseKey(key).getDate(), isToday: key === today, status };
   });
 }
 

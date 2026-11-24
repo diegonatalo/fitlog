@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Schedule } from "@/types";
 import { shortDayLabel, weekStrip } from "@/lib/week";
 
-// 2026-11-24 é uma terça-feira; a semana vai de 22 (domingo) a 28 (sábado)
+// 2026-11-24 é uma terça-feira; a semana vai de 23 (segunda) a 29 (domingo)
 const TODAY = "2026-11-24";
 
 const schedule: Schedule = {
@@ -15,43 +15,43 @@ const schedule: Schedule = {
 };
 
 describe("weekStrip", () => {
-  it("lista a semana de domingo a sábado e marca hoje", () => {
+  it("lista a semana de segunda a domingo e marca hoje", () => {
     const week = weekStrip(TODAY, schedule, new Set());
     expect(week.map((d) => d.key)).toEqual([
-      "2026-11-22",
       "2026-11-23",
       "2026-11-24",
       "2026-11-25",
       "2026-11-26",
       "2026-11-27",
       "2026-11-28",
+      "2026-11-29",
     ]);
-    expect(week.map((d) => d.letter).join("")).toBe("DSTQQSS");
+    expect(week.map((d) => d.letter).join("")).toBe("STQQSSD");
     expect(week.filter((d) => d.isToday).map((d) => d.day)).toEqual([24]);
   });
 
   it("separa feito, perdido, planejado, descanso e livre", () => {
-    const week = weekStrip(TODAY, schedule, new Set(["2026-11-22"]));
+    const week = weekStrip(TODAY, schedule, new Set(["2026-11-29"]));
     expect(week.map((d) => d.status)).toEqual([
-      "done", // domingo sem plano, mas com treino feito
       "missed", // segunda passou sem o treino planejado
       "planned", // hoje ainda pode treinar
       "free",
       "planned",
       "rest",
       "free",
+      "done", // domingo sem plano, mas com treino feito
     ]);
   });
 
   it("um treino feito vale mais que o plano do dia", () => {
     const week = weekStrip(TODAY, schedule, new Set(["2026-11-23", "2026-11-27"]));
-    expect(week[1].status).toBe("done");
-    expect(week[5].status).toBe("done");
+    expect(week[0].status).toBe("done");
+    expect(week[4].status).toBe("done");
   });
 
-  it("funciona quando hoje é domingo ou sábado", () => {
-    expect(weekStrip("2026-11-22", schedule, new Set())[0].isToday).toBe(true);
-    expect(weekStrip("2026-11-28", schedule, new Set())[6].isToday).toBe(true);
+  it("funciona quando hoje é segunda ou domingo", () => {
+    expect(weekStrip("2026-11-23", schedule, new Set())[0].isToday).toBe(true);
+    expect(weekStrip("2026-11-29", schedule, new Set())[6].isToday).toBe(true);
   });
 });
 

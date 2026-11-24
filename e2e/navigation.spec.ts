@@ -14,7 +14,7 @@ const PAGES = [
   { path: "/app", heading: "Hoje" },
   { path: "/app/agenda", heading: "Agenda" },
   { path: "/app/treinos", heading: "Treinos" },
-  { path: "/app/biblioteca", heading: "Exercícios" },
+  { path: "/app/biblioteca", heading: "Biblioteca" },
   { path: "/app/historico", heading: "Histórico" },
   { path: "/app/progresso", heading: "Progresso" },
   { path: "/app/cardio", heading: "Cardio" },

@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useFocusTrap } from "@/hooks/use-focus-trap";
-import { MoonIcon, XIcon } from "@phosphor-icons/react";
+import { XIcon } from "@phosphor-icons/react";
 import type { Plan, Workout } from "@/types";
 import { longDayLabel, weekdayOf, WEEKDAY_NAMES } from "@/lib/dates";
 import type { ResolvedPlan } from "@/lib/schedule";
@@ -17,6 +17,14 @@ type DayEditorProps = {
   onClose: () => void;
 };
 
+type Option = { key: string; plan: Plan; name: string; sub: string };
+
+const planKey = (plan: Plan) => (plan.type === "workout" ? `w:${plan.workoutId}` : plan.type);
+
+/** "toda terça", "todo sábado": sábado e domingo são masculinos. */
+const everyDay = (weekday: number) => `${weekday === 0 || weekday === 6 ? "todo" : "toda"} ${WEEKDAY_NAMES[weekday].replace("-feira", "")}`;
+
+/** Painel do dia: escolhe o plano, decide se repete toda semana e salva. */
 export const DayEditor = ({
   date,
   workouts,
@@ -26,15 +34,30 @@ export const DayEditor = ({
   onStopRepeating,
   onClose,
 }: DayEditorProps) => {
+  const options: Option[] = [
+    ...workouts.map((w) => ({
+      key: `w:${w.id}`,
+      plan: { type: "workout", workoutId: w.id } as Plan,
+      name: w.name,
+      sub: `${w.exerciseIds.length} ${w.exerciseIds.length === 1 ? "exercício" : "exercícios"}`,
+    })),
+    { key: "rest", plan: { type: "rest" }, name: "Descanso", sub: "Dia de recuperação" },
+    { key: "none", plan: { type: "none" }, name: "Nada planejado", sub: "Deixar o dia livre" },
+  ];
+  const [selected, setSelected] = useState(current ? planKey(current.plan) : "none");
   const [repeat, setRepeat] = useState(repeating);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const weekday = WEEKDAY_NAMES[weekdayOf(date)];
+  const titleId = useId();
+  const weekday = weekdayOf(date);
 
   useFocusTrap(dialogRef, onClose);
 
-  const currentWorkoutId =
-    current?.plan.type === "workout" ? current.plan.workoutId : null;
-  const isRest = current?.plan.type === "rest";
+  const save = () => {
+    const plan = options.find((o) => o.key === selected)?.plan ?? { type: "none" };
+    // desligar o "repetir" encerra a regra semanal a partir deste dia
+    if (repeating && !repeat) onStopRepeating();
+    onApply(plan, repeat && plan.type !== "none");
+  };
 
   return (
     <div
@@ -45,18 +68,19 @@ export const DayEditor = ({
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-label={`Planejar ${longDayLabel(date)}`}
+        aria-labelledby={titleId}
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[90dvh] w-full overflow-y-auto rounded-t-[32px] border-t border-border bg-card p-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-w-md sm:rounded-[30px] sm:border"
+        className="flex max-h-[92dvh] w-full flex-col gap-3.5 overflow-y-auto rounded-t-[32px] border-t border-border bg-card px-5 pt-3 pb-[calc(1.75rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-w-md sm:rounded-[30px] sm:border sm:pt-5"
       >
-        <div className="mb-4 flex items-start justify-between gap-3">
-          <div>
-            <h2 className="text-2xl leading-tight font-extrabold first-letter:uppercase font-stretch-semi-expanded">
+        <span aria-hidden="true" className="h-1.5 w-10 self-center rounded-full bg-input sm:hidden" />
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex min-w-0 flex-col gap-1">
+            <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
               {longDayLabel(date)}
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              O que você vai fazer neste dia?
             </p>
+            <h2 id={titleId} className="text-2xl leading-tight font-extrabold font-stretch-semi-expanded">
+              O que fazer neste dia?
+            </h2>
           </div>
           <button
             onClick={onClose}
@@ -67,86 +91,64 @@ export const DayEditor = ({
           </button>
         </div>
 
-        <label className="mb-4 flex cursor-pointer items-center gap-3 rounded-[18px] border border-border bg-background p-4">
-          <input
-            type="checkbox"
-            checked={repeat}
-            onChange={(e) => setRepeat(e.target.checked)}
-            className="size-5 accent-[var(--accent)]"
-          />
-          <span className="text-sm font-medium">
-            Repetir toda {weekday}
-            <span className="block text-xs font-normal text-muted-foreground">
-              a partir deste dia
-            </span>
-          </span>
-        </label>
-
-        <ul className="flex flex-col gap-2">
-          {workouts.map((w) => (
-            <li key={w.id}>
+        <div role="radiogroup" aria-label="Plano do dia" className="flex flex-col gap-2">
+          {options.map((o) => {
+            const on = o.key === selected;
+            return (
               <button
-                onClick={() =>
-                  onApply({ type: "workout", workoutId: w.id }, repeat)
-                }
-                aria-pressed={w.id === currentWorkoutId}
+                key={o.key}
+                role="radio"
+                aria-checked={on}
+                onClick={() => setSelected(o.key)}
                 className={cn(
-                  "flex min-h-14 w-full items-center justify-between gap-3 rounded-[18px] border px-4 text-left font-bold transition-colors",
-                  w.id === currentWorkoutId
-                    ? "border-[1.5px] border-accent bg-accent/10"
-                    : "border-border bg-background hover:bg-muted/50",
+                  "flex min-h-15 items-center gap-3.5 rounded-[18px] border px-4 py-2.5 text-left transition-colors",
+                  on ? "border-[1.5px] border-accent bg-accent/10" : "border-border hover:bg-muted/50",
                 )}
               >
-                <span className="truncate">{w.name}</span>
-                <span className="shrink-0 font-mono text-xs font-normal text-muted-foreground">
-                  {w.exerciseIds.length} ex.
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "size-5 shrink-0 rounded-full",
+                    on ? "border-[6px] border-accent" : "border-2 border-input",
+                  )}
+                />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-bold">{o.name}</span>
+                  <span className="block text-xs text-muted-foreground">{o.sub}</span>
                 </span>
               </button>
-            </li>
-          ))}
-          <li>
-            <button
-              onClick={() => onApply({ type: "rest" }, repeat)}
-              aria-pressed={isRest}
-              className={cn(
-                "flex min-h-14 w-full items-center gap-2 rounded-[18px] border px-4 text-left font-bold transition-colors",
-                isRest
-                  ? "border-[1.5px] border-accent bg-accent/10"
-                  : "border-border bg-background hover:bg-muted/50",
-              )}
-            >
-              <MoonIcon size={18} weight="fill" />
-              Dia de descanso
-            </button>
-          </li>
-        </ul>
+            );
+          })}
+        </div>
 
         {workouts.length === 0 && (
-          <p className="mt-3 text-sm text-muted-foreground">
-            Você ainda não tem treinos. Crie um na aba Treinos.
-          </p>
+          <p className="text-sm text-muted-foreground">Você ainda não tem treinos. Crie um na aba Treinos.</p>
         )}
 
-        {(current || repeating) && (
-          <div className="mt-4 flex flex-col gap-2 border-t border-border pt-4">
-            {current && (
-              <button
-                onClick={() => onApply({ type: "none" }, false)}
-                className="h-12 rounded-2xl border border-input text-sm font-bold hover:bg-muted"
-              >
-                Limpar este dia
-              </button>
-            )}
-            {repeating && (
-              <button
-                onClick={onStopRepeating}
-                className="h-12 rounded-2xl border border-destructive/40 text-sm font-bold text-destructive hover:bg-destructive/10"
-              >
-                Parar de repetir toda {weekday}
-              </button>
-            )}
-          </div>
-        )}
+        <label className="flex cursor-pointer items-center justify-between gap-3 rounded-[18px] border border-border bg-background px-4 py-3.5">
+          <span>
+            <span className="block font-bold first-letter:uppercase">Repetir {everyDay(weekday)}</span>
+            <span className="block text-xs text-muted-foreground">Vale para as próximas semanas</span>
+          </span>
+          <input
+            type="checkbox"
+            role="switch"
+            checked={repeat}
+            onChange={(e) => setRepeat(e.target.checked)}
+            className="peer sr-only"
+          />
+          <span
+            aria-hidden="true"
+            className="relative h-7.5 w-13 shrink-0 rounded-full bg-input transition-colors peer-checked:bg-accent peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-card after:absolute after:top-[3px] after:left-[3px] after:size-6 after:rounded-full after:bg-foreground after:transition-transform peer-checked:after:translate-x-[22px] peer-checked:after:bg-accent-foreground"
+          />
+        </label>
+
+        <button
+          onClick={save}
+          className="h-14 rounded-[18px] bg-primary text-base font-extrabold text-primary-foreground font-stretch-semi-expanded"
+        >
+          Salvar dia
+        </button>
       </div>
     </div>
   );

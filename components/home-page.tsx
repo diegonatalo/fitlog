@@ -1,14 +1,15 @@
 "use client";
 
 import { useMemo } from "react";
-import { CaretRightIcon, PlayIcon } from "@phosphor-icons/react";
+import { CaretRightIcon, PlayIcon, TrophyIcon } from "@phosphor-icons/react";
 import { Link, useNavigate } from "@/lib/router";
 import type { MuscleGroup } from "@/types";
 import { muscleLabel } from "@/types";
 import { dashboardStats } from "@/lib/dashboard";
 import { dateKey } from "@/lib/dates";
 import { getExercise } from "@/lib/exercises";
-import { formatTime, relativeDay } from "@/lib/format";
+import { formatSet, formatTime, relativeDay } from "@/lib/format";
+import { averageMinutes } from "@/lib/workout-stats";
 import { paths } from "@/lib/paths";
 import { resolvePlan } from "@/lib/schedule";
 import { useStore } from "@/hooks/use-store";
@@ -46,11 +47,15 @@ export const HomePage = () => {
       name: todayWorkout.name,
       exercises: todayWorkout.exerciseIds.length,
       groups: groups.slice(0, 4),
-      exerciseNames: todayWorkout.exerciseIds
-        .map((id) => getExercise(id)?.name)
-        .filter((n): n is string => !!n),
+      rows: todayWorkout.exerciseIds.flatMap((id) => {
+        const exercise = getExercise(id);
+        if (!exercise) return [];
+        const last = store.setsByExercise.get(id)?.[0];
+        return [{ name: exercise.name, last: last ? formatSet(last) : undefined }];
+      }),
+      minutes: averageMinutes(store.sessions, todayWorkout.id),
     };
-  }, [today, store.schedule, todayWorkout]);
+  }, [today, store.schedule, store.setsByExercise, store.sessions, todayWorkout]);
 
   const doneDays = useMemo(
     () => new Set(store.finishedSessions.map((s) => dateKey(new Date(s.startedAt)))),
@@ -82,6 +87,15 @@ export const HomePage = () => {
   };
 
   const maxSets = stats?.muscles30[0]?.sets ?? 1;
+  const weekDone = week?.filter((d) => d.status === "done").length ?? 0;
+  // dias com treino na agenda, feitos ou não
+  const weekPlanned =
+    week && today ? week.filter((d) => resolvePlan(store.schedule, d.key)?.plan.type === "workout").length : 0;
+  const volumeDelta =
+    stats && stats.volumePrev7 > 0
+      ? Math.round(((stats.volume7 - stats.volumePrev7) / stats.volumePrev7) * 100)
+      : null;
+  const lastRecordName = stats?.lastRecordExerciseId ? getExercise(stats.lastRecordExerciseId)?.name : undefined;
   const hasData = store.finishedSessions.length > 0;
 
   return (
@@ -126,7 +140,7 @@ export const HomePage = () => {
         <section aria-labelledby="progresso" className="mt-3 flex flex-col gap-3">
           <div className="flex items-baseline justify-between gap-3">
             <h2 id="progresso" className="text-xl font-extrabold font-stretch-semi-expanded">
-              Seu progresso
+              Seu ritmo
             </h2>
             {hasData && (
               <Link
@@ -145,40 +159,52 @@ export const HomePage = () => {
           )}
 
           <div className="grid grid-cols-2 gap-2.5">
-            <Stat label="Treinos (7 dias)" value={String(stats.sessions7)}>
+            <Stat label="Treinos · semana">
+              <p className="font-mono text-[40px] leading-none font-bold">
+                {weekDone}
+                {weekPlanned > 0 && <span className="text-base text-muted-foreground">/{weekPlanned}</span>}
+              </p>
               {week && (
-                <div aria-hidden="true" className="grid h-5 grid-cols-7 items-end gap-1">
+                <div aria-hidden="true" className="grid h-5.5 grid-cols-7 items-end gap-1">
                   {week.map((d) => (
                     <span
                       key={d.key}
-                      className={cn(
-                        "rounded-[4px]",
-                        d.status === "done" ? "h-5 bg-accent" : "h-1.5 bg-border",
-                      )}
+                      className={cn("rounded-[4px]", d.status === "done" ? "h-5.5 bg-accent" : "h-1.5 bg-border")}
                     />
                   ))}
                 </div>
               )}
             </Stat>
-            <Stat label="Treinos (30 dias)" value={String(stats.sessions30)} />
-            <Stat
-              label="Volume (7 dias)"
-              value={stats.volume7.toLocaleString("pt-BR")}
-              unit="kg"
-            />
-            <Stat label="Recordes (30 dias)" value={String(stats.records30)} />
-            <Stat
-              label="Duração média"
-              value={stats.avgMinutes === null ? "—" : String(stats.avgMinutes)}
-              unit={stats.avgMinutes === null ? undefined : "min"}
-              className="col-span-2"
-            />
+            <Stat label="Volume · 7 dias">
+              <p className="font-mono text-3xl leading-tight font-bold">
+                {formatVolume(stats.volume7)}
+              </p>
+              {volumeDelta !== null && (
+                <p className="text-[13px] font-semibold text-accent-text">
+                  {volumeDelta >= 0 ? "▲" : "▼"} {Math.abs(volumeDelta)}% vs semana passada
+                </p>
+              )}
+            </Stat>
+            <Stat label="Recordes · 30 dias">
+              <p className="flex items-center gap-2 font-mono text-3xl leading-none font-bold">
+                <TrophyIcon size={22} weight="fill" className="text-record" aria-hidden="true" />
+                {stats.records30}
+              </p>
+              {lastRecordName && <p className="truncate text-[13px] text-muted-foreground">Último: {lastRecordName}</p>}
+            </Stat>
+            <Stat label="Duração média">
+              <p className="font-mono text-3xl leading-tight font-bold">
+                {stats.avgMinutes === null ? "—" : stats.avgMinutes}
+                {stats.avgMinutes !== null && <span className="text-base text-muted-foreground"> min</span>}
+              </p>
+              <p className="text-[13px] text-muted-foreground">últimos 30 dias</p>
+            </Stat>
           </div>
 
           {stats.muscles30.length > 0 && (
             <div className="rounded-3xl border border-border bg-card p-5">
               <h3 className="mb-4 text-xs font-semibold text-muted-foreground">
-                Músculos mais treinados (30 dias)
+                Músculos mais treinados · 30 dias
               </h3>
               <ul className="flex flex-col gap-3.5">
                 {stats.muscles30.slice(0, 5).map(({ group, sets }) => (
@@ -191,7 +217,7 @@ export const HomePage = () => {
                       />
                     </span>
                     <span className="text-right font-mono text-xs text-muted-foreground">
-                      {sets} {sets === 1 ? "série" : "séries"}
+                      {sets} sér.
                     </span>
                   </li>
                 ))}
@@ -204,27 +230,23 @@ export const HomePage = () => {
   );
 };
 
-const Stat = ({
-  label,
-  value,
-  unit,
-  className,
-  children,
-}: {
-  label: string;
-  value: string;
-  unit?: string;
-  className?: string;
-  children?: React.ReactNode;
-}) => {
-  return (
-    <div className={cn("flex flex-col gap-2.5 rounded-[22px] border border-border bg-card p-4", className)}>
-      <p className="text-xs font-semibold text-muted-foreground">{label}</p>
-      <p className="font-mono text-3xl leading-none font-bold">
-        {value}
-        {unit && <span className="text-base text-muted-foreground"> {unit}</span>}
-      </p>
-      {children}
-    </div>
+const Stat = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  <div className="flex min-w-0 flex-col gap-2.5 rounded-[22px] border border-border bg-card p-4">
+    <p className="text-xs font-semibold text-muted-foreground">{label}</p>
+    {children}
+  </div>
+);
+
+/** Volume em kg, ou em toneladas a partir de 1.000 kg: "850 kg", "12,4 t". */
+const formatVolume = (kg: number) =>
+  kg >= 1000 ? (
+    <>
+      {(kg / 1000).toLocaleString("pt-BR", { maximumFractionDigits: 1 })}
+      <span className="text-base text-muted-foreground"> t</span>
+    </>
+  ) : (
+    <>
+      {kg.toLocaleString("pt-BR")}
+      <span className="text-base text-muted-foreground"> kg</span>
+    </>
   );
-};

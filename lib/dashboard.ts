@@ -7,8 +7,12 @@ export type DashboardStats = {
   sessions30: number;
   /** kg × reps of free-weight sets in the last 7 days */
   volume7: number;
+  /** the same, for the 7 days before those */
+  volumePrev7: number;
   /** sets in the last 30 days that beat every earlier set of that exercise and equipment */
   records30: number;
+  /** exercise of the newest record in the last 30 days */
+  lastRecordExerciseId: string | null;
   /** average length of finished sessions in the last 30 days, in minutes */
   avgMinutes: number | null;
   /** sets per muscle group in the last 30 days, most trained first */
@@ -42,10 +46,21 @@ export function dashboardStats(
     .filter((s) => s.loadType === "weight" && within(s.createdAt, from7))
     .reduce((sum, s) => sum + s.load * s.reps, 0);
 
+  const fromPrev7 = addDays(today, -13);
+  const toPrev7 = addDays(today, -7);
+  const volumePrev7 = sets
+    .filter((s) => {
+      if (s.loadType !== "weight") return false;
+      const day = dayOf(s.createdAt);
+      return day >= fromPrev7 && day <= toPrev7;
+    })
+    .reduce((sum, s) => sum + s.load * s.reps, 0);
+
   const records = recordIdsByExercise(sets);
-  const records30 = sets.filter(
-    (s) => records.has(s.id) && within(s.createdAt, from30),
-  ).length;
+  const recentRecords = sets
+    .filter((s) => records.has(s.id) && within(s.createdAt, from30))
+    .sort((a, b) => b.createdAt - a.createdAt);
+  const records30 = recentRecords.length;
 
   const minutes = recent.map(
     (s) => ((s.finishedAt as number) - s.startedAt) / 60_000,
@@ -68,7 +83,9 @@ export function dashboardStats(
     sessions7,
     sessions30: recent.length,
     volume7: Math.round(volume7),
+    volumePrev7: Math.round(volumePrev7),
     records30,
+    lastRecordExerciseId: recentRecords[0]?.exerciseId ?? null,
     avgMinutes,
     muscles30,
   };
