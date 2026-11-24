@@ -67,27 +67,27 @@ export const SchedulePage = () => {
               <button
                 onClick={() => setView(shiftMonth(shown.year, shown.month, -1))}
                 aria-label="Mês anterior"
-                className="grid size-10 place-items-center rounded-xl border border-border bg-card hover:bg-muted"
+                className="grid size-11 place-items-center rounded-[14px] border border-border bg-card hover:bg-muted"
               >
                 <CaretLeftIcon size={18} weight="bold" />
               </button>
-              <h2 className="text-base font-bold first-letter:uppercase">
+              <h2 className="text-lg font-extrabold first-letter:uppercase font-stretch-semi-expanded">
                 {monthLabel(shown.year, shown.month)}
               </h2>
               <button
                 onClick={() => setView(shiftMonth(shown.year, shown.month, 1))}
                 aria-label="Próximo mês"
-                className="grid size-10 place-items-center rounded-xl border border-border bg-card hover:bg-muted"
+                className="grid size-11 place-items-center rounded-[14px] border border-border bg-card hover:bg-muted"
               >
                 <CaretRightIcon size={18} weight="bold" />
               </button>
             </div>
 
-            <div className="grid grid-cols-7 gap-1 text-center">
+            <div className="grid grid-cols-7 gap-1.5 text-center">
               {WEEKDAY_SHORT.map((d) => (
                 <span
                   key={d}
-                  className="py-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground"
+                  className="py-1 text-[11px] font-bold uppercase text-muted-foreground"
                 >
                   {d}
                 </span>
@@ -112,26 +112,33 @@ export const SchedulePage = () => {
                       kind={plan?.kind ?? null}
                       done={done}
                       isToday={key === today}
+                      isPast={!!today && key < today}
                       onClick={() => setSelected(key)}
                     />
                   );
                 })}
             </div>
 
-            <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
               <li className="flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-accent" /> Treino
+                <span className="size-3.5 rounded-[5px] border border-input bg-muted" /> Treino
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="size-3.5 rounded-[5px] border-[1.5px] border-dashed border-muted-foreground" /> Perdido
               </li>
               <li className="flex items-center gap-1.5">
                 <MoonIcon size={12} weight="fill" /> Descanso
               </li>
               <li className="flex items-center gap-1.5">
-                <CheckIcon size={12} weight="bold" /> Feito
+                <span className="grid size-3.5 place-items-center rounded-[5px] bg-accent text-accent-foreground">
+                  <CheckIcon size={9} weight="bold" />
+                </span>{" "}
+                Feito
               </li>
             </ul>
           </>
         ) : (
-          <div className="h-80 rounded-2xl border border-border bg-card/40" />
+          <div className="h-80 rounded-3xl border border-border bg-card/40" />
         )}
       </section>
 
@@ -162,28 +169,41 @@ type DayCellProps = {
   kind: "workout" | "rest" | null;
   done: boolean;
   isToday: boolean;
+  isPast: boolean;
   onClick: () => void;
 };
 
-const DayCell = ({ day, label, kind, done, isToday, onClick }: DayCellProps) => {
+const DayCell = ({ day, label, kind, done, isToday, isPast, onClick }: DayCellProps) => {
+  const missed = kind === "workout" && !done && isPast;
   return (
     <button
       onClick={onClick}
       aria-label={label}
       className={cn(
-        "relative flex aspect-square flex-col items-center justify-center gap-0.5 rounded-xl border text-sm font-semibold transition-colors",
-        isToday ? "border-accent" : "border-border",
-        kind === "workout" ? "bg-accent/15" : "bg-card hover:bg-muted/50",
+        "relative flex aspect-[1/1.1] flex-col items-center justify-center gap-0.5 rounded-[14px] border text-sm font-semibold transition-colors",
+        // cada caso define uma só cor de borda: classes de cor juntas brigam pela ordem do CSS
+        done
+          ? "border-accent bg-accent text-accent-foreground"
+          : isToday
+            ? cn("border-2 border-accent", kind === "workout" ? "bg-muted" : "bg-card")
+            : missed
+              ? "border-[1.5px] border-dashed border-muted-foreground/70 text-muted-foreground"
+              : kind === "workout"
+                ? "border-input bg-muted"
+                : isPast || kind === "rest"
+                  ? "border-transparent text-muted-foreground hover:bg-muted/60"
+                  : "border-border bg-card hover:bg-muted/60",
+        isToday && done && "ring-2 ring-foreground ring-offset-2 ring-offset-background",
       )}
     >
-      <span className={cn(isToday && "text-accent")}>{day}</span>
-      <span className="flex h-3 items-center text-muted-foreground">
+      <span className="font-mono font-bold">{day}</span>
+      <span className="flex h-3 items-center">
         {done ? (
-          <CheckIcon size={12} weight="bold" className="text-accent" />
+          <CheckIcon size={12} weight="bold" />
         ) : kind === "rest" ? (
           <MoonIcon size={12} weight="fill" />
         ) : kind === "workout" ? (
-          <span className="size-2 rounded-full bg-accent" />
+          <span className={cn("size-1.5 rounded-full", missed ? "border border-current" : "bg-foreground")} />
         ) : null}
       </span>
     </button>

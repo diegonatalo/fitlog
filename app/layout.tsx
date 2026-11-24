@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Archivo, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { THEME_COLORS, THEME_KEY } from "@/lib/storage";
 import { themeScript } from "@/lib/theme";
 
-const inter = Inter({ subsets: ["latin"], variable: "--nf-inter", display: "swap" });
+// "wdth" deixa usar a largura expandida nos títulos e na marca
+const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--nf-archivo", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--nf-mono", display: "swap" });
 
 const TITLE = "FitLog | Monitore sua evolução";
@@ -72,7 +73,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     // a classe "dark" é aplicada pelo script abaixo, antes da hidratação
-    <html lang="pt-BR" className={`${inter.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="pt-BR" className={`${archivo.variable} ${mono.variable}`} suppressHydrationWarning>
       <body>
         <Script id="tema" strategy="beforeInteractive">
           {themeScript(THEME_KEY, THEME_COLORS)}

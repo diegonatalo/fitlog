@@ -1,4 +1,4 @@
-import { BarbellIcon } from "@phosphor-icons/react/ssr";
+import { LogoMark } from "@/components/logo";
 
 /** Enquanto o servidor confere a sessão e carrega os treinos. */
 export const AppLoading = () => {
@@ -8,9 +8,7 @@ export const AppLoading = () => {
       className="grid min-h-dvh place-items-center bg-background text-muted-foreground"
     >
       <div className="flex flex-col items-center gap-3">
-        <span className="grid size-12 animate-pulse place-items-center rounded-2xl bg-accent text-accent-foreground">
-          <BarbellIcon size={26} weight="fill" />
-        </span>
+        <LogoMark size={48} className="animate-pulse" />
         <span className="text-sm font-medium">Carregando seus treinos…</span>
       </div>
     </div>

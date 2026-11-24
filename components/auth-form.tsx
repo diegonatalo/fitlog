@@ -115,7 +115,7 @@ export const AuthForm = ({ mode, onSubmit }: Props) => {
             onClick={() => setShowPassword((v) => !v)}
             aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
             aria-pressed={showPassword}
-            className="grid size-9 place-items-center rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="grid size-11 place-items-center rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             {showPassword ? <EyeSlashIcon size={20} /> : <EyeIcon size={20} />}
           </button>
@@ -123,7 +123,7 @@ export const AuthForm = ({ mode, onSubmit }: Props) => {
       />
 
       {formError && (
-        <p role="alert" className="rounded-xl bg-destructive/10 px-3 py-2.5 text-sm font-medium text-destructive">
+        <p role="alert" className="rounded-[14px] border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">
           {formError}
         </p>
       )}
@@ -131,7 +131,7 @@ export const AuthForm = ({ mode, onSubmit }: Props) => {
       <button
         type="submit"
         disabled={!hydrated || pending}
-        className="mt-1 rounded-xl bg-accent py-3 font-semibold text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+        className="mt-2 h-14 rounded-[18px] bg-primary font-extrabold text-primary-foreground transition-opacity font-stretch-semi-expanded hover:opacity-90 disabled:opacity-60"
       >
         {pending ? COPY[mode].pending : COPY[mode].submit}
       </button>
@@ -158,13 +158,13 @@ const Field = ({ id, label, hint, error, input, trailing }: FieldProps) => {
   const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ");
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium">
+      <label htmlFor={id} className="text-xs font-bold text-muted-foreground">
         {label}
       </label>
       <div
         className={cn(
-          "flex items-center gap-1 rounded-xl border bg-background pr-1 focus-within:ring-2 focus-within:ring-ring",
-          error ? "border-destructive" : "border-input",
+          "flex h-14 items-center gap-1 rounded-2xl border bg-background pr-1.5 focus-within:ring-2 focus-within:ring-ring",
+          error ? "border-[1.5px] border-destructive" : "border-input",
         )}
       >
         <input
@@ -177,7 +177,7 @@ const Field = ({ id, label, hint, error, input, trailing }: FieldProps) => {
           onChange={(e) => input.onChange(e.target.value)}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy || undefined}
-          className={cn("min-w-0 flex-1 bg-transparent px-3 py-3 outline-none", trailing ? "pr-1" : "")}
+          className={cn("min-w-0 flex-1 bg-transparent px-4 text-base outline-none", trailing ? "pr-1" : "")}
         />
         {trailing}
       </div>

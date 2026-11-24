@@ -39,7 +39,7 @@ export const SessionDetail = () => {
 
   return (
     <div className="pb-24">
-      <div className="mb-5 grid grid-cols-3 gap-3">
+      <div className="mb-4 grid grid-cols-3 overflow-hidden rounded-[26px] border border-border bg-card">
         <SummaryStat label="Séries" value={String(sets.length)} />
         <SummaryStat
           label="Exercícios"
@@ -51,32 +51,32 @@ export const SessionDetail = () => {
         />
       </div>
 
-      <p className="mb-4 flex items-center gap-1.5 text-sm text-muted-foreground">
-        <ClockCounterClockwiseIcon size={16} weight="bold" />
+      <p className="mb-4 flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
+        <ClockCounterClockwiseIcon size={14} weight="bold" />
         {relativeDay(session.startedAt)} ·{" "}
         {formatTime(session.startedAt)}
       </p>
 
       {session.note && (
-        <p className="mb-4 flex gap-2 rounded-xl border border-border bg-card p-3.5 text-sm text-muted-foreground">
+        <p className="mb-4 flex gap-2 rounded-[18px] border border-border p-4 text-sm leading-relaxed text-foreground/85">
           <NotePencilIcon size={18} className="mt-0.5 shrink-0" />
           <span className="whitespace-pre-wrap">{session.note}</span>
         </p>
       )}
 
       {Object.keys(groups).length === 0 ? (
-        <p className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+        <p className="rounded-3xl border border-dashed border-input p-6 text-center text-sm text-muted-foreground">
           Nenhuma série registrada nesta sessão.
         </p>
       ) : (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2.5">
           {Object.entries(groups).map(([exerciseId, entries]) => (
             <div
               key={exerciseId}
-              className="rounded-xl border border-border bg-card p-4"
+              className="rounded-[20px] border border-border bg-card p-4"
             >
-              <p className="mb-3 flex items-center gap-2 font-semibold">
-                <BarbellIcon size={18} weight="fill" className="text-primary" />
+              <p className="mb-3 flex items-center gap-2 font-extrabold">
+                <BarbellIcon size={18} weight="fill" className="text-accent-text" />
                 {exerciseName(exerciseId)}
               </p>
               <ul className="flex flex-col gap-1.5">
@@ -108,7 +108,7 @@ export const SessionDetail = () => {
 
       <button
         onClick={() => setConfirmDelete(true)}
-        className="mx-auto mt-8 flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-destructive"
+        className="mt-8 flex h-13 w-full items-center justify-center gap-1.5 rounded-2xl border border-destructive/40 text-sm font-bold text-destructive hover:bg-destructive/10"
       >
         <TrashIcon size={16} /> Excluir sessão
       </button>
@@ -132,11 +132,9 @@ export const SessionDetail = () => {
 
 const SummaryStat = ({ label, value }: { label: string; value: string }) => {
   return (
-    <div className="flex flex-col rounded-xl border border-border bg-card p-3 text-center">
-      <span className="font-mono text-xl font-bold leading-none">{value}</span>
-      <span className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">
-        {label}
-      </span>
+    <div className="flex flex-col-reverse gap-1.5 p-4 not-first:border-l not-first:border-border">
+      <span className="font-mono text-2xl leading-none font-bold">{value}</span>
+      <span className="text-[11px] font-bold text-muted-foreground">{label}</span>
     </div>
   );
 };

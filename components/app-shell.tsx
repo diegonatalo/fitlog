@@ -3,12 +3,14 @@
 import { useEffect, useMemo, type ReactNode } from "react";
 import { GearSixIcon } from "@phosphor-icons/react";
 import { Link, matchPath, useLocation, useNavigate } from "@/lib/router";
-import { Header } from "./header";
+import { Header, headerButtonClass } from "./header";
 import { BottomNav } from "./bottom-nav";
 import { patterns, paths, tabPatterns } from "@/lib/paths";
 import { getExercise } from "@/lib/exercises";
 import { useStore } from "@/hooks/use-store";
 import { useTheme } from "@/hooks/use-theme";
+import { useToday } from "@/hooks/use-today";
+import { shortDayLabel } from "@/lib/week";
 import { THEME_COLORS, THEME_KEY } from "@/lib/storage";
 import type { Store } from "@/hooks/use-workout-store";
 
@@ -25,11 +27,12 @@ type Params = Record<string, string | undefined>;
  */
 const HEADER_RULES: {
   pattern: string;
-  resolve: (params: Params, store: Store) => HeaderInfo;
+  resolve: (params: Params, store: Store, today: string) => HeaderInfo;
 }[] = [
   {
     pattern: patterns.home,
-    resolve: () => ({ title: "FitLog", subtitle: "Seus treinos de hoje" }),
+    // a data só existe depois da hidratação (useToday)
+    resolve: (_p, _s, today) => ({ title: "Hoje", subtitle: today ? shortDayLabel(today) : undefined }),
   },
   {
     pattern: patterns.schedule,
@@ -37,7 +40,7 @@ const HEADER_RULES: {
   },
   {
     pattern: patterns.workouts,
-    resolve: () => ({ title: "Treinos", subtitle: "Monte e organize seus treinos" }),
+    resolve: () => ({ title: "Treinos", subtitle: "Monte e organize" }),
   },
   {
     pattern: patterns.library,
@@ -52,6 +55,10 @@ const HEADER_RULES: {
     resolve: () => ({ title: "Cardio", subtitle: "Calculadora de esteira" }),
   },
   { pattern: patterns.settings, resolve: () => ({ title: "Ajustes" }) },
+  {
+    pattern: patterns.progress,
+    resolve: () => ({ title: "Progresso", subtitle: "Sua evolução" }),
+  },
   { pattern: patterns.newWorkout, resolve: () => ({ title: "Novo treino" }) },
   {
     pattern: patterns.editWorkout,
@@ -91,6 +98,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
   const store = useStore();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const today = useToday();
 
   const isTab = useMemo(
     () => tabPatterns.some((p) => matchPath(p, pathname)),
@@ -100,10 +108,10 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
   const header = useMemo<HeaderInfo>(() => {
     for (const rule of HEADER_RULES) {
       const match = matchPath(rule.pattern, pathname);
-      if (match) return rule.resolve(match.params, store);
+      if (match) return rule.resolve(match.params, store, today);
     }
-    return { title: "Treino Log" };
-  }, [pathname, store]);
+    return { title: "FitLog" };
+  }, [pathname, store, today]);
 
   // fechar a aba no meio de um salvamento perderia a última mudança
   useEffect(() => {
@@ -127,7 +135,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
             <Link
               to={paths.settings}
               aria-label="Ajustes"
-              className="grid size-9 place-items-center rounded-full text-foreground transition-colors hover:bg-muted"
+              className={headerButtonClass}
             >
               <GearSixIcon size={20} weight="bold" />
             </Link>
@@ -135,7 +143,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
         }
       />
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-28 pt-4">
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-32 pt-4">
         {(store.syncError || store.syncConflict) && (
           <div
             role="alert"

@@ -65,15 +65,15 @@ export const CardioChart = ({ input, profile }: CardioChartProps) => {
   });
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-4">
+    <section className="rounded-[26px] border border-border bg-card p-[18px]">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+        <h2 className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
           <ChartLineIcon size={18} /> Comparar
         </h2>
         <div
           role="group"
           aria-label="Métrica do gráfico"
-          className="flex rounded-lg bg-muted p-0.5 text-xs font-semibold"
+          className="flex gap-0.5 rounded-[12px] bg-background p-1 text-xs"
         >
           {METRICS.map((m) => (
             <button
@@ -81,10 +81,10 @@ export const CardioChart = ({ input, profile }: CardioChartProps) => {
               onClick={() => setMetric(m.value)}
               aria-pressed={metric === m.value}
               className={cn(
-                "rounded-md px-2.5 py-1 transition-colors",
+                "h-8 rounded-[9px] px-3 transition-colors",
                 metric === m.value
-                  ? "bg-card text-foreground shadow-sm"
-                  : "text-muted-foreground",
+                  ? "bg-muted font-extrabold text-foreground"
+                  : "font-semibold text-muted-foreground hover:text-foreground",
               )}
             >
               {m.label}

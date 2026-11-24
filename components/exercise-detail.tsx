@@ -51,9 +51,10 @@ const ExerciseDetailBody = ({ exerciseId }: { exerciseId: string }) => {
         <MuscleBadge group={exercise.muscleGroup} size="md" />
       </div>
 
-      <section className="grid grid-cols-2 gap-2">
+      <section className="grid grid-cols-2 gap-2.5">
         <StatCard label="Registros" value={String(sets.length)} />
         <StatCard
+          highlight
           label="Recorde"
           value={best ? formatLoad(best.loadType, best.load) : "—"}
           sub={best && meta.hasReps ? `${best.reps} reps` : undefined}
@@ -91,22 +92,24 @@ const StatCard = ({
   value,
   sub,
   className = "",
+  highlight = false,
 }: {
   label: string;
   value: string;
   sub?: string;
   className?: string;
+  highlight?: boolean;
 }) => {
   return (
     <div
-      className={`flex flex-col rounded-xl border border-border bg-card p-4 ${className}`}
+      className={`flex flex-col gap-2 rounded-[22px] border border-border bg-card p-4 ${className}`}
     >
-      <p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">
+      <p className={highlight ? "text-xs font-bold text-record" : "text-xs font-semibold text-muted-foreground"}>
         {label}
       </p>
-      <p className="font-mono text-2xl font-bold leading-none">{value}</p>
+      <p className="font-mono text-3xl font-bold leading-none">{value}</p>
       {sub && (
-        <p className="mt-1 font-mono text-sm font-medium text-muted-foreground">
+        <p className="font-mono text-sm font-medium text-muted-foreground">
           {sub}
         </p>
       )}

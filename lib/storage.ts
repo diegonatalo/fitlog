@@ -7,7 +7,7 @@ import type { ThemeColors } from "@/lib/theme";
 export const THEME_KEY = "fitlog:theme:v1";
 
 /** Cor da barra do navegador em cada tema (fundo do app). */
-export const THEME_COLORS: ThemeColors = { dark: "#14161d", light: "#f4f6f9" };
+export const THEME_COLORS: ThemeColors = { dark: "#0b0d10", light: "#f3f4ef" };
 
 /** Ids gerados no navegador, para a tela atualizar antes de o servidor responder. */
 export const uid = () =>

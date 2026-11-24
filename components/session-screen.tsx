@@ -16,6 +16,7 @@ import { ConfirmDialog } from "@/components/confirm-dialog";
 import { EmptyState } from "@/components/empty-state";
 import { RestTimer } from "@/components/rest-timer";
 import { SessionExerciseCard } from "@/components/session-exercise-card";
+import { cn } from "@/lib/cn";
 
 export const SessionScreen = () => {
   const store = useStore();
@@ -40,6 +41,9 @@ export const SessionScreen = () => {
 
   const sessionSets = store.setsBySession.get(session.id) ?? [];
   const totalSets = sessionSets.length;
+  const startedExercises = exercises.filter((ex) =>
+    sessionSets.some((s) => s.exerciseId === ex.id),
+  ).length;
 
   const finish = () => {
     store.finishSession(session.id);
@@ -48,25 +52,42 @@ export const SessionScreen = () => {
 
   return (
     <div className="flex flex-col gap-4 pb-24">
-      <div className="rounded-2xl border border-accent/40 bg-accent/10 p-4">
-        <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-col gap-3 rounded-3xl border border-border bg-card p-4">
+        <div className="flex items-end justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-wide text-accent">
-              Sessão ativa
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-accent-text">
+              ● Ao vivo
             </p>
-            <p className="mt-0.5 truncate text-lg font-bold">{session.name}</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-muted-foreground">
               {totalSets}{" "}
               {totalSets === 1 ? "série registrada" : "séries registradas"}
             </p>
           </div>
           <p
-            className="font-mono text-2xl font-bold tabular-nums"
+            className="font-mono text-4xl leading-none font-bold tabular-nums"
             aria-label="Tempo de treino"
           >
             {formatClock((now - session.startedAt) / 1000)}
           </p>
         </div>
+        {exercises.length > 0 && (
+          <div
+            role="progressbar"
+            aria-label="Exercícios começados"
+            aria-valuemin={0}
+            aria-valuemax={exercises.length}
+            aria-valuenow={startedExercises}
+            className="grid gap-1"
+            style={{ gridTemplateColumns: `repeat(${exercises.length}, minmax(0, 1fr))` }}
+          >
+            {exercises.map((ex, i) => (
+              <span
+                key={ex.id}
+                className={cn("h-1.5 rounded-full", i < startedExercises ? "bg-accent" : "bg-muted")}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {restStartedAt !== null && (
@@ -131,13 +152,13 @@ export const SessionScreen = () => {
           rows={2}
           maxLength={LIMITS.sessionNote}
           placeholder="Como foi o treino? Dores, energia, sono..."
-          className="w-full resize-none rounded-xl border border-input bg-background px-4 py-3 text-base outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"
+          className="w-full resize-none rounded-2xl border border-border bg-card px-4 py-3 text-base outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"
         />
       </div>
 
       <button
         onClick={finish}
-        className="sticky bottom-4 flex w-full items-center justify-center gap-2 rounded-xl bg-accent py-4 text-base font-bold text-accent-foreground shadow-lg"
+        className="sticky bottom-4 flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-accent text-base font-extrabold text-accent-foreground shadow-[0_12px_40px_rgb(0_0_0/0.4)] font-stretch-semi-expanded"
       >
         <CheckCircleIcon size={20} weight="fill" />
         Finalizar treino

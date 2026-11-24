@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --font-sans: var(--nf-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--nf-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--nf-mono), ui-monospace, monospace;
 
   --color-background: var(--background);
@@ -22,51 +22,58 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-ring: var(--ring);
 
-  --radius-lg: 1rem;
-  --radius-xl: 1.25rem;
+  --color-record: var(--record);
+  /* verde legível como texto: o limão no escuro, um verde fechado no claro */
+  --color-accent-text: var(--accent-text);
+
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.125rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 1.75rem;
 }
 
 :root {
   color-scheme: light;
-  --background: oklch(0.97 0.005 250);
-  --foreground: oklch(0.18 0.02 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.02 250);
-  --muted: oklch(0.93 0.008 250);
-  --muted-foreground: oklch(0.48 0.02 250);
-  --border: oklch(0.88 0.01 250);
-  --input: oklch(0.9 0.01 250);
-  --primary: oklch(0.22 0.03 260);
-  --primary-foreground: oklch(0.98 0 0);
-  --accent: oklch(0.78 0.19 130);
-  --accent-foreground: oklch(0.2 0.04 130);
-  --destructive: oklch(0.58 0.22 25);
-  --destructive-foreground: oklch(0.98 0 0);
-  --ring: oklch(0.78 0.19 130);
+  --background: #f3f4ef;
+  --foreground: #0e1114;
+  --card: #ffffff;
+  --card-foreground: #0e1114;
+  --muted: #eceee7;
+  --muted-foreground: #5b6470;
+  --border: #e1e3dc;
+  --input: #d6d9d0;
+  --primary: #c6f24e;
+  --primary-foreground: #0b0d10;
+  --accent: #c6f24e;
+  --accent-foreground: #0b0d10;
+  --destructive: #d63a2f;
+  --destructive-foreground: #ffffff;
+  --ring: #4d7c0f;
+  --record: #b45309;
+  --accent-text: #3f6212;
 }
 
 .dark {
   color-scheme: dark;
-  --background: oklch(0.16 0.015 260);
-  --foreground: oklch(0.96 0.005 250);
-  --card: oklch(0.21 0.018 260);
-  --card-foreground: oklch(0.96 0.005 250);
-  --muted: oklch(0.26 0.02 260);
-  --muted-foreground: oklch(0.68 0.02 260);
-  --border: oklch(0.3 0.02 260);
-  --input: oklch(0.28 0.02 260);
-  --primary: oklch(0.96 0.005 250);
-  --primary-foreground: oklch(0.2 0.02 260);
-  --accent: oklch(0.82 0.2 128);
-  --accent-foreground: oklch(0.22 0.05 128);
-  --destructive: oklch(0.62 0.2 25);
-  --destructive-foreground: oklch(0.98 0 0);
-  --ring: oklch(0.82 0.2 128);
+  --background: #0b0d10;
+  --foreground: #f2f4f7;
+  --card: #14171c;
+  --card-foreground: #f2f4f7;
+  --muted: #1f242c;
+  --muted-foreground: #9aa3af;
+  --border: #262b33;
+  --input: #333a44;
+  --primary: #c6f24e;
+  --primary-foreground: #0b0d10;
+  --accent: #c6f24e;
+  --accent-foreground: #0b0d10;
+  --destructive: #ff6b5e;
+  --destructive-foreground: #1a0b09;
+  --ring: #c6f24e;
+  --record: #ffb547;
+  --accent-text: #c6f24e;
 }
 
-* {
-  border-color: var(--border);
-}
 
 html,
 body {
@@ -82,6 +89,12 @@ body {
 }
 
 @layer base {
+  /* na camada base, para classes como border-transparent poderem trocar a cor */
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
   button {
     cursor: pointer;
   }

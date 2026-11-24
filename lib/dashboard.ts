@@ -1,13 +1,13 @@
 import type { MuscleGroup, WorkoutSession, WorkoutSet } from "@/types";
 import { addDays, dateKey } from "./dates";
-import { recordIds } from "./stats";
+import { recordIdsByExercise } from "./stats";
 
 export type DashboardStats = {
   sessions7: number;
   sessions30: number;
   /** kg × reps of free-weight sets in the last 7 days */
   volume7: number;
-  /** sets in the last 30 days that beat every earlier set of that equipment */
+  /** sets in the last 30 days that beat every earlier set of that exercise and equipment */
   records30: number;
   /** average length of finished sessions in the last 30 days, in minutes */
   avgMinutes: number | null;
@@ -42,7 +42,7 @@ export function dashboardStats(
     .filter((s) => s.loadType === "weight" && within(s.createdAt, from7))
     .reduce((sum, s) => sum + s.load * s.reps, 0);
 
-  const records = recordIds(sets);
+  const records = recordIdsByExercise(sets);
   const records30 = sets.filter(
     (s) => records.has(s.id) && within(s.createdAt, from30),
   ).length;

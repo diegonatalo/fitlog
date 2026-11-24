@@ -26,7 +26,7 @@ export const EditSetDialog = ({ set, onClose, onSave }: EditSetDialogProps) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/40 backdrop-blur-sm sm:items-center"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm sm:items-center"
       onClick={onClose}
     >
       <div
@@ -35,9 +35,9 @@ export const EditSetDialog = ({ set, onClose, onSave }: EditSetDialogProps) => {
         aria-modal="true"
         aria-label="Editar série"
         onClick={(e) => e.stopPropagation()}
-        className="w-full rounded-t-2xl border-t border-border bg-card p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-w-md sm:rounded-2xl sm:border"
+        className="w-full rounded-t-[32px] border-t border-border bg-card p-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-w-md sm:rounded-[30px] sm:border"
       >
-        <h2 className="mb-4 text-lg font-bold">Editar série</h2>
+        <h2 className="mb-4 text-2xl font-extrabold font-stretch-semi-expanded">Editar série</h2>
 
         <div
           className={cn(
@@ -63,7 +63,7 @@ export const EditSetDialog = ({ set, onClose, onSave }: EditSetDialogProps) => {
 
         <label
           htmlFor="set-note"
-          className="mb-1.5 mt-4 block text-xs font-medium text-muted-foreground"
+          className="mb-1.5 mt-4 block text-xs font-semibold text-muted-foreground"
         >
           Observação (opcional)
         </label>
@@ -73,20 +73,20 @@ export const EditSetDialog = ({ set, onClose, onSave }: EditSetDialogProps) => {
           onChange={(e) => setNote(e.target.value)}
           maxLength={LIMITS.setNote}
           placeholder="Ex: falha na última, ajuste do banco..."
-          className="w-full rounded-xl border border-input bg-background px-4 py-3 text-base outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"
+          className="h-13 w-full rounded-2xl border border-input bg-background px-4 text-base outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"
         />
 
         <div className="mt-5 flex gap-2">
           <button
             onClick={onClose}
-            className="flex-1 rounded-xl border border-border bg-background py-3 font-semibold hover:bg-muted"
+            className="h-13 flex-1 rounded-2xl border border-input font-bold hover:bg-muted"
           >
             Cancelar
           </button>
           <button
             onClick={() => onSave({ load: loadNum, reps: repsNum, note })}
             disabled={!valid}
-            className="flex-1 rounded-xl bg-accent py-3 font-bold text-accent-foreground disabled:cursor-not-allowed disabled:opacity-40"
+            className="h-13 flex-1 rounded-2xl bg-primary font-extrabold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-40"
           >
             Salvar
           </button>

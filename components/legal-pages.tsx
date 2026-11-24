@@ -8,7 +8,7 @@ import { PRIVACY_EMAIL, SOURCE_URL } from "@/lib/site";
 /** Data da última mudança nos textos (`AAAA-MM-DD`). */
 const UPDATED_AT = "2026-11-22";
 
-const linkClass = "font-semibold text-accent underline underline-offset-2";
+const linkClass = "font-semibold text-accent-text underline underline-offset-2";
 
 const Header = () => (
   <div className="mb-10 flex items-center justify-between gap-3">

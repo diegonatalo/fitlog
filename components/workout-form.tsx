@@ -82,7 +82,7 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
   return (
     <div className="flex flex-col gap-5 pb-20">
       <div>
-        <label className="mb-1.5 block text-sm font-medium" htmlFor="wk-name">
+        <label className="mb-2 block font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground" htmlFor="wk-name">
           Nome do treino
         </label>
         <input
@@ -92,35 +92,35 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
           maxLength={LIMITS.name}
           autoFocus
           placeholder="Ex: Treino A — Peito e Tríceps"
-          className="w-full rounded-xl border border-input bg-background px-4 py-3 text-base outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"
+          className="h-14 w-full rounded-2xl border border-input bg-card px-4 text-[17px] font-bold outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"
         />
       </div>
 
       {picked.length > 0 && (
         <div>
           <div className="mb-2 flex items-baseline justify-between">
-            <span className="text-sm font-medium">Ordem do treino</span>
+            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">Ordem do treino</span>
             <span className="font-mono text-xs text-muted-foreground">
               {picked.length} {picked.length === 1 ? "exercício" : "exercícios"}
             </span>
           </div>
-          <ol className="flex flex-col gap-2">
+          <ol className="overflow-hidden rounded-[22px] border border-border bg-card">
             {picked.map((ex, i) => (
               <li
                 key={ex.id}
-                className="flex items-center gap-2 rounded-xl border border-border bg-card p-2.5"
+                className={cn("flex items-center gap-2 py-2.5 pr-2.5 pl-4", i > 0 && "border-t border-border")}
               >
-                <span className="grid size-7 shrink-0 place-items-center rounded-md bg-muted font-mono text-xs font-bold">
-                  {i + 1}
+                <span className="w-6 shrink-0 font-mono text-xs text-muted-foreground">
+                  {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="min-w-0 flex-1 truncate font-semibold">
+                <span className="min-w-0 flex-1 truncate font-bold">
                   {ex.name}
                 </span>
                 <button
                   onClick={() => move(i, -1)}
                   disabled={i === 0}
                   aria-label={`Subir ${ex.name}`}
-                  className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted disabled:opacity-30"
+                  className="grid size-9 place-items-center rounded-[10px] bg-muted text-foreground/80 hover:text-foreground disabled:opacity-30"
                 >
                   <ArrowUpIcon size={16} weight="bold" />
                 </button>
@@ -128,14 +128,14 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
                   onClick={() => move(i, 1)}
                   disabled={i === picked.length - 1}
                   aria-label={`Descer ${ex.name}`}
-                  className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-muted disabled:opacity-30"
+                  className="grid size-9 place-items-center rounded-[10px] bg-muted text-foreground/80 hover:text-foreground disabled:opacity-30"
                 >
                   <ArrowDownIcon size={16} weight="bold" />
                 </button>
                 <button
                   onClick={() => toggle(ex.id)}
                   aria-label={`Remover ${ex.name}`}
-                  className="grid size-8 place-items-center rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                  className="grid size-9 place-items-center rounded-[10px] text-destructive hover:bg-destructive/10"
                 >
                   <XIcon size={16} weight="bold" />
                 </button>
@@ -147,7 +147,7 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
 
       <div>
         <div className="mb-2 flex items-baseline justify-between">
-          <span className="text-sm font-medium">Adicionar da biblioteca</span>
+          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">Adicionar da biblioteca</span>
         </div>
 
         <>
@@ -161,7 +161,7 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Buscar exercício..."
                 aria-label="Buscar exercício"
-                className="w-full rounded-xl border border-input bg-background py-2.5 pl-11 pr-4 text-base outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"
+                className="h-13 w-full rounded-2xl border border-input bg-card pl-11 pr-4 text-base outline-none focus:border-accent focus:ring-2 focus:ring-ring/40"
               />
             </div>
             <ul className="flex flex-col gap-2">
@@ -173,23 +173,23 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
                       onClick={() => toggle(ex.id)}
                       aria-pressed={on}
                       className={cn(
-                        "flex w-full items-center gap-3 rounded-xl border p-3.5 text-left transition-colors",
+                        "flex min-h-14 w-full items-center gap-3 rounded-[18px] border px-4 py-2.5 text-left transition-colors",
                         on
-                          ? "border-accent bg-accent/10"
+                          ? "border-[1.5px] border-accent bg-accent/10"
                           : "border-border bg-card hover:bg-muted/50",
                       )}
                     >
                       <span
                         className={cn(
-                          "grid size-6 shrink-0 place-items-center rounded-md border transition-colors",
+                          "grid size-6 shrink-0 place-items-center rounded-lg border-[1.5px] transition-colors",
                           on
                             ? "border-accent bg-accent text-accent-foreground"
-                            : "border-border bg-background",
+                            : "border-input bg-background",
                         )}
                       >
                         {on && <CheckIcon size={16} weight="bold" />}
                       </span>
-                      <span className="min-w-0 flex-1 truncate font-semibold">
+                      <span className="min-w-0 flex-1 truncate font-bold">
                         {ex.name}
                       </span>
                       <MuscleBadge group={ex.muscleGroup} />
@@ -204,7 +204,7 @@ const WorkoutFormBody = ({ workoutId }: { workoutId?: string }) => {
       <button
         onClick={save}
         disabled={!canSave}
-        className="sticky bottom-4 w-full rounded-xl bg-accent py-4 text-base font-bold text-accent-foreground shadow-lg transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
+        className="sticky bottom-4 h-14 w-full rounded-[18px] bg-primary text-base font-extrabold text-primary-foreground shadow-[0_12px_40px_rgb(0_0_0/0.4)] transition-opacity font-stretch-semi-expanded disabled:cursor-not-allowed disabled:opacity-40"
       >
         {editing ? "Salvar treino" : "Criar treino"}
       </button>

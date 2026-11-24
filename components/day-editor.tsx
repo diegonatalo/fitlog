@@ -38,7 +38,7 @@ export const DayEditor = ({
 
   return (
     <div
-      className="fixed inset-0 z-40 flex items-end justify-center bg-foreground/40 backdrop-blur-sm sm:items-center"
+      className="fixed inset-0 z-40 flex items-end justify-center bg-black/60 backdrop-blur-sm sm:items-center"
       onClick={onClose}
     >
       <div
@@ -47,11 +47,11 @@ export const DayEditor = ({
         aria-modal="true"
         aria-label={`Planejar ${longDayLabel(date)}`}
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[90dvh] w-full overflow-y-auto rounded-t-2xl border-t border-border bg-card p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-w-md sm:rounded-2xl sm:border"
+        className="max-h-[90dvh] w-full overflow-y-auto rounded-t-[32px] border-t border-border bg-card p-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-w-md sm:rounded-[30px] sm:border"
       >
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <h2 className="text-lg font-bold first-letter:uppercase">
+            <h2 className="text-2xl leading-tight font-extrabold first-letter:uppercase font-stretch-semi-expanded">
               {longDayLabel(date)}
             </h2>
             <p className="text-sm text-muted-foreground">
@@ -61,18 +61,18 @@ export const DayEditor = ({
           <button
             onClick={onClose}
             aria-label="Fechar"
-            className="grid size-8 shrink-0 place-items-center rounded-full text-muted-foreground hover:bg-muted"
+            className="grid size-11 shrink-0 place-items-center rounded-[14px] bg-muted text-muted-foreground hover:text-foreground"
           >
             <XIcon size={18} weight="bold" />
           </button>
         </div>
 
-        <label className="mb-4 flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-background p-3.5">
+        <label className="mb-4 flex cursor-pointer items-center gap-3 rounded-[18px] border border-border bg-background p-4">
           <input
             type="checkbox"
             checked={repeat}
             onChange={(e) => setRepeat(e.target.checked)}
-            className="size-5 accent-accent"
+            className="size-5 accent-[var(--accent)]"
           />
           <span className="text-sm font-medium">
             Repetir toda {weekday}
@@ -91,9 +91,9 @@ export const DayEditor = ({
                 }
                 aria-pressed={w.id === currentWorkoutId}
                 className={cn(
-                  "flex w-full items-center justify-between gap-3 rounded-xl border p-3.5 text-left font-semibold transition-colors",
+                  "flex min-h-14 w-full items-center justify-between gap-3 rounded-[18px] border px-4 text-left font-bold transition-colors",
                   w.id === currentWorkoutId
-                    ? "border-accent bg-accent/10"
+                    ? "border-[1.5px] border-accent bg-accent/10"
                     : "border-border bg-background hover:bg-muted/50",
                 )}
               >
@@ -109,9 +109,9 @@ export const DayEditor = ({
               onClick={() => onApply({ type: "rest" }, repeat)}
               aria-pressed={isRest}
               className={cn(
-                "flex w-full items-center gap-2 rounded-xl border p-3.5 text-left font-semibold transition-colors",
+                "flex min-h-14 w-full items-center gap-2 rounded-[18px] border px-4 text-left font-bold transition-colors",
                 isRest
-                  ? "border-accent bg-accent/10"
+                  ? "border-[1.5px] border-accent bg-accent/10"
                   : "border-border bg-background hover:bg-muted/50",
               )}
             >
@@ -132,7 +132,7 @@ export const DayEditor = ({
             {current && (
               <button
                 onClick={() => onApply({ type: "none" }, false)}
-                className="rounded-xl border border-border py-3 text-sm font-semibold hover:bg-muted"
+                className="h-12 rounded-2xl border border-input text-sm font-bold hover:bg-muted"
               >
                 Limpar este dia
               </button>
@@ -140,7 +140,7 @@ export const DayEditor = ({
             {repeating && (
               <button
                 onClick={onStopRepeating}
-                className="rounded-xl border border-destructive/40 py-3 text-sm font-semibold text-destructive hover:bg-destructive/10"
+                className="h-12 rounded-2xl border border-destructive/40 text-sm font-bold text-destructive hover:bg-destructive/10"
               >
                 Parar de repetir toda {weekday}
               </button>

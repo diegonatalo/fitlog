@@ -1,12 +1,9 @@
 import Link from "next/link";
-import { BarbellIcon } from "@phosphor-icons/react/ssr";
+import { Logo } from "@/components/logo";
 
 /** Marca do FitLog com link para a página inicial. */
 export const BrandLink = () => (
-  <Link href="/" aria-label="FitLog, página inicial" className="flex items-center gap-2.5 rounded-xl">
-    <span className="grid size-9 place-items-center rounded-xl bg-accent text-accent-foreground">
-      <BarbellIcon size={22} weight="fill" />
-    </span>
-    <span className="text-lg font-bold tracking-tight">FitLog</span>
+  <Link href="/" aria-label="FitLog, página inicial" className="rounded-xl">
+    <Logo size={34} />
   </Link>
 );

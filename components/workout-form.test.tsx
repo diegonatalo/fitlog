@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Store } from "@/hooks/use-workout-store";
@@ -35,7 +35,9 @@ const setup = (workouts: Workout[] = []) => {
 
 /** Botão da biblioteca pelo nome exato do exercício (o nome acessível inclui o grupo muscular). */
 const libraryButton = (name: string) =>
-  screen.getAllByRole("button").find((b) => b.querySelector(".font-semibold")?.textContent === name)!;
+  screen
+    .getAllByRole("button")
+    .find((b) => b.hasAttribute("aria-pressed") && within(b).queryByText(name) !== null)!;
 
 beforeEach(() => {
   router.params = {};

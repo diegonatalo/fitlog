@@ -91,6 +91,15 @@ describe("dashboardStats", () => {
     expect(dashboardStats([], sets, TODAY, groupOf).records30).toBe(2);
   });
 
+  it("compara cada série só com as do mesmo exercício", () => {
+    const sets = [
+      set("2026-11-01", 100, 5, { exerciseId: "ex-agachamento-livre" }),
+      set("2026-11-05", 20, 10, { exerciseId: "ex-rosca-direta" }), // primeira da rosca
+      set("2026-11-10", 22, 10, { exerciseId: "ex-rosca-direta" }), // recorde da rosca, apesar dos 100 kg do agachamento
+    ];
+    expect(dashboardStats([], sets, TODAY, groupOf).records30).toBe(1);
+  });
+
   it("agrupa séries por músculo, do mais treinado ao menos", () => {
     const sets = [
       set(TODAY, 40, 10),

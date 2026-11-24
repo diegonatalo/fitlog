@@ -15,11 +15,11 @@ export const EmptyState = ({
   action,
 }: EmptyStateProps) => {
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-dashed border-border bg-card/40 px-6 py-14 text-center">
-      <span className="mb-4 grid size-16 place-items-center rounded-2xl bg-muted text-muted-foreground">
-        <IconCmp size={30} weight="duotone" />
+    <div className="flex flex-col items-center rounded-3xl border border-dashed border-input px-6 py-14 text-center">
+      <span className="mb-4 grid size-16 place-items-center rounded-[20px] bg-muted text-accent-text">
+        <IconCmp size={30} weight="fill" />
       </span>
-      <h3 className="text-base font-bold text-balance">{title}</h3>
+      <h3 className="text-xl font-extrabold text-balance font-stretch-semi-expanded">{title}</h3>
       <p className="mt-1 max-w-xs text-sm text-muted-foreground text-pretty">
         {description}
       </p>

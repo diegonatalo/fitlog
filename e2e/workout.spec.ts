@@ -33,7 +33,7 @@ test("o treino em andamento sobrevive a recarregar a página", async ({ page }) 
   await saved(page);
 
   await page.reload();
-  await expect(page.getByRole("main").getByText("Sessão ativa")).toBeVisible();
+  await expect(page.getByRole("main").getByText("Ao vivo")).toBeVisible();
   await expect(page.getByRole("button", { name: "Editar série" })).toHaveCount(1);
 });
 
