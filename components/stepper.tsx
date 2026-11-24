@@ -29,16 +29,16 @@ export const Stepper = ({
     <div>
       <label
         htmlFor={id}
-        className="mb-1.5 block text-xs font-medium text-muted-foreground"
+        className="mb-1.5 block text-xs font-semibold text-muted-foreground"
       >
         {label}
       </label>
-      <div className="flex items-center overflow-hidden rounded-xl border border-input bg-background focus-within:ring-2 focus-within:ring-ring">
+      <div className="flex h-14 items-center overflow-hidden rounded-2xl border border-border bg-background focus-within:ring-2 focus-within:ring-ring">
         <button
           type="button"
           aria-label={`Diminuir ${label}`}
           onClick={() => bump(-step)}
-          className="grid size-11 shrink-0 place-items-center text-muted-foreground hover:bg-muted active:bg-muted"
+          className="grid h-14 w-11 shrink-0 place-items-center text-muted-foreground hover:bg-muted active:bg-muted"
         >
           <MinusIcon size={18} weight="bold" />
         </button>
@@ -49,13 +49,13 @@ export const Stepper = ({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full min-w-0 bg-transparent py-2.5 text-center font-mono text-xl font-bold outline-none"
+          className="w-full min-w-0 bg-transparent text-center font-mono text-[22px] font-bold outline-none"
         />
         <button
           type="button"
           aria-label={`Aumentar ${label}`}
           onClick={() => bump(step)}
-          className="grid size-11 shrink-0 place-items-center text-muted-foreground hover:bg-muted active:bg-muted"
+          className="grid h-14 w-11 shrink-0 place-items-center text-muted-foreground hover:bg-muted active:bg-muted"
         >
           <PlusIcon size={18} weight="bold" />
         </button>

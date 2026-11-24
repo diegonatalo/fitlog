@@ -3,7 +3,7 @@
  * public pages in cache. Pages under /app carry the person's data (the HTML and
  * the RSC payloads), so they are never cached: they always come from the network.
  */
-const CACHE = "fitlog-v4";
+const CACHE = "fitlog-v5";
 const SHELL = ["/", "/manifest.webmanifest", "/favicon.svg", "/icon-192.png"];
 
 /** Caches the shell and the hashed JS/CSS files that the landing references. */

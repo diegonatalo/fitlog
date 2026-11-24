@@ -28,7 +28,7 @@ export const ConfirmDialog = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] backdrop-blur-sm sm:items-center"
       onClick={onCancel}
     >
       <div
@@ -37,7 +37,7 @@ export const ConfirmDialog = ({
         aria-modal="true"
         aria-label={title}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-sm rounded-2xl border border-border bg-card p-5 shadow-2xl"
+        className="w-full max-w-sm rounded-[30px] border border-border bg-card p-6 shadow-2xl"
       >
         <form
           onSubmit={(e) => {
@@ -45,8 +45,8 @@ export const ConfirmDialog = ({
             if (!confirmDisabled) onConfirm();
           }}
         >
-          <h2 className="text-lg font-bold text-balance">{title}</h2>
-          <p className="mt-1.5 text-sm text-muted-foreground text-pretty">
+          <h2 className="text-2xl leading-tight font-extrabold text-balance font-stretch-semi-expanded">{title}</h2>
+          <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground text-pretty">
             {description}
           </p>
           {children && <div className="mt-4">{children}</div>}
@@ -54,14 +54,14 @@ export const ConfirmDialog = ({
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 rounded-xl border border-border bg-background py-3 font-semibold text-foreground hover:bg-muted"
+              className="h-13 flex-1 rounded-2xl border border-input font-bold text-foreground hover:bg-muted"
             >
               {cancelLabel}
             </button>
             <button
               type="submit"
               disabled={confirmDisabled}
-              className="flex-1 rounded-xl bg-destructive py-3 font-bold text-destructive-foreground hover:opacity-90 disabled:opacity-50"
+              className="h-13 flex-1 rounded-2xl bg-destructive font-extrabold text-destructive-foreground hover:opacity-90 disabled:opacity-50"
             >
               {confirmLabel}
             </button>

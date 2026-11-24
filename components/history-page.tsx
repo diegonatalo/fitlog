@@ -2,6 +2,7 @@
 
 import {
   CaretRightIcon,
+  ChartLineUpIcon,
   ClockCounterClockwiseIcon,
   ListChecksIcon,
 } from "@phosphor-icons/react";
@@ -9,6 +10,7 @@ import { Link, useSearchParams } from "@/lib/router";
 import { CardioHistory } from "@/components/cardio-history";
 import { EmptyState } from "@/components/empty-state";
 import { paths } from "@/lib/paths";
+import { WEEKDAY_SHORT } from "@/lib/dates";
 import { cn } from "@/lib/cn";
 import { formatDuration, formatTime, relativeDay } from "@/lib/format";
 import { useStore } from "@/hooks/use-store";
@@ -32,7 +34,7 @@ export const HistoryPage = () => {
       <div
         role="group"
         aria-label="Tipo de histórico"
-        className="grid grid-cols-2 rounded-xl bg-muted p-1 text-sm font-semibold"
+        className="grid grid-cols-2 gap-1 rounded-[14px] border border-border bg-card p-1 text-sm"
       >
         {KINDS.map((k) => (
           <button
@@ -40,16 +42,30 @@ export const HistoryPage = () => {
             onClick={() => select(k.value)}
             aria-pressed={kind === k.value}
             className={cn(
-              "rounded-lg py-2 transition-colors",
+              "h-10 rounded-[10px] transition-colors",
               kind === k.value
-                ? "bg-card text-foreground shadow-sm"
-                : "text-muted-foreground",
+                ? "bg-foreground font-extrabold text-background"
+                : "font-semibold text-muted-foreground hover:text-foreground",
             )}
           >
             {k.label}
           </button>
         ))}
       </div>
+
+      {kind === "workouts" && (
+        <Link
+          to={paths.progress}
+          className="flex items-center gap-3.5 rounded-[22px] bg-accent px-4 py-4 text-accent-foreground"
+        >
+          <ChartLineUpIcon size={26} weight="bold" aria-hidden="true" />
+          <span className="min-w-0 flex-1">
+            <span className="block font-extrabold">Ver progresso</span>
+            <span className="block text-[13px] font-medium">Volume, consistência e recordes</span>
+          </span>
+          <CaretRightIcon size={18} weight="bold" aria-hidden="true" />
+        </Link>
+      )}
 
       {kind === "cardio" ? <CardioHistory /> : <WorkoutHistory />}
     </div>
@@ -69,7 +85,7 @@ const WorkoutHistory = () => {
         action={
           <Link
             to={paths.home}
-            className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-bold text-accent-foreground"
+            className="inline-flex h-12 items-center gap-2 rounded-2xl bg-primary px-5 font-extrabold text-primary-foreground"
           >
             Ver meus treinos
           </Link>
@@ -87,13 +103,21 @@ const WorkoutHistory = () => {
           <li key={s.id}>
             <Link
               to={paths.sessionDetail(s.id)}
-              className="flex w-full items-center gap-3 rounded-2xl border border-border bg-card p-4 text-left transition-colors hover:bg-muted/40"
+              className="flex w-full items-center gap-3.5 rounded-[22px] border border-border bg-card p-3.5 pr-4 text-left transition-colors hover:bg-muted/40"
             >
-              <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-muted text-foreground">
-                <ClockCounterClockwiseIcon size={22} weight="fill" />
+              <span
+                aria-hidden="true"
+                className="flex h-13 w-12 shrink-0 flex-col items-center justify-center gap-0.5 rounded-[14px] bg-muted"
+              >
+                <span className="font-mono text-lg leading-none font-bold">
+                  {new Date(s.startedAt).getDate()}
+                </span>
+                <span className="text-[10px] font-extrabold uppercase text-muted-foreground">
+                  {WEEKDAY_SHORT[new Date(s.startedAt).getDay()]}
+                </span>
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-bold">{s.name}</span>
+                <span className="block truncate text-base font-extrabold">{s.name}</span>
                 <span className="block text-xs text-muted-foreground">
                   {relativeDay(s.startedAt)}{" "}
                   · {formatTime(s.startedAt)}

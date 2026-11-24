@@ -64,20 +64,20 @@ export const CardioProfileForm = () => {
       </div>
 
       <div>
-        <p className="mb-1.5 text-xs font-medium text-muted-foreground">
+        <p className="mb-1.5 text-xs font-semibold text-muted-foreground">
           Sexo (usado na estimativa da FC máxima)
         </p>
-        <div role="group" aria-label="Sexo" className="grid grid-cols-2 gap-2">
+        <div role="group" aria-label="Sexo" className="grid grid-cols-2 gap-1 rounded-[14px] bg-background p-1">
           {SEXES.map((s) => (
             <button
               key={s.value}
               onClick={() => update(weight, age, s.value)}
               aria-pressed={sex === s.value}
               className={cn(
-                "rounded-xl border py-2.5 text-sm font-semibold transition-colors",
+                "h-10 rounded-[10px] text-sm transition-colors",
                 sex === s.value
-                  ? "border-accent bg-accent/15 text-foreground"
-                  : "border-input bg-background text-muted-foreground hover:bg-muted",
+                  ? "bg-muted font-extrabold text-foreground"
+                  : "font-semibold text-muted-foreground hover:text-foreground",
               )}
             >
               {s.label}

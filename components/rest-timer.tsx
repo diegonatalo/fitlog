@@ -38,55 +38,76 @@ export const RestTimer = ({
     }
   }, [done, startedAt]);
 
+  const progress = Math.max(0, Math.min(1, remaining / duration));
+  const RING = 2 * Math.PI * 27;
+
   return (
     <div
       role="timer"
       className={cn(
-        "flex items-center gap-3 rounded-2xl border p-3",
-        done ? "border-accent bg-accent/15" : "border-border bg-card",
+        "flex flex-col gap-3 rounded-3xl p-4 transition-colors",
+        done ? "bg-accent text-accent-foreground" : "border border-border bg-card",
       )}
     >
-      <span
-        className={cn(
-          "grid size-10 shrink-0 place-items-center rounded-xl",
-          done ? "bg-accent text-accent-foreground" : "bg-muted",
-        )}
-      >
-        <TimerIcon size={22} weight="fill" />
-      </span>
+      <div className="flex items-center gap-4">
+        <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true" className="shrink-0">
+          <circle cx="32" cy="32" r="27" fill="none" strokeWidth="6" className="stroke-current opacity-15" />
+          <circle
+            cx="32"
+            cy="32"
+            r="27"
+            fill="none"
+            strokeWidth="6"
+            strokeLinecap="round"
+            strokeDasharray={RING}
+            strokeDashoffset={RING * (1 - progress)}
+            transform="rotate(-90 32 32)"
+            className={done ? "stroke-current" : "stroke-accent"}
+          />
+          <TimerIcon x="22" y="22" size={20} weight="fill" />
+        </svg>
 
-      <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-          {done ? "Descanso concluído" : "Descansando"}
-        </p>
-        <p className="font-mono text-2xl font-bold leading-none">
-          {done ? "Bora!" : formatClock(Math.ceil(remaining))}
-        </p>
+        <div className="min-w-0 flex-1">
+          <p className={cn("font-mono text-[11px] font-bold uppercase tracking-[0.1em]", !done && "text-muted-foreground")}>
+            {done ? "Descanso concluído" : "Descansando"}
+          </p>
+          <p className="font-mono text-[34px] leading-none font-bold tabular-nums">
+            {done ? "Bora!" : formatClock(Math.ceil(remaining))}
+          </p>
+        </div>
+
+        <button
+          onClick={onDismiss}
+          aria-label="Dispensar timer"
+          className={cn(
+            "grid size-11 shrink-0 place-items-center rounded-[14px]",
+            done ? "bg-accent-foreground/10 hover:bg-accent-foreground/20" : "bg-muted text-muted-foreground hover:text-foreground",
+          )}
+        >
+          <XIcon size={18} weight="bold" />
+        </button>
       </div>
 
-      <div className="flex flex-col items-end gap-1">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1">
           <button
             onClick={() => onDurationChange(duration - REST_STEP_SECONDS)}
             disabled={duration <= MIN_REST_SECONDS}
             aria-label="Diminuir descanso"
-            className="grid size-7 place-items-center rounded-lg text-muted-foreground hover:bg-muted disabled:opacity-30"
+            className="grid size-9 place-items-center rounded-xl hover:bg-current/10 disabled:opacity-30"
           >
-            <MinusIcon size={14} weight="bold" />
+            <MinusIcon size={16} weight="bold" />
           </button>
-          <span
-            className="min-w-12 text-center font-mono text-xs font-semibold"
-            aria-label="Duração do descanso"
-          >
+          <span className="min-w-12 text-center font-mono text-sm font-bold" aria-label="Duração do descanso">
             {formatClock(duration)}
           </span>
           <button
             onClick={() => onDurationChange(duration + REST_STEP_SECONDS)}
             disabled={duration >= MAX_REST_SECONDS}
             aria-label="Aumentar descanso"
-            className="grid size-7 place-items-center rounded-lg text-muted-foreground hover:bg-muted disabled:opacity-30"
+            className="grid size-9 place-items-center rounded-xl hover:bg-current/10 disabled:opacity-30"
           >
-            <PlusIcon size={14} weight="bold" />
+            <PlusIcon size={16} weight="bold" />
           </button>
         </div>
         <div className="flex gap-1">
@@ -96,10 +117,12 @@ export const RestTimer = ({
               onClick={() => onDurationChange(p)}
               aria-pressed={p === duration}
               className={cn(
-                "rounded-lg px-2 py-1 font-mono text-xs font-semibold transition-colors",
+                "h-9 rounded-xl px-2.5 font-mono text-xs font-bold transition-colors",
                 p === duration
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted",
+                  ? done
+                    ? "bg-accent-foreground text-accent"
+                    : "bg-foreground text-background"
+                  : "opacity-70 hover:opacity-100",
               )}
             >
               {p}s
@@ -107,14 +130,6 @@ export const RestTimer = ({
           ))}
         </div>
       </div>
-
-      <button
-        onClick={onDismiss}
-        aria-label="Dispensar timer"
-        className="grid size-8 shrink-0 place-items-center rounded-full text-muted-foreground hover:bg-muted"
-      >
-        <XIcon size={16} weight="bold" />
-      </button>
     </div>
   );
 };

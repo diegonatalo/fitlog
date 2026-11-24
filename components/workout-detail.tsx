@@ -11,6 +11,7 @@ import {
 import { Link, Navigate, useNavigate, useParams } from "@/lib/router";
 import { getExercise } from "@/lib/exercises";
 import { paths } from "@/lib/paths";
+import { cn } from "@/lib/cn";
 import { useStore } from "@/hooks/use-store";
 import { MuscleBadge } from "@/components/muscle-badge";
 import { EmptyState } from "@/components/empty-state";
@@ -46,14 +47,14 @@ export const WorkoutDetail = () => {
       <div className="flex gap-2">
         <Link
           to={paths.editWorkout(workout.id)}
-          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-border bg-card py-2.5 text-sm font-medium hover:bg-muted"
+          className="inline-flex h-11 flex-1 items-center justify-center gap-1.5 rounded-[14px] border border-border bg-card text-sm font-bold hover:bg-muted"
         >
           <PencilSimpleIcon size={16} weight="bold" /> Editar
         </Link>
         <button
           onClick={() => setConfirmDelete(true)}
           aria-label="Excluir treino"
-          className="grid size-10 place-items-center rounded-xl border border-border bg-card text-muted-foreground hover:border-destructive/40 hover:text-destructive"
+          className="grid size-11 place-items-center rounded-[14px] border border-border bg-card text-destructive hover:border-destructive/40"
         >
           <TrashIcon size={18} />
         </button>
@@ -61,7 +62,7 @@ export const WorkoutDetail = () => {
 
       <div>
         <div className="mb-3 flex items-baseline justify-between">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          <h2 className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
             Exercícios
           </h2>
           <span className="font-mono text-xs text-muted-foreground">
@@ -77,25 +78,28 @@ export const WorkoutDetail = () => {
             action={
               <Link
                 to={paths.editWorkout(workout.id)}
-                className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-bold text-accent-foreground"
+                className="inline-flex h-12 items-center gap-2 rounded-2xl bg-primary px-5 font-extrabold text-primary-foreground"
               >
                 <PencilSimpleIcon size={18} weight="bold" /> Editar treino
               </Link>
             }
           />
         ) : (
-          <ul className="flex flex-col gap-2">
-            {exercises.map((ex) => (
+          <ul className="overflow-hidden rounded-[26px] border border-border bg-card">
+            {exercises.map((ex, i) => (
               <li key={ex.id}>
                 <Link
                   to={paths.exercise(ex.id)}
-                  className="flex w-full items-center gap-3 rounded-xl border border-border bg-card p-3.5 text-left transition-colors hover:bg-muted/50"
+                  className={cn(
+                    "flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-muted/50",
+                    i > 0 && "border-t border-border",
+                  )}
                 >
-                  <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted">
-                    <BarbellIcon size={18} weight="fill" />
+                  <span className="w-6 shrink-0 font-mono text-xs text-muted-foreground">
+                    {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate font-semibold">
+                    <span className="block truncate font-bold">
                       {ex.name}
                     </span>
                   </span>
@@ -115,7 +119,7 @@ export const WorkoutDetail = () => {
       <button
         onClick={start}
         disabled={exercises.length === 0 && !store.activeSession}
-        className="sticky bottom-4 flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-4 text-base font-bold text-primary-foreground shadow-lg transition-opacity disabled:cursor-not-allowed disabled:opacity-40"
+        className="sticky bottom-4 flex h-15 w-full items-center justify-center gap-2.5 rounded-[18px] bg-primary text-[17px] font-extrabold text-primary-foreground shadow-[0_12px_40px_rgb(0_0_0/0.4)] transition-opacity font-stretch-semi-expanded disabled:cursor-not-allowed disabled:opacity-40"
       >
         <PlayIcon size={20} weight="fill" />
         {activeHere

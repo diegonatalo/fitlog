@@ -12,7 +12,7 @@ export const LandingThemeToggle = ({ className = "text-foreground hover:bg-muted
       type="button"
       onClick={toggle}
       aria-label={theme === "dark" ? "Ativar tema claro" : "Ativar tema escuro"}
-      className={`grid size-9 place-items-center rounded-full transition-colors ${className}`}
+      className={`grid size-11 place-items-center rounded-[14px] border border-current/15 transition-colors ${className}`}
     >
       {theme === "dark" ? <SunIcon size={20} /> : <MoonIcon size={20} />}
     </button>

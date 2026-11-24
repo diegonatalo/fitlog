@@ -41,4 +41,17 @@ describe("SettingsPage", () => {
     expect(store.clearAll).toHaveBeenCalled();
     expect(screen.getByRole("status")).toHaveTextContent("Dados apagados.");
   });
+
+  it("escolhe o tema e pode voltar a seguir o sistema", async () => {
+    localStorage.clear();
+    setup();
+    const group = screen.getByRole("radiogroup", { name: "Tema" });
+    expect(screen.getByRole("radio", { name: "Sistema" })).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(screen.getByRole("radio", { name: "Escuro" }));
+    expect(screen.getByRole("radio", { name: "Escuro" })).toHaveAttribute("aria-checked", "true");
+    expect(document.documentElement).toHaveClass("dark");
+    await userEvent.click(screen.getByRole("radio", { name: "Sistema" }));
+    expect(screen.getByRole("radio", { name: "Sistema" })).toHaveAttribute("aria-checked", "true");
+    expect(group).toBeInTheDocument();
+  });
 });

@@ -66,27 +66,27 @@ export const CardioPage = () => {
   return (
     <div className="flex flex-col gap-4">
       {profile ? (
-        <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-card px-4 py-3">
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-card py-2.5 pr-2.5 pl-4">
           <p className="font-mono text-sm text-muted-foreground">
             {profile.weightKg} kg · {profile.age} anos ·{" "}
             {profile.sex === "male" ? "masc." : "fem."}
           </p>
           <Link
             to={paths.settings}
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent"
+            className="inline-flex h-9 items-center gap-1.5 rounded-[10px] bg-muted px-3 text-sm font-bold"
           >
             <GearSixIcon size={16} weight="bold" /> Editar perfil
           </Link>
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-border bg-card/40 px-4 py-5 text-center">
+        <div className="rounded-3xl border border-dashed border-input px-4 py-6 text-center">
           <p className="text-sm text-muted-foreground text-pretty">
             Para estimar calorias e frequência cardíaca, preencha seu perfil
             (peso, idade e sexo) nos Ajustes.
           </p>
           <Link
             to={paths.settings}
-            className="mt-3 inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 font-bold text-accent-foreground"
+            className="mt-4 inline-flex h-12 items-center gap-2 rounded-2xl bg-primary px-5 font-extrabold text-primary-foreground"
           >
             Preencher perfil
           </Link>
@@ -105,7 +105,7 @@ export const CardioPage = () => {
 
       {result && profile && input && (
         <>
-          <section className="rounded-2xl border border-border bg-card p-4">
+          <section className="rounded-[26px] border border-border bg-card p-[18px]">
             <div className="grid grid-cols-2 gap-3">
               <Stat
                 icon={<FireIcon size={16} weight="fill" />}
@@ -135,7 +135,7 @@ export const CardioPage = () => {
                   <span
                     key={z.id}
                     className={cn(
-                      "h-2 flex-1 rounded-full",
+                      "h-2.5 flex-1 rounded-full",
                       z.id === result.zone.id ? "bg-accent" : "bg-muted",
                     )}
                   />
@@ -146,9 +146,9 @@ export const CardioPage = () => {
             <button
               onClick={save}
               className={cn(
-                "mt-4 flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-bold transition-all",
+                "mt-4 flex h-14 w-full items-center justify-center gap-2 rounded-2xl font-extrabold transition-all font-stretch-semi-expanded",
                 saved
-                  ? "bg-accent text-accent-foreground"
+                  ? "bg-foreground text-background"
                   : "bg-primary text-primary-foreground",
               )}
             >
@@ -198,8 +198,8 @@ const Card = ({
   children: ReactNode;
 }) => {
   return (
-    <section className="rounded-2xl border border-border bg-card p-4">
-      <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+    <section className="rounded-[26px] border border-border bg-card p-[18px]">
+      <h2 className="mb-3 flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
         {icon} {title}
       </h2>
       {children}
@@ -219,11 +219,11 @@ const Stat = ({
   unit: string;
 }) => {
   return (
-    <div className="rounded-xl bg-muted/60 p-3">
-      <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+    <div className="flex flex-col gap-1.5 py-1">
+      <p className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground">
         {icon} {label}
       </p>
-      <p className="mt-1 font-mono text-3xl font-bold leading-none">
+      <p className="font-mono text-4xl font-bold leading-none">
         {value}
         <span className="ml-1 text-sm font-medium text-muted-foreground">
           {unit}

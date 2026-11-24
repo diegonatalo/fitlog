@@ -20,7 +20,7 @@ export const CardioHistory = () => {
         action={
           <Link
             to={paths.cardio}
-            className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-bold text-accent-foreground"
+            className="inline-flex h-12 items-center gap-2 rounded-2xl bg-primary px-5 font-extrabold text-primary-foreground"
           >
             Abrir calculadora
           </Link>
@@ -43,7 +43,7 @@ export const CardioHistory = () => {
         {cardioSessions.map((s) => (
           <li
             key={s.id}
-            className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3"
+            className="flex items-center gap-3 rounded-[20px] border border-border bg-card p-3.5"
           >
             <span className="min-w-0 flex-1">
               <span className="block text-sm font-bold">
@@ -65,7 +65,7 @@ export const CardioHistory = () => {
             <button
               onClick={() => setToDelete(s.id)}
               aria-label="Excluir sessão"
-              className="grid size-9 shrink-0 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-destructive"
+              className="grid size-10 shrink-0 place-items-center rounded-xl text-muted-foreground hover:bg-muted hover:text-destructive"
             >
               <TrashIcon size={18} />
             </button>

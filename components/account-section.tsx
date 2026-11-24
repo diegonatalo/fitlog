@@ -56,9 +56,11 @@ export const AccountSection = () => {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center gap-3">
-        <UserCircleIcon size={36} weight="duotone" className="shrink-0 text-muted-foreground" />
+        <span aria-hidden="true" className="grid size-13 shrink-0 place-items-center rounded-[18px] bg-accent text-xl font-extrabold text-accent-foreground font-stretch-expanded">
+          {account.name.trim().charAt(0).toUpperCase() || <UserCircleIcon size={28} weight="fill" />}
+        </span>
         <div className="min-w-0">
-          <p className="truncate font-semibold">{account.name}</p>
+          <p className="truncate text-lg font-extrabold">{account.name}</p>
           <p className="truncate text-sm text-muted-foreground">{account.email}</p>
         </div>
       </div>
@@ -67,7 +69,7 @@ export const AccountSection = () => {
           type="button"
           onClick={signOut}
           disabled={pending}
-          className="flex items-center justify-center gap-2 rounded-xl border border-border bg-background py-3 font-semibold hover:bg-muted disabled:opacity-60"
+          className="flex h-12 items-center justify-center gap-2 rounded-2xl border border-input font-bold hover:bg-muted disabled:opacity-60"
         >
           <SignOutIcon size={20} weight="bold" /> Sair
         </button>
@@ -75,7 +77,7 @@ export const AccountSection = () => {
           type="button"
           onClick={() => setConfirmDelete(true)}
           disabled={pending}
-          className="rounded-xl border border-destructive/40 py-3 font-semibold text-destructive hover:bg-destructive/10 disabled:opacity-60"
+          className="h-12 rounded-2xl bg-destructive/15 font-bold text-destructive hover:bg-destructive/25 disabled:opacity-60"
         >
           Excluir conta
         </button>
@@ -104,7 +106,7 @@ export const AccountSection = () => {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1.5 w-full rounded-xl border border-border bg-background px-3 py-2.5"
+            className="mt-1.5 h-13 w-full rounded-2xl border border-input bg-background px-4"
           />
         </ConfirmDialog>
       )}

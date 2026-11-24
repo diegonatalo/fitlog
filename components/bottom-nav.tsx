@@ -20,26 +20,35 @@ const ITEMS: { to: string; label: string; icon: typeof HouseIcon }[] = [
   { to: paths.cardio, label: "Cardio", icon: PersonSimpleRunIcon },
 ];
 
+/** Barra flutuante: a aba ativa vira uma pílula verde com o nome; as outras mostram só o ícone. */
 export const BottomNav = () => {
   const pathname = usePathname();
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex w-full max-w-2xl items-stretch justify-around px-2 pb-[env(safe-area-inset-bottom)]">
-        {ITEMS.map(({ to, label, icon: Icon }) => (
-          <Link
-            key={to}
-            href={to}
-            className={cn(
-              "flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[11px] font-medium transition-colors",
-              pathname === to
-                ? "text-accent"
-                : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            <Icon size={22} weight={pathname === to ? "fill" : "regular"} />
-            {label}
-          </Link>
-        ))}
+    <nav
+      aria-label="Principal"
+      className="fixed inset-x-0 bottom-0 z-30 px-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
+    >
+      <div className="mx-auto flex h-[68px] w-full max-w-lg items-center gap-1 rounded-3xl border border-border bg-card/95 px-2 shadow-[0_12px_40px_rgb(0_0_0/0.35)] backdrop-blur-md">
+        {ITEMS.map(({ to, label, icon: Icon }) => {
+          const active = pathname === to;
+          return (
+            <Link
+              key={to}
+              href={to}
+              aria-label={label}
+              aria-current={active ? "page" : undefined}
+              className={cn(
+                "flex h-12 min-w-0 items-center justify-center gap-1.5 rounded-2xl text-[13px] font-extrabold transition-[flex-grow,background-color,color] duration-200",
+                active
+                  ? "flex-[1.7] bg-accent text-accent-foreground"
+                  : "flex-1 text-muted-foreground hover:bg-muted hover:text-foreground",
+              )}
+            >
+              <Icon size={active ? 20 : 22} weight={active ? "fill" : "regular"} />
+              {active && <span className="truncate">{label}</span>}
+            </Link>
+          );
+        })}
       </div>
     </nav>
   );

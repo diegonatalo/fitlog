@@ -34,9 +34,9 @@ export const ProgressChart = ({ sets, loadType }: ProgressChartProps) => {
   const delta = last.load - first.load;
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-4">
+    <section className="rounded-[26px] border border-border bg-card p-[18px]">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+        <h2 className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
           <ChartLineUpIcon size={18} /> Evolução
         </h2>
         <span className="font-mono text-xs font-semibold text-muted-foreground">

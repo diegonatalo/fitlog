@@ -66,10 +66,10 @@ export const LogForm = ({
 
   return (
     <section
-      className={cn(!bare && "rounded-2xl border border-border bg-card p-4")}
+      className={cn(!bare && "rounded-3xl border border-border bg-card p-4")}
     >
       {!bare && (
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+        <h2 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
           Registrar série
         </h2>
       )}
@@ -108,9 +108,9 @@ export const LogForm = ({
         onClick={submit}
         disabled={!valid}
         className={cn(
-          "mt-4 flex w-full items-center justify-center gap-2 rounded-xl py-4 text-base font-bold transition-all disabled:cursor-not-allowed disabled:opacity-40",
-          feedback
-            ? "bg-accent text-accent-foreground"
+          "mt-4 flex h-14 w-full items-center justify-center gap-2 rounded-2xl text-base font-extrabold transition-all font-stretch-semi-expanded disabled:cursor-not-allowed disabled:opacity-40",
+          feedback === "record"
+            ? "bg-record text-black"
             : "bg-primary text-primary-foreground",
         )}
       >

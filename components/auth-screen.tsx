@@ -52,9 +52,9 @@ export const AuthScreen = ({ mode }: { mode: AuthMode }) => {
           <LandingThemeToggle />
         </div>
 
-        <main id="conteudo" className="rounded-2xl border border-border bg-card p-5 sm:p-6">
-          <h1 className="text-2xl font-bold tracking-tight">{copy.title}</h1>
-          <p className="mt-1 mb-6 text-sm text-muted-foreground text-pretty">{copy.lead}</p>
+        <main id="conteudo" className="rounded-[30px] border border-border bg-card p-6 sm:p-7">
+          <h1 className="text-4xl leading-none font-extrabold tracking-tight font-stretch-expanded">{copy.title}</h1>
+          <p className="mt-3 mb-6 text-[15px] text-muted-foreground text-pretty">{copy.lead}</p>
           <AuthForm
             mode={mode}
             onSubmit={(values) =>
@@ -67,7 +67,7 @@ export const AuthScreen = ({ mode }: { mode: AuthMode }) => {
           {copy.switchText}{" "}
           <Link
             href={copy.switchHref}
-            className="font-semibold text-accent underline underline-offset-2"
+            className="font-bold text-foreground underline decoration-accent decoration-2 underline-offset-4"
           >
             {copy.switchLabel}
           </Link>

@@ -42,12 +42,12 @@ test("excluir conta na aba de A não apaga a conta de B", async ({ page, baseURL
   await signUpByApi(page.request, baseURL!);
   const other = await page.context().newPage();
   await other.goto("/app");
-  await expect(title(other, "FitLog")).toBeVisible();
+  await expect(title(other, "Hoje")).toBeVisible();
 
   await page.getByRole("alertdialog").getByLabel("Sua senha").fill(PASSWORD);
   await page.getByRole("alertdialog").getByRole("button", { name: "Excluir conta" }).click();
   await expect(page.getByRole("alert").filter({ hasText: "Outra conta entrou" })).toBeVisible();
 
   await other.reload();
-  await expect(title(other, "FitLog")).toBeVisible();
+  await expect(title(other, "Hoje")).toBeVisible();
 });

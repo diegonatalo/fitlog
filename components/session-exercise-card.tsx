@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  BarbellIcon,
   PencilSimpleIcon,
   PlusIcon,
   TrashIcon,
@@ -14,6 +13,7 @@ import { recordIds } from "@/lib/stats";
 import { EditSetDialog } from "./edit-set-dialog";
 import { LogForm } from "./log-form";
 import { MuscleBadge } from "./muscle-badge";
+import { cn } from "@/lib/cn";
 
 type SessionExerciseCardProps = {
   exercise: Exercise;
@@ -52,14 +52,13 @@ export const SessionExerciseCard = ({
     setsForEquipment(history, exercise, equipment)[0];
 
   return (
-    <li className="overflow-hidden rounded-2xl border border-border bg-card">
-      <div className="flex items-center gap-3 p-4">
-        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted">
-          <BarbellIcon size={18} weight="fill" />
-        </span>
+    <li className="overflow-hidden rounded-3xl border border-border bg-card">
+      <div className="flex items-start gap-3 p-4 pb-3">
         <span className="min-w-0 flex-1">
-          <span className="block truncate font-semibold">{exercise.name}</span>
-          <span className="block text-xs text-muted-foreground">
+          <span className="block truncate text-xl leading-tight font-extrabold font-stretch-semi-expanded">
+            {exercise.name}
+          </span>
+          <span className="mt-1 block text-xs text-muted-foreground">
             {sets.length} {sets.length === 1 ? "série" : "séries"}
             {last && sets.length === 0 && (
               <> · última vez {formatLoad(last.loadType, last.load)}</>
@@ -70,25 +69,28 @@ export const SessionExerciseCard = ({
       </div>
 
       {sets.length > 0 && (
-        <ol className="flex flex-col gap-1.5 px-4 pb-3">
+        <ol className="px-4 pb-2">
           {sets.map((s, i) => (
             <li
               key={s.id}
-              className="flex items-center gap-3 rounded-lg bg-muted/60 px-3 py-2 text-sm"
+              className="flex min-h-12 items-center gap-3 border-t border-border py-1.5"
             >
-              <span className="grid size-6 place-items-center rounded-md bg-background font-mono text-xs font-bold">
+              <span className="w-6 font-mono text-sm font-bold text-muted-foreground">
                 {i + 1}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="flex items-center gap-2 font-mono font-semibold">
+                <span
+                  className={cn(
+                    "flex items-center gap-2 font-mono text-base font-bold",
+                    records.has(s.id) && "text-record",
+                  )}
+                >
                   {formatSet(s)}
                   {records.has(s.id) && (
-                    <TrophyIcon
-                      size={14}
-                      weight="fill"
-                      className="text-accent"
-                      aria-label="Recorde"
-                    />
+                    <span className="inline-flex items-center gap-1 rounded-md bg-record/15 px-1.5 py-0.5 font-sans text-[10px] font-extrabold tracking-wide">
+                      <TrophyIcon size={12} weight="fill" aria-hidden="true" />
+                      RECORDE
+                    </span>
                   )}
                 </span>
                 {s.note && (
@@ -100,16 +102,16 @@ export const SessionExerciseCard = ({
               <button
                 onClick={() => setEditing(s)}
                 aria-label="Editar série"
-                className="grid size-7 place-items-center rounded-md text-muted-foreground hover:text-foreground"
+                className="grid size-9 place-items-center rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
               >
-                <PencilSimpleIcon size={15} />
+                <PencilSimpleIcon size={16} />
               </button>
               <button
                 onClick={() => onRemoveSet(s.id)}
                 aria-label="Remover série"
-                className="grid size-7 place-items-center rounded-md text-muted-foreground hover:text-destructive"
+                className="grid size-9 place-items-center rounded-xl text-muted-foreground hover:bg-muted hover:text-destructive"
               >
-                <TrashIcon size={15} />
+                <TrashIcon size={16} />
               </button>
             </li>
           ))}
@@ -117,7 +119,7 @@ export const SessionExerciseCard = ({
       )}
 
       {open ? (
-        <div className="border-t border-border p-3">
+        <div className="border-t border-border bg-background/40 p-4">
           <LogForm
             bare
             equipments={exercise.equipments}
@@ -135,9 +137,9 @@ export const SessionExerciseCard = ({
       ) : (
         <button
           onClick={() => setOpen(true)}
-          className="flex w-full items-center justify-center gap-2 border-t border-border py-3 text-sm font-semibold text-accent hover:bg-accent/5"
+          className="flex h-13 w-full items-center justify-center gap-2 border-t border-border text-sm font-bold text-foreground hover:bg-muted"
         >
-          <PlusIcon size={18} weight="bold" /> Registrar série
+          <PlusIcon size={18} weight="bold" className="text-accent-text" /> Registrar série
         </button>
       )}
 

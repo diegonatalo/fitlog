@@ -35,13 +35,13 @@ export const HistoryList = ({
           size={18}
           className="text-muted-foreground"
         />
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          Histórico
+        <h2 className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+          Registros
         </h2>
       </div>
 
       {sets.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border py-10 text-center text-sm text-muted-foreground">
+        <div className="rounded-3xl border border-dashed border-input py-10 text-center text-sm text-muted-foreground">
           Nenhuma série registrada ainda.
           <br />
           Salve a primeira acima.
@@ -53,7 +53,7 @@ export const HistoryList = ({
             return (
               <li
                 key={s.id}
-                className="flex items-center gap-3 rounded-xl border border-border bg-card p-3.5"
+                className="flex items-center gap-3 rounded-[20px] border border-border bg-card p-3.5"
               >
                 <div className="flex min-w-16 shrink-0 flex-col items-center justify-center">
                   <span className="font-mono text-xl font-bold leading-none">
@@ -81,8 +81,8 @@ export const HistoryList = ({
                       </span>
                     )}
                     {records.has(s.id) && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-accent/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-accent">
-                        <TrophyIcon size={11} weight="fill" /> PR
+                      <span className="inline-flex items-center gap-1 rounded-md bg-record/15 px-1.5 py-0.5 text-[10px] font-extrabold tracking-wide text-record">
+                        <TrophyIcon size={11} weight="fill" /> RECORDE
                       </span>
                     )}
                   </p>
@@ -100,14 +100,14 @@ export const HistoryList = ({
                 <button
                   onClick={() => setEditing(s)}
                   aria-label="Editar registro"
-                  className="grid size-9 shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  className="grid size-10 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 >
                   <PencilSimpleIcon size={17} />
                 </button>
                 <button
                   onClick={() => onRemoveSet(s.id)}
                   aria-label="Excluir registro"
-                  className="grid size-9 shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                  className="grid size-10 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                 >
                   <TrashIcon size={17} />
                 </button>

@@ -11,11 +11,12 @@ const collectErrors = (page: Page) => {
 };
 
 const PAGES = [
-  { path: "/app", heading: "FitLog" },
+  { path: "/app", heading: "Hoje" },
   { path: "/app/agenda", heading: "Agenda" },
   { path: "/app/treinos", heading: "Treinos" },
   { path: "/app/biblioteca", heading: "Exercícios" },
   { path: "/app/historico", heading: "Histórico" },
+  { path: "/app/progresso", heading: "Progresso" },
   { path: "/app/cardio", heading: "Cardio" },
   { path: "/app/ajustes", heading: "Ajustes" },
 ];
@@ -29,17 +30,20 @@ for (const { path, heading } of PAGES) {
   });
 }
 
-test("endereço desconhecido volta para o início do app", async ({ page }) => {
+// sem conferir o console: o Chromium registra a própria resposta 404 como erro
+test("a 404 avisa e leva de volta ao início do app", async ({ page }) => {
   await page.goto("/nao-existe");
+  await expect(title(page, "Página não encontrada")).toBeVisible();
+  await page.getByRole("link", { name: "Voltar para o app" }).click();
   await expect(page).toHaveURL("/app");
-  await expect(title(page, "FitLog")).toBeVisible();
+  await expect(title(page, "Hoje")).toBeVisible();
 });
 
 anonymous("a página inicial apresenta o FitLog e leva ao login", async ({ page }) => {
   const errors = collectErrors(page);
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(/caderninho/);
-  await page.getByRole("main").getByRole("link", { name: "Abrir o FitLog" }).click();
+  await page.getByRole("main").getByRole("link", { name: "Abrir o app" }).click();
   await expect(page).toHaveURL("/entrar");
   await expect(page.getByRole("heading", { level: 1, name: "Entrar" })).toBeVisible();
   // A marca volta para a página inicial.
