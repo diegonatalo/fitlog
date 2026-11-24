@@ -3,7 +3,8 @@
 │                 /privacidade, /termos, a API do Better Auth (api/auth), robots e sitemap
 ├── components/   interface (log-form, rest-timer, progress-chart, auth-form…), SignedInApp (confere a sessão e carrega
 │                 os dados) e StoreProvider (o estado do app, lido com useStore())
-├── hooks/        use-workout-store (estado em memória, salvo por Server Actions), use-store, use-theme, use-now
+├── hooks/        use-workout-store (estado em memória, salvo por Server Actions), use-store, use-theme,
+│                 use-theme-choice, use-today, use-now
 ├── lib/
 │   ├── db/           schema do banco (Drizzle) e conexão com o Postgres
 │   ├── data/         consultas, Server Actions e conversão entre linhas do banco e registros do app
@@ -12,8 +13,12 @@
 │   ├── schema.ts     validação dos dados que chegam ao servidor
 │   ├── defaults.ts   treinos de exemplo de cada conta nova
 │   ├── stats.ts      recordes, 1RM e série histórica
+│   ├── dashboard.ts  números da tela inicial
+│   ├── progress.ts   volume semanal, consistência e recordes recentes
+│   ├── workout-stats.ts  tempo médio, próximo dia na agenda e sessão anterior de cada treino
+│   ├── week.ts       a semana da tela inicial
 │   ├── cardio.ts     calorias, FC estimada, zonas, comparação e dicas da esteira
-│   ├── format.ts     datas, durações e cargas
+│   ├── format.ts     datas, durações e cargas (vírgula decimal)
 │   ├── paths.ts      rotas centralizadas
 │   └── router.tsx    Link, useNavigate e useParams sobre o roteador do Next
 ├── types/        modelos e metadados dos tipos de carga
