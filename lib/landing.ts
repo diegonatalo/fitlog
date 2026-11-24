@@ -71,6 +71,21 @@ export const SCREENSHOT: Screenshot = {
   alt: "Tela de um treino no FitLog, no celular, com os exercícios e as séries registradas.",
 };
 
+/** Prints de outras telas, na seção "No celular". Gerados por `e2e/screenshots.spec.ts`. */
+export const GALLERY_TITLE = "No celular, do jeito que você treina";
+export const GALLERY: { src: string; alt: string; light?: boolean }[] = [
+  { src: "/landing/inicio-escuro.webp", alt: "Tela inicial do FitLog com a semana, o treino de hoje e o progresso." },
+  { src: "/landing/progresso-escuro.webp", alt: "Tela de progresso do FitLog com o volume por semana e a consistência." },
+  { src: "/landing/inicio-claro.webp", alt: "Tela inicial do FitLog no tema claro.", light: true },
+];
+
+/** Privacidade em uma frase, sobre a foto dos halteres. */
+export const PRIVACY_LINE =
+  "Seus treinos ficam na sua conta, sem anúncio e sem rastreamento. Você pode apagar tudo quando quiser.";
+
+/** Chamada final, antes do rodapé. */
+export const FINAL_CTA = { title: "Próxima série começa aqui.", action: "Montar meu primeiro treino" };
+
 export type Faq = { question: string; answer: string };
 
 export const FAQ: Faq[] = [

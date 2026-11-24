@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import Link from "next/link";
 import { TrashIcon } from "@phosphor-icons/react";
 import { EXERCISES } from "@/lib/exercises";
 import { useStore } from "@/hooks/use-store";
@@ -50,6 +51,15 @@ export const SettingsPage = () => {
           </p>
         )}
       </Section>
+
+      <nav aria-label="Documentos" className="flex justify-center gap-5 text-sm">
+        <Link href="/privacidade" className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
+          Privacidade
+        </Link>
+        <Link href="/termos" className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
+          Termos de uso
+        </Link>
+      </nav>
 
       <p className="text-center text-xs text-muted-foreground">
         FitLog · {EXERCISES.length} exercícios · {store.sets.length}{" "}

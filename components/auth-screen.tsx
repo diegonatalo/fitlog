@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { AuthForm, type AuthMode } from "@/components/auth-form";
 import { BrandLink } from "@/components/landing/brand-link";
+import { Logo } from "@/components/logo";
 import { LandingThemeToggle } from "@/components/landing/landing-theme-toggle";
 import { SiteFooter } from "@/components/site-footer";
 import { authClient } from "@/lib/auth-client";
@@ -27,6 +28,9 @@ const COPY = {
   },
 } as const;
 
+/** A frase do bloco verde da tela de entrar. */
+const HERO_LINE = "Cada série conta.";
+
 /** Lido só no envio, para a página não depender da URL ao renderizar. */
 const returnTo = () =>
   safeRedirect(new URLSearchParams(window.location.search).get(RETURN_PARAM));
@@ -44,16 +48,46 @@ const send = async (mode: AuthMode, values: SignUpInput) => {
 
 export const AuthScreen = ({ mode }: { mode: AuthMode }) => {
   const copy = COPY[mode];
+  const signIn = mode === "sign-in";
   return (
     <div className="flex min-h-full flex-col bg-background text-foreground">
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-4 py-6 sm:py-10">
-        <div className="mb-8 flex items-center justify-between gap-3">
-          <BrandLink />
-          <LandingThemeToggle />
-        </div>
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-4 pt-4 pb-8 sm:pt-8">
+        {signIn ? (
+          // entrar: o bloco verde da marca no topo
+          <div className="relative flex h-72 flex-col justify-between overflow-hidden rounded-[32px] bg-accent p-6 text-accent-foreground">
+            <div className="flex items-center justify-between gap-3">
+              <Link href="/" aria-label="FitLog, página inicial" className="rounded-xl">
+                <Logo size={34} tone="ink" />
+              </Link>
+              <LandingThemeToggle className="border-accent-foreground/20 text-accent-foreground hover:bg-accent-foreground/10" />
+            </div>
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute top-16 -right-2 font-mono text-8xl leading-none font-bold tracking-tighter opacity-15"
+            >
+              ×10
+            </span>
+            <p className="max-w-[17rem] text-[34px] leading-[1.05] font-extrabold font-stretch-semi-expanded">
+              {HERO_LINE}
+            </p>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between gap-3">
+            <BrandLink />
+            <LandingThemeToggle />
+          </div>
+        )}
 
-        <main id="conteudo" className="rounded-[30px] border border-border bg-card p-6 sm:p-7">
-          <h1 className="text-4xl leading-none font-extrabold tracking-tight font-stretch-expanded">{copy.title}</h1>
+        <main id="conteudo" className={signIn ? "pt-6" : "pt-8"}>
+          <h1
+            className={
+              signIn
+                ? "text-3xl leading-none font-extrabold tracking-tight font-stretch-expanded"
+                : "text-4xl leading-none font-extrabold tracking-tight font-stretch-expanded"
+            }
+          >
+            {copy.title}
+          </h1>
           <p className="mt-3 mb-6 text-[15px] text-muted-foreground text-pretty">{copy.lead}</p>
           <AuthForm
             mode={mode}

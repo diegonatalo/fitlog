@@ -6,7 +6,9 @@ import {
   ClockCounterClockwiseIcon,
   NotePencilIcon,
   TrashIcon,
+  TrophyIcon,
 } from "@phosphor-icons/react";
+import { recordIdsByExercise } from "@/lib/stats";
 import { Navigate, useNavigate, useParams } from "@/lib/router";
 import type { WorkoutSet } from "@/types";
 import { formatDuration, formatSet, formatTime, relativeDay } from "@/lib/format";
@@ -37,6 +39,10 @@ export const SessionDetail = () => {
   const exerciseName = (exId: string) =>
     getExercise(exId)?.name ?? "Exercício removido";
 
+  // recordes batidos nesta sessão (cada exercício comparado só consigo mesmo)
+  const allRecords = recordIdsByExercise(store.sets);
+  const sessionRecords = sets.filter((s) => allRecords.has(s.id));
+
   return (
     <div className="pb-24">
       <div className="mb-4 grid grid-cols-3 overflow-hidden rounded-[26px] border border-border bg-card">
@@ -56,6 +62,23 @@ export const SessionDetail = () => {
         {relativeDay(session.startedAt)} ·{" "}
         {formatTime(session.startedAt)}
       </p>
+
+      {sessionRecords.length > 0 && (
+        <ul aria-label="Recordes desta sessão" className="mb-4 flex flex-col gap-2">
+          {sessionRecords.map((r) => (
+            <li
+              key={r.id}
+              className="flex items-center gap-2.5 rounded-[18px] bg-record/10 px-4 py-3.5 text-sm text-foreground"
+            >
+              <TrophyIcon size={18} weight="fill" className="shrink-0 text-record" aria-hidden="true" />
+              <span>
+                Novo recorde em {exerciseName(r.exerciseId).toLowerCase()}:{" "}
+                <span className="font-mono font-bold text-record">{formatSet(r)}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {session.note && (
         <p className="mb-4 flex gap-2 rounded-[18px] border border-border p-4 text-sm leading-relaxed text-foreground/85">

@@ -8,9 +8,6 @@ import {
 
 const CHANGE_EVENT = "theme:change";
 
-/** O que a pessoa escolheu: um tema fixo ou seguir o sistema. */
-export type ThemeChoice = Theme | "system";
-
 const readChoice = (key: string): Theme | null => {
   try {
     return parseTheme(localStorage.getItem(key));
@@ -86,40 +83,5 @@ export const useTheme = (key: string, colors?: ThemeColors) => {
     [setTheme],
   );
 
-  // a escolha salva, ou "system" quando o tema segue o sistema
-  const subscribeChoice = useCallback(
-    (onChange: () => void) => {
-      const onStorage = (event: StorageEvent) => {
-        if (event.key === key || event.key === null) onChange();
-      };
-      window.addEventListener("storage", onStorage);
-      window.addEventListener(CHANGE_EVENT, onChange);
-      return () => {
-        window.removeEventListener("storage", onStorage);
-        window.removeEventListener(CHANGE_EVENT, onChange);
-      };
-    },
-    [key],
-  );
-  const choice = useSyncExternalStore(
-    subscribeChoice,
-    () => readChoice(key) ?? "system",
-    () => "system" as const,
-  );
-
-  const setChoice = useCallback(
-    (next: ThemeChoice) => {
-      if (next !== "system") return setTheme(next);
-      try {
-        localStorage.removeItem(key);
-      } catch {
-        // Armazenamento bloqueado: nada salvo para apagar.
-      }
-      applyTheme(systemTheme(), colors);
-      window.dispatchEvent(new Event(CHANGE_EVENT));
-    },
-    [key, colors, setTheme],
-  );
-
-  return { theme, setTheme, toggle, choice, setChoice };
+  return { theme, setTheme, toggle };
 };

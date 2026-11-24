@@ -7,7 +7,7 @@ import { WorkoutsPage } from "@/components/workouts-page";
 
 const renderWith = (workouts: Workout[]) =>
   render(
-    <StoreContext value={{ workouts } as unknown as Store}>
+    <StoreContext value={{ workouts, sessions: [], schedule: { days: [], rules: [] } } as unknown as Store}>
       <WorkoutsPage />
     </StoreContext>,
   );

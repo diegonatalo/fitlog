@@ -97,7 +97,7 @@ export const ProgressPage = () => {
             {data.streak === 1 ? "semana seguida" : "semanas seguidas"}
           </p>
         </div>
-        <div role="img" aria-label="Dias com treino nas últimas 12 semanas" className="grid grid-flow-col grid-rows-7 gap-1.5">
+        <div role="img" aria-label="Dias com treino nas últimas 12 semanas" className="grid grid-flow-col grid-cols-[repeat(12,minmax(0,1fr))] grid-rows-7 gap-1">
           {data.grid.flat().map((d) => (
             <span
               key={d.key}

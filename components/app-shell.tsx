@@ -44,7 +44,7 @@ const HEADER_RULES: {
   },
   {
     pattern: patterns.library,
-    resolve: () => ({ title: "Exercícios", subtitle: "Todos os exercícios" }),
+    resolve: () => ({ title: "Biblioteca", subtitle: "Todos os exercícios" }),
   },
   {
     pattern: patterns.history,

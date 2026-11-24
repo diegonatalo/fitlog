@@ -22,6 +22,8 @@ type LogFormProps = {
   onSave: (load: number, reps: number) => boolean | void;
   /** drops the card chrome and title, for use inside another card */
   bare?: boolean;
+  /** esconde a escolha de equipamento, quando quem usa a mostra em outro lugar */
+  hideEquipment?: boolean;
 };
 
 type Feedback = "saved" | "record" | null;
@@ -33,6 +35,7 @@ export const LogForm = ({
   suggestion,
   onSave,
   bare = false,
+  hideEquipment = false,
 }: LogFormProps) => {
   const initialLoad = suggestion ? String(suggestion.load) : "";
   const initialReps = suggestion ? String(suggestion.reps) : "";
@@ -74,7 +77,7 @@ export const LogForm = ({
         </h2>
       )}
 
-      {equipments.length > 1 && (
+      {!hideEquipment && equipments.length > 1 && (
         <EquipmentToggle
           options={equipments}
           value={equipment}

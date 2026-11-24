@@ -73,8 +73,15 @@ describe("carga", () => {
     expect(loadParts("bodyweight", 5)).toEqual({ value: "+5", unit: "kg" });
   });
 
+  it("escreve a carga com vírgula decimal e ponto de milhar", () => {
+    expect(loadParts("weight", 62.5)).toEqual({ value: "62,5", unit: "kg" });
+    expect(loadParts("weight", 1000)).toEqual({ value: "1.000", unit: "kg" });
+    expect(loadParts("bodyweight", 2.5)).toEqual({ value: "+2,5", unit: "kg" });
+    expect(formatSet({ loadType: "weight", load: 62.5, reps: 10 })).toBe("62,5 kg × 10");
+  });
+
   it("formatLoad junta valor e unidade", () => {
-    expect(formatLoad("weight", 42.5)).toBe("42.5 kg");
+    expect(formatLoad("weight", 42.5)).toBe("42,5 kg");
   });
 
   it("formatSet inclui as repetições, exceto em exercícios de tempo", () => {

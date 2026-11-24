@@ -10,8 +10,10 @@ export type TodayPlan =
       name: string;
       exercises: number;
       groups: MuscleGroup[];
-      /** os primeiros exercícios, na ordem do treino */
-      exerciseNames?: string[];
+      /** os exercícios, na ordem do treino, com a última série de cada um */
+      rows?: { name: string; last?: string }[];
+      /** duração média das vezes em que o treino foi feito */
+      minutes?: number | null;
     }
   | { kind: "rest" }
   | null;
@@ -27,6 +29,7 @@ type TodayCardProps = {
 };
 
 const SHOWN_EXERCISES = 3;
+const LIST = new Intl.ListFormat("pt-BR", { type: "conjunction" });
 
 const Kicker = ({ children }: { children: React.ReactNode }) => (
   <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">{children}</p>
@@ -58,14 +61,20 @@ export const TodayCard = ({ plan, doneToday, busy, onStart, onStartFree }: Today
   }
 
   if (plan?.kind === "workout") {
-    const names = plan.exerciseNames ?? [];
-    const rest = plan.exercises - Math.min(names.length, SHOWN_EXERCISES);
+    const rows = plan.rows ?? [];
+    const shown = rows.slice(0, SHOWN_EXERCISES);
+    const others = rows.slice(SHOWN_EXERCISES).map((r) => r.name);
     return (
       <Shell>
         <div className="flex flex-col gap-2.5 px-5 pt-5">
-          <Kicker>
-            <span className="text-accent-text">●</span> Planejado
-          </Kicker>
+          <div className="flex items-center justify-between gap-3">
+            <Kicker>
+              <span className="text-accent-text">●</span> Planejado
+            </Kicker>
+            {plan.minutes != null && (
+              <span className="font-mono text-xs text-muted-foreground">~{plan.minutes} min</span>
+            )}
+          </div>
           <p className="truncate text-[2rem] leading-none font-extrabold font-stretch-semi-expanded">{plan.name}</p>
           <p className="text-sm text-muted-foreground">
             {plan.exercises} {plan.exercises === 1 ? "exercício" : "exercícios"}
@@ -79,18 +88,23 @@ export const TodayCard = ({ plan, doneToday, busy, onStart, onStartFree }: Today
           )}
         </div>
 
-        {names.length > 0 && (
+        {shown.length > 0 && (
           <ol className="mt-4 px-5">
-            {names.slice(0, SHOWN_EXERCISES).map((name, i) => (
-              <li key={name} className="flex items-center gap-3 border-t border-border py-2.5">
-                <span className="w-5 font-mono text-xs text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
-                <span className="truncate font-semibold">{name}</span>
+            {shown.map((row, i) => (
+              <li key={row.name} className="flex items-center gap-3 border-t border-border py-2.5">
+                <span className="w-5 shrink-0 font-mono text-xs text-muted-foreground">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="min-w-0 flex-1 truncate font-semibold">{row.name}</span>
+                {row.last && (
+                  <span className="shrink-0 font-mono text-[13px] text-muted-foreground">{row.last}</span>
+                )}
               </li>
             ))}
-            {rest > 0 && (
+            {others.length > 0 && (
               <li className="flex items-center gap-3 border-t border-border py-2.5 text-sm text-muted-foreground">
-                <span className="w-5 font-mono text-xs">+{rest}</span>
-                <span>{rest === 1 ? "outro exercício" : "outros exercícios"}</span>
+                <span className="w-5 shrink-0 font-mono text-xs">+{others.length}</span>
+                <span className="min-w-0 truncate">{LIST.format(others)}</span>
               </li>
             )}
           </ol>

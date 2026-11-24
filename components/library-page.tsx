@@ -14,6 +14,7 @@ import { EXERCISES } from "@/lib/exercises";
 import { paths } from "@/lib/paths";
 import { cn } from "@/lib/cn";
 import { formatSet } from "@/lib/format";
+import { bestSet } from "@/lib/stats";
 import { useStore } from "@/hooks/use-store";
 
 export const LibraryPage = () => {
@@ -118,7 +119,10 @@ export const LibraryPage = () => {
                         {count === 0 || !last ? (
                           <span className="shrink-0 text-xs text-muted-foreground">Sem registros</span>
                         ) : (
-                          <span className="shrink-0 font-mono text-sm font-bold">{formatSet(last)}</span>
+                          // a melhor marca, no tipo de carga do registro mais recente
+                          <span className="shrink-0 font-mono text-sm font-bold text-record">
+                            {formatSet(bestSet(store.setsByExercise.get(ex.id) ?? [], last.loadType) ?? last)}
+                          </span>
                         )}
                         <CaretRightIcon size={16} className="shrink-0 text-muted-foreground" weight="bold" />
                       </Link>

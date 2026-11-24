@@ -41,7 +41,9 @@ describe("dashboardStats", () => {
       sessions7: 0,
       sessions30: 0,
       volume7: 0,
+      volumePrev7: 0,
       records30: 0,
+      lastRecordExerciseId: null,
       avgMinutes: null,
       muscles30: [],
     });
@@ -89,6 +91,29 @@ describe("dashboardStats", () => {
       set("2026-11-10", 50, 5), // recorde
     ];
     expect(dashboardStats([], sets, TODAY, groupOf).records30).toBe(2);
+  });
+
+  it("soma o volume dos 7 dias anteriores para comparar", () => {
+    const sets = [
+      set(TODAY, 40, 10), // semana atual
+      set("2026-11-07", 50, 10), // 7 dias antes de hoje: semana anterior
+      set("2026-11-01", 30, 10), // 13 dias antes: ainda na semana anterior
+      set("2026-10-31", 99, 10), // fora
+    ];
+    const stats = dashboardStats([], sets, TODAY, groupOf);
+    expect(stats.volume7).toBe(400);
+    expect(stats.volumePrev7).toBe(800);
+  });
+
+  it("diz de qual exercício é o recorde mais novo", () => {
+    const sets = [
+      set("2026-11-01", 40, 10),
+      set("2026-11-05", 45, 10), // recorde do supino
+      set("2026-11-02", 20, 10, { exerciseId: "ex-rosca-direta" }),
+      set("2026-11-10", 22, 10, { exerciseId: "ex-rosca-direta" }), // recorde mais novo
+    ];
+    expect(dashboardStats([], sets, TODAY, groupOf).lastRecordExerciseId).toBe("ex-rosca-direta");
+    expect(dashboardStats([], [], TODAY, groupOf).lastRecordExerciseId).toBeNull();
   });
 
   it("compara cada série só com as do mesmo exercício", () => {

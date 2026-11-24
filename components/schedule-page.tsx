@@ -20,6 +20,7 @@ import { cn } from "@/lib/cn";
 import { useStore } from "@/hooks/use-store";
 import { useToday } from "@/hooks/use-today";
 import { DayEditor } from "@/components/day-editor";
+import { workoutInitial } from "@/lib/workout-stats";
 
 type View = { year: number; month: number };
 
@@ -110,6 +111,7 @@ export const SchedulePage = () => {
                         .filter(Boolean)
                         .join(", ")}
                       kind={plan?.kind ?? null}
+                      initial={plan?.kind === "workout" ? workoutInitial(plan.name) : null}
                       done={done}
                       isToday={key === today}
                       isPast={!!today && key < today}
@@ -121,7 +123,7 @@ export const SchedulePage = () => {
 
             <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
               <li className="flex items-center gap-1.5">
-                <span className="size-3.5 rounded-[5px] border border-input bg-muted" /> Treino
+                <span className="grid size-3.5 place-items-center rounded-[5px] border border-input bg-muted text-[8px] font-extrabold">A</span> Planejado
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="size-3.5 rounded-[5px] border-[1.5px] border-dashed border-muted-foreground" /> Perdido
@@ -167,13 +169,15 @@ type DayCellProps = {
   day: number;
   label: string;
   kind: "workout" | "rest" | null;
+  /** letra do treino planejado */
+  initial: string | null;
   done: boolean;
   isToday: boolean;
   isPast: boolean;
   onClick: () => void;
 };
 
-const DayCell = ({ day, label, kind, done, isToday, isPast, onClick }: DayCellProps) => {
+const DayCell = ({ day, label, kind, initial, done, isToday, isPast, onClick }: DayCellProps) => {
   const missed = kind === "workout" && !done && isPast;
   return (
     <button
@@ -197,14 +201,8 @@ const DayCell = ({ day, label, kind, done, isToday, isPast, onClick }: DayCellPr
       )}
     >
       <span className="font-mono font-bold">{day}</span>
-      <span className="flex h-3 items-center">
-        {done ? (
-          <CheckIcon size={12} weight="bold" />
-        ) : kind === "rest" ? (
-          <MoonIcon size={12} weight="fill" />
-        ) : kind === "workout" ? (
-          <span className={cn("size-1.5 rounded-full", missed ? "border border-current" : "bg-foreground")} />
-        ) : null}
+      <span aria-hidden="true" className="flex h-3 items-center text-[10px] leading-none font-extrabold">
+        {kind === "rest" ? <MoonIcon size={12} weight="fill" /> : kind === "workout" ? initial : done ? <CheckIcon size={12} weight="bold" /> : null}
       </span>
     </button>
   );

@@ -11,9 +11,11 @@ type EditSetDialogProps = {
   set: WorkoutSet;
   onClose: () => void;
   onSave: (patch: { load: number; reps: number; note: string }) => void;
+  /** quando presente, o diálogo também oferece remover a série */
+  onRemove?: () => void;
 };
 
-export const EditSetDialog = ({ set, onClose, onSave }: EditSetDialogProps) => {
+export const EditSetDialog = ({ set, onClose, onSave, onRemove }: EditSetDialogProps) => {
   const meta = loadTypeMeta(set.loadType);
   const [load, setLoad] = useState(String(set.load));
   const [reps, setReps] = useState(String(set.reps));
@@ -91,6 +93,14 @@ export const EditSetDialog = ({ set, onClose, onSave }: EditSetDialogProps) => {
             Salvar
           </button>
         </div>
+        {onRemove && (
+          <button
+            onClick={onRemove}
+            className="mt-3 h-12 w-full rounded-2xl text-sm font-bold text-destructive hover:bg-destructive/10"
+          >
+            Remover série
+          </button>
+        )}
       </div>
     </div>
   );

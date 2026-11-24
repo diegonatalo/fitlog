@@ -2,14 +2,16 @@
 
 import { Navigate, useParams } from "@/lib/router";
 import type { WorkoutSet } from "@/types";
-import { equipmentMeta, loadTypeMeta } from "@/types";
+import { equipmentMeta, loadTypeMeta, muscleLabel } from "@/types";
 import { paths } from "@/lib/paths";
 import { getExercise, setsForEquipment } from "@/lib/exercises";
-import { formatLoad } from "@/lib/format";
-import { bestSet, estimateOneRepMax, isNewRecord } from "@/lib/stats";
+import { TrophyIcon } from "@phosphor-icons/react";
+import { formatLoad, loadParts, relativeDay } from "@/lib/format";
+import { bestSet, dailyBest, estimateOneRepMax, isNewRecord } from "@/lib/stats";
+import { dateKey } from "@/lib/dates";
 import { useStore } from "@/hooks/use-store";
 import { useEquipmentChoice } from "@/hooks/use-equipment-choice";
-import { MuscleBadge } from "@/components/muscle-badge";
+import { EquipmentToggle } from "@/components/equipment-toggle";
 import { LogForm } from "@/components/log-form";
 import { HistoryList } from "@/components/history-list";
 import { ProgressChart } from "@/components/progress-chart";
@@ -45,30 +47,58 @@ const ExerciseDetailBody = ({ exerciseId }: { exerciseId: string }) => {
     return record;
   };
 
-  return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <MuscleBadge group={exercise.muscleGroup} size="md" />
-      </div>
+  const days = dailyBest(equipmentSets, loadType);
+  const gain = days.length >= 2 ? days[days.length - 1].load - days[0].load : null;
+  const sessionCount = new Set(sets.map((s) => s.sessionId ?? dateKey(new Date(s.createdAt)))).size;
+  const bestParts = best ? loadParts(best.loadType, best.load) : null;
 
-      <section className="grid grid-cols-2 gap-2.5">
-        <StatCard label="Registros" value={String(sets.length)} />
-        <StatCard
-          highlight
-          label="Recorde"
-          value={best ? formatLoad(best.loadType, best.load) : "—"}
-          sub={best && meta.hasReps ? `${best.reps} reps` : undefined}
-        />
-        {oneRepMax !== null && (
-          <StatCard
-            label="1RM estimado"
-            value={formatLoad("weight", oneRepMax)}
-            className="col-span-2"
+  return (
+    <div className="flex flex-col gap-4">
+      <p className="-mt-1 font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+        {muscleLabel(exercise.muscleGroup)}
+      </p>
+
+      {exercise.equipments.length > 1 && (
+        <EquipmentToggle options={exercise.equipments} value={equipment} onChange={setEquipment} />
+      )}
+
+      <section aria-label="Recorde" className="flex flex-col gap-4 rounded-[28px] border border-border bg-card p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex min-w-0 flex-col gap-1.5">
+            <p className="flex items-center gap-1.5 text-xs font-bold text-record">
+              <TrophyIcon size={14} weight="fill" aria-hidden="true" /> Recorde
+            </p>
+            <p className="font-mono text-[44px] leading-none font-bold">
+              {bestParts ? bestParts.value : "—"}
+              {bestParts && best && (
+                <span className="text-lg text-muted-foreground">
+                  {" "}
+                  {bestParts.unit}
+                  {meta.hasReps ? ` × ${best.reps}` : ""}
+                </span>
+              )}
+            </p>
+            {oneRepMax !== null && (
+              <p className="font-mono text-xs text-muted-foreground">1RM estimado {formatLoad("weight", oneRepMax)}</p>
+            )}
+          </div>
+          {best && <span className="pt-0.5 text-xs text-muted-foreground">{relativeDay(best.createdAt).toLowerCase()}</span>}
+        </div>
+
+        <ProgressChart bare sets={equipmentSets} loadType={loadType} />
+
+        <div className="grid grid-cols-3 gap-2 border-t border-border pt-3.5">
+          <MiniStat
+            value={gain === null ? "—" : `${gain > 0 ? "+" : ""}${loadParts(loadType, gain).value}`}
+            label={`${loadParts(loadType, 0).unit} de evolução`}
           />
-        )}
+          <MiniStat value={String(sets.length)} label="séries no total" />
+          <MiniStat value={String(sessionCount)} label={sessionCount === 1 ? "sessão" : "sessões"} />
+        </div>
       </section>
 
       <LogForm
+        hideEquipment
         equipments={exercise.equipments}
         equipment={equipment}
         onEquipmentChange={setEquipment}
@@ -76,43 +106,14 @@ const ExerciseDetailBody = ({ exerciseId }: { exerciseId: string }) => {
         onSave={handleSave}
       />
 
-      <ProgressChart sets={equipmentSets} loadType={loadType} />
-
-      <HistoryList
-        sets={sets}
-        onRemoveSet={store.removeSet}
-        onUpdateSet={store.updateSet}
-      />
+      <HistoryList sets={sets} onRemoveSet={store.removeSet} onUpdateSet={store.updateSet} />
     </div>
   );
 };
 
-const StatCard = ({
-  label,
-  value,
-  sub,
-  className = "",
-  highlight = false,
-}: {
-  label: string;
-  value: string;
-  sub?: string;
-  className?: string;
-  highlight?: boolean;
-}) => {
-  return (
-    <div
-      className={`flex flex-col gap-2 rounded-[22px] border border-border bg-card p-4 ${className}`}
-    >
-      <p className={highlight ? "text-xs font-bold text-record" : "text-xs font-semibold text-muted-foreground"}>
-        {label}
-      </p>
-      <p className="font-mono text-3xl font-bold leading-none">{value}</p>
-      {sub && (
-        <p className="font-mono text-sm font-medium text-muted-foreground">
-          {sub}
-        </p>
-      )}
-    </div>
-  );
-};
+const MiniStat = ({ value, label }: { value: string; label: string }) => (
+  <span className="flex min-w-0 flex-col gap-0.5">
+    <span className="truncate font-mono text-lg font-bold">{value}</span>{" "}
+    <span className="text-[11px] text-muted-foreground">{label}</span>
+  </span>
+);
