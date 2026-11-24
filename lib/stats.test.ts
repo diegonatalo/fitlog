@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bestSet, dailyBest, estimateOneRepMax, isNewRecord, recordIds } from "@/lib/stats";
+import { bestSet, dailyBest, estimateOneRepMax, isNewRecord, recordIds, recordIdsByExercise } from "@/lib/stats";
 import type { LoadType, WorkoutSet } from "@/types";
 
 let seq = 0;
@@ -95,5 +95,17 @@ describe("dailyBest", () => {
 
   it("ignora outros tipos de carga", () => {
     expect(dailyBest([set(5, 10, day(1), "plates")], "weight")).toEqual([]);
+  });
+});
+
+describe("recordIdsByExercise", () => {
+  it("cada exercício compete só consigo mesmo", () => {
+    const heavy = { ...set(100, 5, 1), exerciseId: "ex-a" };
+    const light1 = { ...set(20, 10, 2), exerciseId: "ex-b" };
+    const light2 = { ...set(22, 10, 3), exerciseId: "ex-b" };
+    const heavy2 = { ...set(105, 5, 4), exerciseId: "ex-a" };
+    expect(recordIdsByExercise([heavy, light1, light2, heavy2])).toEqual(new Set([light2.id, heavy2.id]));
+    // sem separar, a rosca nunca bateria os 100 kg
+    expect(recordIds([heavy, light1, light2, heavy2]).has(light2.id)).toBe(false);
   });
 });

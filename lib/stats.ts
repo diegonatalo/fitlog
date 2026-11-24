@@ -40,6 +40,24 @@ export function recordIds(sets: WorkoutSet[]) {
   return ids;
 }
 
+/**
+ * Recordes de séries de vários exercícios: cada série só compete com as do
+ * mesmo exercício (`recordIds` sozinho compararia uma rosca com um agachamento).
+ */
+export function recordIdsByExercise(sets: WorkoutSet[]) {
+  const byExercise = new Map<string, WorkoutSet[]>();
+  for (const s of sets) {
+    const list = byExercise.get(s.exerciseId);
+    if (list) list.push(s);
+    else byExercise.set(s.exerciseId, [s]);
+  }
+  const ids = new Set<string>();
+  for (const list of byExercise.values()) {
+    for (const id of recordIds(list)) ids.add(id);
+  }
+  return ids;
+}
+
 export function isNewRecord(
   previous: WorkoutSet[],
   loadType: LoadType,
