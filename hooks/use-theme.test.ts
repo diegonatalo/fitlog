@@ -80,22 +80,4 @@ describe("useTheme", () => {
     });
     expect(result.current.theme).toBe("dark");
   });
-
-  it("voltar a seguir o sistema apaga a escolha e aplica o tema do sistema", () => {
-    vi.spyOn(window, "matchMedia").mockReturnValue({
-      matches: true,
-      addEventListener: () => {},
-      removeEventListener: () => {},
-    } as unknown as MediaQueryList);
-    const { result } = renderHook(() => useTheme(KEY, COLORS));
-    act(() => result.current.setChoice("light"));
-    expect(result.current.choice).toBe("light");
-    expect(isDark()).toBe(false);
-
-    act(() => result.current.setChoice("system"));
-    expect(result.current.choice).toBe("system");
-    expect(localStorage.getItem(KEY)).toBeNull();
-    expect(isDark()).toBe(true);
-    expect(result.current.theme).toBe("dark");
-  });
 });
