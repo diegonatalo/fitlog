@@ -11,14 +11,15 @@ const UPDATED_AT = "2026-11-22";
 const linkClass = "font-semibold text-accent-text underline underline-offset-2";
 
 const Header = () => (
-  <div className="mb-10 flex items-center justify-between gap-3">
+  <div className="flex items-center justify-between gap-3">
     <BrandLink />
     <LandingThemeToggle />
   </div>
 );
 
 const Shell = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex min-h-full flex-col bg-background text-foreground">
+  // [data-legal]: o visual do FitLog para o LegalPage do modelo (app/globals.css)
+  <div data-legal className="flex min-h-full flex-col bg-background text-foreground">
     {children}
     <SiteFooter privacy terms sourceUrl={SOURCE_URL} authorUrl="https://diegonatalo.dev" />
   </div>
