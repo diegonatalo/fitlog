@@ -41,12 +41,12 @@ const trainToday = async (page: Page) => {
     .getByRole("region", { name: "Calendário" })
     .getByRole("button", { name: /^(domingo|segunda|terça|quarta|quinta|sexta|sábado)/i });
   await days.nth(new Date().getDate() - 1).click();
-  await page.getByRole("dialog").getByRole("radio", { name: /Treino A/ }).click();
-  await page.getByRole("dialog").getByRole("button", { name: "Salvar dia" }).click();
+  await page.getByRole("radio", { name: /Treino A/ }).click();
+  await page.getByRole("button", { name: "Salvar dia" }).click();
   await saved(page);
 
   await page.goto("/app");
-  await page.getByRole("button", { name: "Iniciar treino" }).click();
+  await page.getByRole("main").getByRole("button", { name: "Iniciar treino" }).click();
   await expect(page).toHaveURL(/\/sessao\/[^/]+$/);
   await logSet(page, "60", "10");
   // o formulário continua aberto: a segunda série, mais pesada, vira recorde
@@ -63,7 +63,7 @@ for (const scheme of ["light", "dark"] as const) {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.emulateMedia({ colorScheme: scheme });
     await createWorkout(page, "Treino A · Peito e tríceps", ["Supino reto", "Tríceps"]);
-    await page.getByRole("button", { name: "Iniciar treino" }).click();
+    await page.getByRole("main").getByRole("button", { name: "Iniciar treino" }).click();
     await expect(page).toHaveURL(/\/sessao\/[^/]+$/);
     await logSet(page, "60", "10");
     await expect(page.getByRole("button", { name: "Editar série" })).toHaveCount(1);

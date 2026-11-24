@@ -62,8 +62,9 @@ export const SessionScreen = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4 pb-24">
-      <div className="flex flex-col gap-3 rounded-3xl border border-border bg-card p-4">
+    // telas largas: o exercício à esquerda; descanso, lista e observações à direita
+    <div className="flex flex-col gap-4 pb-24 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:grid-rows-[repeat(6,auto)_1fr] lg:items-start lg:gap-5 lg:pb-0">
+      <div className="flex flex-col gap-3 rounded-3xl border border-border bg-card p-4 lg:col-span-2 lg:p-5">
         <div className="flex items-end justify-between gap-3">
           <div className="min-w-0">
             <p className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-accent-text">
@@ -75,11 +76,18 @@ export const SessionScreen = () => {
             </p>
           </div>
           <p
-            className="font-mono text-4xl leading-none font-bold tabular-nums"
+            className="ml-auto font-mono text-4xl leading-none font-bold tabular-nums lg:text-5xl"
             aria-label="Tempo de treino"
           >
             {formatClock((now - session.startedAt) / 1000)}
           </p>
+          <button
+            onClick={finish}
+            className="hidden h-13 items-center gap-2 rounded-2xl border-[1.5px] border-accent-text px-5 font-extrabold text-accent-text lg:flex"
+          >
+            <FlagIcon size={18} weight="bold" />
+            Finalizar treino
+          </button>
         </div>
         {exercises.length > 0 && (
           <div
@@ -102,6 +110,7 @@ export const SessionScreen = () => {
       </div>
 
       {restStartedAt !== null && (
+        <div className="lg:col-start-2">
         <RestTimer
           key={restStartedAt}
           startedAt={restStartedAt}
@@ -109,6 +118,7 @@ export const SessionScreen = () => {
           onDurationChange={store.setRestSeconds}
           onDismiss={() => setRestStartedAt(null)}
         />
+        </div>
       )}
 
       {exercises.length === 0 ? (
@@ -119,6 +129,7 @@ export const SessionScreen = () => {
         />
       ) : (
         <>
+          <div className="lg:col-start-1 lg:row-[2/-1]">
           <SessionExerciseCard
             key={active.id}
             exercise={active}
@@ -143,7 +154,9 @@ export const SessionScreen = () => {
             onUpdateSet={store.updateSet}
             onRemoveSet={store.removeSet}
           />
+          </div>
 
+          <div className="lg:col-start-2">
           <OtherExercises
             title="A seguir"
             items={exercises.filter((ex) => ex !== active && setsOf(ex.id).length === 0)}
@@ -154,6 +167,8 @@ export const SessionScreen = () => {
             onPick={(ex) => setChosenId(ex.id)}
             position={(ex) => exercises.indexOf(ex) + 1}
           />
+          </div>
+          <div className="lg:col-start-2">
           <OtherExercises
             title="Feitos"
             items={exercises.filter((ex) => ex !== active && setsOf(ex.id).length > 0)}
@@ -165,10 +180,11 @@ export const SessionScreen = () => {
             position={(ex) => exercises.indexOf(ex) + 1}
             done
           />
+          </div>
         </>
       )}
 
-      <div>
+      <div className="lg:col-start-2">
         <label
           htmlFor="session-note"
           className="mb-1.5 block text-xs font-medium text-muted-foreground"
@@ -190,7 +206,7 @@ export const SessionScreen = () => {
 
       <button
         onClick={finish}
-        className="sticky bottom-4 flex h-14 w-full items-center justify-center gap-2.5 rounded-[18px] border-[1.5px] border-accent-text bg-background text-base font-extrabold text-accent-text shadow-[0_12px_40px_rgb(0_0_0/0.4)] font-stretch-semi-expanded"
+        className="sticky bottom-4 lg:hidden flex h-14 w-full items-center justify-center gap-2.5 rounded-[18px] border-[1.5px] border-accent-text bg-background text-base font-extrabold text-accent-text shadow-[0_12px_40px_rgb(0_0_0/0.4)] font-stretch-semi-expanded"
       >
         <FlagIcon size={20} weight="bold" />
         Finalizar treino
@@ -198,7 +214,7 @@ export const SessionScreen = () => {
 
       <button
         onClick={() => setConfirmDiscard(true)}
-        className="mx-auto text-sm font-medium text-muted-foreground underline-offset-4 hover:text-destructive hover:underline"
+        className="mx-auto text-sm font-medium text-muted-foreground underline-offset-4 hover:text-destructive hover:underline lg:col-start-2"
       >
         Descartar sessão
       </button>

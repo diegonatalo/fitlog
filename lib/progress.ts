@@ -1,4 +1,4 @@
-import type { WorkoutSet } from "@/types";
+import type { WorkoutSession, WorkoutSet } from "@/types";
 import { addDays, dateKey, weekdayOf } from "./dates";
 import { recordIdsByExercise } from "./stats";
 
@@ -76,4 +76,37 @@ export function recentRecords(sets: WorkoutSet[], limit: number): WorkoutSet[] {
     .filter((s) => records.has(s.id))
     .sort((a, b) => b.createdAt - a.createdAt)
     .slice(0, limit);
+}
+
+/**
+ * A melhor marca anterior a um recorde: a série mais pesada do mesmo exercício
+ * e do mesmo tipo de carga feita antes dele (na dúvida, a mais recente).
+ */
+export function previousBest(sets: WorkoutSet[], record: WorkoutSet): WorkoutSet | null {
+  const kind = record.equipment ?? record.loadType;
+  let best: WorkoutSet | null = null;
+  for (const s of sets) {
+    if (s.exerciseId !== record.exerciseId || (s.equipment ?? s.loadType) !== kind) continue;
+    if (s.createdAt >= record.createdAt) continue;
+    if (!best || s.load > best.load || (s.load === best.load && s.createdAt > best.createdAt)) best = s;
+  }
+  return best;
+}
+
+export type ConsistencySummary = { sessions: number; perWeek: number; averageMinutes: number | null };
+
+/** Treinos terminados nas últimas `weeks` semanas (até hoje), a média por semana e a duração média. */
+export function consistencySummary(sessions: WorkoutSession[], today: string, weeks: number): ConsistencySummary {
+  const first = addDays(weekStart(today), -7 * (weeks - 1));
+  const done = sessions.filter((s) => {
+    if (s.finishedAt === null) return false;
+    const day = dayOf(s.startedAt);
+    return day >= first && day <= today;
+  });
+  const minutes = done.map((s) => ((s.finishedAt as number) - s.startedAt) / 60_000);
+  return {
+    sessions: done.length,
+    perWeek: Math.round((done.length / weeks) * 10) / 10,
+    averageMinutes: minutes.length ? Math.round(minutes.reduce((a, b) => a + b, 0) / minutes.length) : null,
+  };
 }

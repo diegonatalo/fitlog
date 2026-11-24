@@ -4,6 +4,8 @@ import { useEffect, useMemo, type ReactNode } from "react";
 import { GearSixIcon } from "@phosphor-icons/react";
 import { Link, matchPath, useLocation, useNavigate } from "@/lib/router";
 import { Header, headerButtonClass } from "./header";
+import { SideNav } from "./side-nav";
+import { cn } from "@/lib/cn";
 import { BottomNav } from "./bottom-nav";
 import { patterns, paths, tabPatterns } from "@/lib/paths";
 import { getExercise } from "@/lib/exercises";
@@ -93,6 +95,9 @@ const HEADER_RULES: {
   },
 ];
 
+/** Telas com layout de duas colunas em telas largas; as outras ficam numa coluna centralizada. */
+const WIDE_PATTERNS = [patterns.home, patterns.schedule, patterns.workouts, patterns.progress, patterns.session];
+
 export const AppShell = ({ children }: { children: ReactNode }) => {
   const { theme, toggle: onToggleTheme } = useTheme(THEME_KEY, THEME_COLORS);
   const store = useStore();
@@ -104,6 +109,12 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
     () => tabPatterns.some((p) => matchPath(p, pathname)),
     [pathname],
   );
+  // telas com layout próprio para telas largas
+  const wide = useMemo(
+    () => WIDE_PATTERNS.some((p) => matchPath(p, pathname)),
+    [pathname],
+  );
+  const progress = !!matchPath(patterns.progress, pathname);
 
   const header = useMemo<HeaderInfo>(() => {
     for (const rule of HEADER_RULES) {
@@ -122,8 +133,11 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
   }, [store.saving]);
 
   return (
-    <div className="flex min-h-dvh flex-col" data-saving={store.saving || undefined}>
+    <div className="flex min-h-dvh flex-col md:pl-62" data-saving={store.saving || undefined}>
+      <SideNav theme={theme} onToggleTheme={onToggleTheme} />
       <Header
+        width={wide ? "wide" : "narrow"}
+        tabOnDesktop={progress}
         theme={theme}
         onToggleTheme={onToggleTheme}
         showBack={!isTab}
@@ -135,7 +149,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
             <Link
               to={paths.settings}
               aria-label="Ajustes"
-              className={headerButtonClass}
+              className={cn(headerButtonClass, "md:hidden")}
             >
               <GearSixIcon size={20} weight="bold" />
             </Link>
@@ -143,7 +157,12 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
         }
       />
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-32 pt-4">
+      <main
+        className={cn(
+          "mx-auto w-full max-w-2xl flex-1 px-4 pb-32 pt-4 md:pb-14",
+          wide && "md:max-w-[1160px] md:px-10 md:pt-6",
+        )}
+      >
         {(store.syncError || store.syncConflict) && (
           <div
             role="alert"
@@ -166,7 +185,11 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
         {children}
       </main>
 
-      {isTab && <BottomNav />}
+      {isTab && (
+        <div className="md:hidden">
+          <BottomNav />
+        </div>
+      )}
     </div>
   );
 };

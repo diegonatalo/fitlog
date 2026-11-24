@@ -33,7 +33,7 @@ test("cria a conta pela tela, os dados ficam na conta e voltam ao entrar de novo
   await expect(title(page, "Treino da Ana")).toBeVisible();
 
   await page.goto("/app/ajustes");
-  await expect(page.getByText(email)).toBeVisible();
+  await expect(page.getByRole("main").getByText(email)).toBeVisible();
   await page.getByRole("button", { name: "Sair" }).click();
   await expect(page).toHaveURL("/");
   await page.goto("/app");

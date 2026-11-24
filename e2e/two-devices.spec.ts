@@ -105,8 +105,8 @@ test("cada aparelho planeja um dia e os dois ficam", async ({ page, browser, bas
       .getByRole("button", { name: /^(domingo|segunda|terça|quarta|quinta|sexta|sábado)/i });
   const rest = async (device: Page, index: number) => {
     await days(device).nth(index).click();
-    await device.getByRole("dialog").getByRole("radio", { name: /Descanso/ }).click();
-    await device.getByRole("dialog").getByRole("button", { name: "Salvar dia" }).click();
+    await device.getByRole("radio", { name: /Descanso/ }).click();
+    await device.getByRole("button", { name: "Salvar dia" }).click();
     await saved(device);
   };
 
@@ -121,7 +121,7 @@ test("cada aparelho planeja um dia e os dois ficam", async ({ page, browser, bas
 
 test("editar a série numa tela desatualizada mantém a carga que o outro salvou", async ({ page, browser, baseURL }) => {
   await createWorkout(page, NAME, ["Supino reto"]);
-  await page.getByRole("button", { name: "Iniciar treino" }).click();
+  await page.getByRole("main").getByRole("button", { name: "Iniciar treino" }).click();
   await page.getByRole("spinbutton", { name: "Peso (kg)" }).fill("60");
   await page.getByRole("spinbutton", { name: "Repetições" }).fill("10");
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
