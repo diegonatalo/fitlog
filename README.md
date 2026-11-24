@@ -15,7 +15,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript_6-3178c6?style=flat-square&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white)
 ![PWA](https://img.shields.io/badge/PWA-instal%C3%A1vel-5a0fc8?style=flat-square&logo=pwa&logoColor=white)
-![Dados](https://img.shields.io/badge/dados-na_sua_conta-9fe02e?style=flat-square)
+![Dados](https://img.shields.io/badge/dados-na_sua_conta-c6f24e?style=flat-square)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-16a34a?style=flat-square)
 
 </div>
@@ -43,27 +43,27 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 
 <table>
   <tr>
-    <td align="center" width="33%"><img src="docs/assets/shot-01.svg" alt="Treinos" width="100%" /><br />
-      <sub><b>Treinos</b></sub></td>
-    <td align="center" width="33%"><img src="docs/assets/shot-02.svg" alt="Sessão ao vivo" width="100%" /><br />
+    <td align="center" width="33%"><img src="docs/assets/shot-01.svg" alt="Tela inicial com a semana, o treino de hoje e o ritmo" width="100%" /><br />
+      <sub><b>Início</b></sub></td>
+    <td align="center" width="33%"><img src="docs/assets/shot-02.svg" alt="Treino em andamento com a tabela de séries e o descanso" width="100%" /><br />
       <sub><b>Sessão ao vivo</b></sub></td>
-    <td align="center" width="33%"><img src="docs/assets/shot-03.svg" alt="Evolução do exercício" width="100%" /><br />
+    <td align="center" width="33%"><img src="docs/assets/shot-03.svg" alt="Agenda do mês com o painel para planejar o dia" width="100%" /><br />
+      <sub><b>Agenda</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="33%"><img src="docs/assets/shot-04.svg" alt="Recorde, gráfico e registros de um exercício" width="100%" /><br />
       <sub><b>Evolução do exercício</b></sub></td>
-  </tr>
-  <tr>
-    <td align="center" width="33%"><img src="docs/assets/shot-04.svg" alt="Biblioteca" width="100%" /><br />
+    <td align="center" width="33%"><img src="docs/assets/shot-05.svg" alt="Volume semanal, consistência e recordes recentes" width="100%" /><br />
+      <sub><b>Progresso</b></sub></td>
+    <td align="center" width="33%"><img src="docs/assets/shot-06.svg" alt="Biblioteca de exercícios agrupada por músculo" width="100%" /><br />
       <sub><b>Biblioteca</b></sub></td>
-    <td align="center" width="33%"><img src="docs/assets/shot-05.svg" alt="Histórico de treinos" width="100%" /><br />
-      <sub><b>Histórico de treinos</b></sub></td>
-    <td align="center" width="33%"><img src="docs/assets/shot-06.svg" alt="Histórico de cardio" width="100%" /><br />
-      <sub><b>Histórico de cardio</b></sub></td>
   </tr>
   <tr>
-    <td align="center" width="33%"><img src="docs/assets/shot-07.svg" alt="Calculadora de cardio" width="100%" /><br />
+    <td align="center" width="33%"><img src="docs/assets/shot-07.svg" alt="Histórico de treinos concluídos" width="100%" /><br />
+      <sub><b>Histórico</b></sub></td>
+    <td align="center" width="33%"><img src="docs/assets/shot-08.svg" alt="Calculadora de esteira com calorias, frequência cardíaca e zona" width="100%" /><br />
       <sub><b>Calculadora de cardio</b></sub></td>
-    <td align="center" width="33%"><img src="docs/assets/shot-08.svg" alt="Comparador e dicas" width="100%" /><br />
-      <sub><b>Comparador e dicas</b></sub></td>
-    <td align="center" width="33%"><img src="docs/assets/shot-09.svg" alt="Ajustes e perfil" width="100%" /><br />
+    <td align="center" width="33%"><img src="docs/assets/shot-09.svg" alt="Ajustes com conta, tema e perfil" width="100%" /><br />
       <sub><b>Ajustes e perfil</b></sub></td>
   </tr>
 </table>
@@ -80,8 +80,8 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 
 <div align="center">
 
-<img src="docs/assets/f-01.svg" alt="Funcionalidade 01: Treinos prontos. Agrupe exercícios em treinos (Push, Pull, Legs…), defina a ordem e inicie tudo com um toque." width="49%" />
-<img src="docs/assets/f-02.svg" alt="Funcionalidade 02: Sessão ao vivo. Cronômetro do treino, séries por exercício e observações da sessão e de cada série." width="49%" />
+<img src="docs/assets/f-01.svg" alt="Funcionalidade 01: Treinos e agenda. Agrupe exercícios em treinos (Push, Pull, Legs…), defina a ordem, coloque cada um num dia da semana (com repetição semanal) e veja na tela inicial o treino de hoje." width="49%" />
+<img src="docs/assets/f-02.svg" alt="Funcionalidade 02: Sessão ao vivo. Um exercício por vez, com as séries numa tabela ao lado das da sessão anterior, cronômetro do treino e observações da sessão e de cada série." width="49%" />
 <br />
 <img src="docs/assets/f-03.svg" alt="Funcionalidade 03: Timer de descanso. Contagem regressiva de 60, 90, 120 ou 180 s depois de cada série, com vibração ao terminar." width="49%" />
 <img src="docs/assets/f-04.svg" alt="Funcionalidade 04: Carga sugerida. A última série do exercício já vem preenchida, então você só ajusta o que mudou." width="49%" />
@@ -92,11 +92,11 @@ Registre séries, monte treinos, bata recordes, estime o gasto do cardio e veja 
 <img src="docs/assets/f-07.svg" alt="Funcionalidade 07: Comparador de esteira. Gráfico com as curvas de 0%, 6%, 12% e 18% de inclinação (e a sua), em calorias ou frequência cardíaca, para ver o efeito de mudar velocidade ou inclinação." width="49%" />
 <img src="docs/assets/f-08.svg" alt="Funcionalidade 08: Perfil. Peso, idade e sexo ficam salvos em Ajustes e alimentam as estimativas do cardio." width="49%" />
 <br />
-<img src="docs/assets/f-09.svg" alt="Funcionalidade 09: Recordes e evolução. Aviso na hora de um novo recorde, marca de PR no histórico, 1RM estimado e gráfico da melhor carga por dia." width="49%" />
-<img src="docs/assets/f-10.svg" alt="Funcionalidade 10: Biblioteca. Busca, filtro por grupo muscular e 24 exercícios de exemplo. Exercícios com histórico são arquivados, não apagados." width="49%" />
+<img src="docs/assets/f-09.svg" alt="Funcionalidade 09: Recordes e evolução. Aviso na hora de um novo recorde, selo RECORDE no histórico, 1RM estimado, gráfico da melhor carga por dia e uma página de Progresso com volume semanal, consistência e recordes recentes." width="49%" />
+<img src="docs/assets/f-10.svg" alt="Funcionalidade 10: Biblioteca. Busca, filtro por grupo muscular e 70 exercícios, agrupados por músculo, com a melhor marca de cada um." width="49%" />
 <br />
 <img src="docs/assets/f-11.svg" alt="Funcionalidade 11: Histórico de sessões. Duração, séries e anotações de cada treino concluído, com edição de qualquer série. Um seletor alterna entre Treinos e Cardio." width="49%" />
-<img src="docs/assets/f-12.svg" alt="Funcionalidade 12: Conta. Entre com e-mail e senha e encontre seus treinos em qualquer aparelho. Em Ajustes dá para sair, apagar os dados ou excluir a conta." width="49%" />
+<img src="docs/assets/f-12.svg" alt="Funcionalidade 12: Conta. Entre com e-mail e senha e encontre seus treinos em qualquer aparelho. Em Ajustes dá para escolher o tema (sistema, claro ou escuro), sair, apagar os dados ou excluir a conta." width="49%" />
 
 </div>
 
@@ -189,7 +189,8 @@ No CI, o E2E roda contra um Postgres descartável do próprio GitHub Actions, nu
 │                 /privacidade, /termos, a API do Better Auth (api/auth), robots e sitemap
 ├── components/   interface (log-form, rest-timer, progress-chart, auth-form…), SignedInApp (confere a sessão e carrega
 │                 os dados) e StoreProvider (o estado do app, lido com useStore())
-├── hooks/        use-workout-store (estado em memória, salvo por Server Actions), use-store, use-theme, use-now
+├── hooks/        use-workout-store (estado em memória, salvo por Server Actions), use-store, use-theme,
+│                 use-theme-choice, use-today, use-now
 ├── lib/
 │   ├── db/           schema do banco (Drizzle) e conexão com o Postgres
 │   ├── data/         consultas, Server Actions e conversão entre linhas do banco e registros do app
@@ -198,8 +199,12 @@ No CI, o E2E roda contra um Postgres descartável do próprio GitHub Actions, nu
 │   ├── schema.ts     validação dos dados que chegam ao servidor
 │   ├── defaults.ts   treinos de exemplo de cada conta nova
 │   ├── stats.ts      recordes, 1RM e série histórica
+│   ├── dashboard.ts  números da tela inicial
+│   ├── progress.ts   volume semanal, consistência e recordes recentes
+│   ├── workout-stats.ts  tempo médio, próximo dia na agenda e sessão anterior de cada treino
+│   ├── week.ts       a semana da tela inicial
 │   ├── cardio.ts     calorias, FC estimada, zonas, comparação e dicas da esteira
-│   ├── format.ts     datas, durações e cargas
+│   ├── format.ts     datas, durações e cargas (vírgula decimal)
 │   ├── paths.ts      rotas centralizadas
 │   └── router.tsx    Link, useNavigate e useParams sobre o roteador do Next
 ├── types/        modelos e metadados dos tipos de carga
@@ -245,7 +250,7 @@ Os dados ficam num banco Postgres ([Neon](https://neon.tech)), ligados à sua co
 
 | Conceito | Regra |
 |---|---|
-| **Recorde (PR)** | Uma série é recorde quando a carga supera todas as anteriores do mesmo exercício e tipo de carga. A primeira série nunca conta. |
+| **Recorde** | Uma série é recorde quando a carga supera todas as anteriores do mesmo exercício e tipo de carga. A primeira série nunca conta. |
 | **1RM estimado** | Fórmula de Epley (`carga × (1 + reps / 30)`), calculada sobre a melhor série em peso. |
 | **Sessão** | Só uma sessão pode estar ativa por vez. Descartar apaga as séries dela, finalizar manda para o histórico. |
 | **Arquivar** | Exercício com registros é arquivado ao ser removido. O histórico é mantido e ele pode ser restaurado em Biblioteca → Arquivados. |

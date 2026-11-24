@@ -1,9 +1,18 @@
 {
-  "bg": "#090d14", "card": "#131921", "border": "#282e38", "borderStrong": "#343c49",
-  "fg": "#eff2f5", "muted": "#9199a5", "subtle": "#7b8491",
-  "accent": "#9edb2e", "accent2": "#c4ec74", "onAccent": "#141f03",
-  "fontSans": "'Inter','Segoe UI',-apple-system,Helvetica,Arial,sans-serif",
+  "bg": "#0b0d10",
+  "card": "#14171c",
+  "border": "#262b33",
+  "borderStrong": "#333a44",
+  "fg": "#f2f4f7",
+  "muted": "#9aa3af",
+  "subtle": "#858e9a",
+  "accent": "#c6f24e",
+  "accent2": "#ddfb86",
+  "onAccent": "#0b0d10",
+  "fontSans": "'Archivo','Segoe UI',-apple-system,Helvetica,Arial,sans-serif",
   "fontMono": "'JetBrains Mono',Menlo,Consolas,monospace",
   "radiusScale": 1.0,
-  "glow": true, "grid": true, "animations": true
+  "glow": true,
+  "grid": true,
+  "animations": true
 }

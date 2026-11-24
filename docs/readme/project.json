@@ -37,17 +37,17 @@
       "alt": "Dados",
       "label": "dados",
       "message": "na sua conta",
-      "color": "9fe02e"
+      "color": "c6f24e"
     }
   ],
   "features": [
     {
       "title": "Funcionalidade 01",
-      "desc": "Treinos prontos. Agrupe exercícios em treinos (Push, Pull, Legs…), defina a ordem e inicie tudo com um toque."
+      "desc": "Treinos e agenda. Agrupe exercícios em treinos (Push, Pull, Legs…), defina a ordem, coloque cada um num dia da semana (com repetição semanal) e veja na tela inicial o treino de hoje."
     },
     {
       "title": "Funcionalidade 02",
-      "desc": "Sessão ao vivo. Cronômetro do treino, séries por exercício e observações da sessão e de cada série."
+      "desc": "Sessão ao vivo. Um exercício por vez, com as séries numa tabela ao lado das da sessão anterior, cronômetro do treino e observações da sessão e de cada série."
     },
     {
       "title": "Funcionalidade 03",
@@ -75,11 +75,11 @@
     },
     {
       "title": "Funcionalidade 09",
-      "desc": "Recordes e evolução. Aviso na hora de um novo recorde, marca de PR no histórico, 1RM estimado e gráfico da melhor carga por dia."
+      "desc": "Recordes e evolução. Aviso na hora de um novo recorde, selo RECORDE no histórico, 1RM estimado, gráfico da melhor carga por dia e uma página de Progresso com volume semanal, consistência e recordes recentes."
     },
     {
       "title": "Funcionalidade 10",
-      "desc": "Biblioteca. Busca, filtro por grupo muscular e 24 exercícios de exemplo. Exercícios com histórico são arquivados, não apagados."
+      "desc": "Biblioteca. Busca, filtro por grupo muscular e 70 exercícios, agrupados por músculo, com a melhor marca de cada um."
     },
     {
       "title": "Funcionalidade 11",
@@ -87,7 +87,7 @@
     },
     {
       "title": "Funcionalidade 12",
-      "desc": "Conta. Entre com e-mail e senha e encontre seus treinos em qualquer aparelho. Em Ajustes dá para sair, apagar os dados ou excluir a conta."
+      "desc": "Conta. Entre com e-mail e senha e encontre seus treinos em qualquer aparelho. Em Ajustes dá para escolher o tema (sistema, claro ou escuro), sair, apagar os dados ou excluir a conta."
     }
   ],
   "banner": {
@@ -102,56 +102,56 @@
     "shots": [
       {
         "file": "docs/screenshots/inicio.png",
-        "title": "Treinos",
-        "alt": "Treinos",
-        "caption": "<b>Treinos</b>"
+        "title": "Início",
+        "alt": "Tela inicial com a semana, o treino de hoje e o ritmo",
+        "caption": "<b>Início</b>"
       },
       {
         "file": "docs/screenshots/sessao.png",
         "title": "Sessão ao vivo",
-        "alt": "Sessão ao vivo",
+        "alt": "Treino em andamento com a tabela de séries e o descanso",
         "caption": "<b>Sessão ao vivo</b>"
+      },
+      {
+        "file": "docs/screenshots/agenda.png",
+        "title": "Agenda",
+        "alt": "Agenda do mês com o painel para planejar o dia",
+        "caption": "<b>Agenda</b>"
       },
       {
         "file": "docs/screenshots/exercicio.png",
         "title": "Evolução do exercício",
-        "alt": "Evolução do exercício",
+        "alt": "Recorde, gráfico e registros de um exercício",
         "caption": "<b>Evolução do exercício</b>"
+      },
+      {
+        "file": "docs/screenshots/progresso.png",
+        "title": "Progresso",
+        "alt": "Volume semanal, consistência e recordes recentes",
+        "caption": "<b>Progresso</b>"
       },
       {
         "file": "docs/screenshots/biblioteca.png",
         "title": "Biblioteca",
-        "alt": "Biblioteca",
+        "alt": "Biblioteca de exercícios agrupada por músculo",
         "caption": "<b>Biblioteca</b>"
       },
       {
         "file": "docs/screenshots/historico.png",
-        "title": "Histórico de treinos",
-        "alt": "Histórico de treinos",
-        "caption": "<b>Histórico de treinos</b>"
-      },
-      {
-        "file": "docs/screenshots/historico-cardio.png",
-        "title": "Histórico de cardio",
-        "alt": "Histórico de cardio",
-        "caption": "<b>Histórico de cardio</b>"
+        "title": "Histórico",
+        "alt": "Histórico de treinos concluídos",
+        "caption": "<b>Histórico</b>"
       },
       {
         "file": "docs/screenshots/cardio.png",
         "title": "Calculadora de cardio",
-        "alt": "Calculadora de cardio",
+        "alt": "Calculadora de esteira com calorias, frequência cardíaca e zona",
         "caption": "<b>Calculadora de cardio</b>"
-      },
-      {
-        "file": "docs/screenshots/cardio-grafico.png",
-        "title": "Comparador e dicas",
-        "alt": "Comparador e dicas",
-        "caption": "<b>Comparador e dicas</b>"
       },
       {
         "file": "docs/screenshots/ajustes.png",
         "title": "Ajustes e perfil",
-        "alt": "Ajustes e perfil",
+        "alt": "Ajustes com conta, tema e perfil",
         "caption": "<b>Ajustes e perfil</b>"
       }
     ]
